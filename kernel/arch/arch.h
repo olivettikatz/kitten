@@ -48,6 +48,8 @@
 #define O_EDI 7
 
 #define O_FPST_SIZE 8
+
+#define O_AP_INIT 8
 #endif
 
 O_INST(nop);

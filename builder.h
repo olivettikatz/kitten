@@ -65,6 +65,53 @@ namespace nightowl
 		_fsqrt
 	} opcode;
 
+	typedef void (*emitter)(o_jit*,unsigned char,unsigned char,int);
+	static map<opcode, emitter> emitters = {
+		{_nop, o_emit_nop},
+		{_const, o_emit_const},
+		{_mov, o_emit_mov},
+		{_mov_disp, o_emit_mov_disp},
+		{_ld, o_emit_ld},
+		{_st, o_emit_st},
+		{_add, o_emit_add},
+		{_sub, o_emit_sub},
+		{_mul, o_emit_mul},
+		{_and, o_emit_and},
+		{_or, o_emit_or},
+		{_xor, o_emit_xor},
+		{_pusharg, o_emit_pusharg},
+		{_poparg, o_emit_poparg},
+		{_leave, o_emit_leave},
+		{_ret, o_emit_ret},
+		{_int, o_emit_int},
+		{_cmp, o_emit_cmp},
+		{_breq, o_emit_breq},
+		{_brne, o_emit_brne},
+		{_brlt, o_emit_brlt},
+		{_brle, o_emit_brle},
+		{_brgt, o_emit_brgt},
+		{_brge, o_emit_brge},
+		{_breq, o_emit_breq},
+		{_jmp, o_emit_jmp},
+		{_call, o_emit_call},
+		{_fld, o_emit_fld},
+		{_fst, o_emit_fst},
+		{_fadd, o_emit_fadd},
+		{_fsub, o_emit_fsub},
+		{_fmul, o_emit_fmul},
+		{_fdiv, o_emit_fdiv},
+		{_fcmp, o_emit_fcmp},
+		{_fchs, o_emit_fchs},
+		{_fst_rot, o_emit_fst_rot},
+		{_fnop, o_emit_fnop},
+		{_ftan, o_emit_ftan},
+		{_fatan, o_emit_fatan},
+		{_fsin, o_emit_fsin},
+		{_fcos, o_emit_fcos},
+		{_fsincos, o_emit_fsincos},
+		{_fsqrt, o_emit_fsqrt}
+	};
+
 	class BuilderInstruction
 	{
 	private:
@@ -103,6 +150,7 @@ namespace nightowl
 		vector<BuilderInstruction> getFunctionSegment(string n);
 		BuilderInstructionPage &operator << (BuilderInstruction i);
 		BuilderInstructionPage &operator << (BuilderInstructionPage p);
+		BuilderInstruction &operator [] (unsigned int idx);
 		iterator begin();
 		iterator end();
 		size_t size();
@@ -112,11 +160,18 @@ namespace nightowl
 	class Builder
 	{
 	private:
-		typedef void (*emitter)(o_jit*,unsigned char,unsigned char,int);
+		typedef struct
+		{
+			opcode o;
+			unsigned int from;
+			unsigned int to;
+		} relocation;
+		vector<relocation> relocations;
 
-		map<opcode, emitter> emitters;
-		map<string, int> labels;
+		unsigned int ap;
 
+		bool enableOutputToPage;
+		BuilderInstructionPage _page;
 		o_jit _jit;
 
 		typedef struct
@@ -153,15 +208,22 @@ namespace nightowl
 	public:
 		Builder();
 		~Builder();
+		void outputToPage();
 		void emit(opcode o, unsigned char r0, unsigned char r1, int a);
 		void emit(BuilderInstruction i);
 		void emit(BuilderInstructionPage p);
 		o_jit *jit();
+		BuilderInstructionPage page();
 
 		int label();
 
-		int emitFunctionPrototype(string n, vector<pair<unsigned char, unsigned int> > args, int argreg);
-		int emitFunctionReturn();
+		int emitFunction();
+		unsigned char emitFunctionArgument(unsigned int s);
+		void emitFunctionReturn();
+
+		unsigned int emitRelocatableBranch(opcode br, unsigned int target);
+		unsigned int emitRelocatableJump(unsigned int target);
+		void reemitRelocations();
 
 		int emitIfCondition(unsigned char r, int v, opcode o);
 		int emitIfCondition(unsigned char r);

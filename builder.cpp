@@ -82,51 +82,9 @@ namespace nightowl
 
 	Builder::Builder()
 	{
-		emitters[_nop] = o_emit_nop;
-		emitters[_const] = o_emit_const;
-		emitters[_mov] = o_emit_mov;
-		emitters[_mov_disp] = o_emit_mov_disp;
-		emitters[_ld] = o_emit_ld;
-		emitters[_st] = o_emit_st;
-		emitters[_add] = o_emit_add;
-		emitters[_sub] = o_emit_sub;
-		emitters[_mul] = o_emit_mul;
-		emitters[_and] = o_emit_and;
-		emitters[_or] = o_emit_or;
-		emitters[_xor] = o_emit_xor;
-		emitters[_pusharg] = o_emit_pusharg;
-		emitters[_poparg] = o_emit_poparg;
-		emitters[_leave] = o_emit_leave;
-		emitters[_ret] = o_emit_ret;
-		emitters[_int] = o_emit_int;
-		emitters[_cmp] = o_emit_cmp;
-		emitters[_breq] = o_emit_breq;
-		emitters[_brne] = o_emit_brne;
-		emitters[_brlt] = o_emit_brlt;
-		emitters[_brle] = o_emit_brle;
-		emitters[_brgt] = o_emit_brgt;
-		emitters[_brge] = o_emit_brge;
-		emitters[_breq] = o_emit_breq;
-		emitters[_jmp] = o_emit_jmp;
-		emitters[_call] = o_emit_call;
-		emitters[_fld] = o_emit_fld;
-		emitters[_fst] = o_emit_fst;
-		emitters[_fadd] = o_emit_fadd;
-		emitters[_fsub] = o_emit_fsub;
-		emitters[_fmul] = o_emit_fmul;
-		emitters[_fdiv] = o_emit_fdiv;
-		emitters[_fcmp] = o_emit_fcmp;
-		emitters[_fchs] = o_emit_fchs;
-		emitters[_fst_rot] = o_emit_fst_rot;
-		emitters[_fnop] = o_emit_fnop;
-		emitters[_ftan] = o_emit_ftan;
-		emitters[_fatan] = o_emit_fatan;
-		emitters[_fsin] = o_emit_fsin;
-		emitters[_fcos] = o_emit_fcos;
-		emitters[_fsincos] = o_emit_fsincos;
-		emitters[_fsqrt] = o_emit_fsqrt;
-
+		enableOutputToPage = false;
 		_jit = o_jit_init();
+		_page = BuilderInstructionPage();
 		
 		for (int i = 0; i < O_REGISTER_HB; i++)
 		{
@@ -147,20 +105,37 @@ namespace nightowl
 		o_jit_release(&_jit);
 	}
 
+	void Builder::outputToPage()
+	{
+		enableOutputToPage = true;
+		o_jit_release(&_jit);
+	}
+
 	void Builder::emit(opcode o, unsigned char r0, unsigned char r1, int a)
 	{
-		emitters[o](&_jit, r0, r1, a);
+		if (enableOutputToPage)
+			_page << BuilderInstruction(o, r0, r1, a);
+		else
+			emitters[o](&_jit, r0, r1, a);
 	}
 
 	void Builder::emit(BuilderInstruction i)
 	{
-		emit(i.getOp(), i.getReg0(), i.getReg1(), i.getArg());
+		if (enableOutputToPage)
+			_page << i;
+		else
+			emit(i.getOp(), i.getReg0(), i.getReg1(), i.getArg());
 	}
 
 	void Builder::emit(BuilderInstructionPage p)
 	{
-		for (BuilderInstructionPage::iterator i = p.begin(); i != p.end(); i++)
-			emit(*i);
+		if (enableOutputToPage)
+			_page << p;
+		else
+		{
+			for (BuilderInstructionPage::iterator i = p.begin(); i != p.end(); i++)
+				emit(*i);
+		}
 	}
 
 	o_jit *Builder::jit()
@@ -168,35 +143,82 @@ namespace nightowl
 		return &_jit;
 	}
 
+	BuilderInstructionPage Builder::page()
+	{
+		return _page;
+	}
+
 	int Builder::label()
 	{
-		return o_jit_label(&_jit);
+		if (enableOutputToPage)
+			return _page.size();
+		else
+			return o_jit_label(&_jit);
 	}
 
-	int Builder::emitFunctionPrototype(string n, vector<pair<unsigned char, unsigned int> > args, int argreg)
+	int Builder::emitFunction()
 	{
-		labels[n] = label();
-		symbol s;
-		s.cpos = labels[n];
-		s.addr = NULL;
-		symtable[n] = s;
+		int tmp = label();
+		ap = O_AP_INIT;
 		emit(_pusharg, O_EBP, 0, 0);
-		emit(_mov, argreg, O_ESP, 0);
-		int ap = 8;
-		for (vector<pair<unsigned char, unsigned int> >::iterator i = args.begin(); i != args.end(); i++)
-		{
-			emit(_mov_disp, i->first, argreg, ap);
-			ap += i->second;
-		}
-		return labels[n];
+		emit(_mov, O_EBP, O_ESP, 0);
+		return tmp;
 	}
 
-	int Builder::emitFunctionReturn()
+	unsigned char Builder::emitFunctionArgument(unsigned int s)
+	{
+		unsigned char r = regAlloc(true);
+		emit(_mov_disp, r, O_EBP, (int)ap);
+		ap += s;
+		return r;
+	}
+
+	void Builder::emitFunctionReturn()
 	{
 		if (regDirty(O_EAX) == false)
 			emit(_const, O_EAX, 0, regValue(O_EAX));
 		emit(_leave, 0, 0, 0);
 		emit(_ret, 0, 0, 0);
+	}
+
+	unsigned int Builder::emitRelocatableBranch(opcode br, unsigned int target)
+	{
+		relocation relo;
+		relo.o = br;
+		relo.from = label();
+		relo.to = target;
+		relocations.push_back(relo);
+		emit(br, 0, 0, 0);
+		return relocations.size()-1;
+	}
+
+	unsigned int Builder::emitRelocatableJump(unsigned int target)
+	{
+		relocation relo;
+		relo.o = _jmp;
+		relo.from = label();
+		relo.to = target;
+		relocations.push_back(relo);
+		emit(_jmp, 0, 0, 0);
+		return relocations.size()-1;
+	}
+
+	void Builder::reemitRelocations()
+	{
+		for (vector<relocation>::iterator i = relocations.begin(); i != relocations.end(); i++)
+		{
+			if (enableOutputToPage)
+			{
+				_page[i->from] = BuilderInstruction(i->o, 0, 0, relocations[i->to].from);
+			}
+			else
+			{
+				int tmp = label();
+				o_jit_insert(&_jit, i->from);
+				emit(i->o, 0, 0, relocations[i->to].from);
+				o_jit_insert(&_jit, tmp);
+			}
+		}
 	}
 
 	int Builder::emitIfCondition(unsigned char r, int v, opcode o)
