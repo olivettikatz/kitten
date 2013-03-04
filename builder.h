@@ -225,15 +225,6 @@ namespace nightowl
 		unsigned int emitRelocatableJump(unsigned int target);
 		void reemitRelocations();
 
-		int emitIfCondition(unsigned char r, int v, opcode o);
-		int emitIfCondition(unsigned char r);
-		int emitIfElse();
-		int emitIfEndif(int lif, opcode o);
-		int emitIfEndif(int lif);
-		int emitIfEndif(int lif, int lelse, opcode o);
-		int emitIfEndif(int lif, int lelse);
-		int emitIfEndif();
-
 		unsigned char regAlloc(bool d);
 		bool regIsAllocated(unsigned char r);
 		int regValue(unsigned char r, int v);
