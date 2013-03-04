@@ -174,14 +174,6 @@ namespace nightowl
 		BuilderInstructionPage _page;
 		o_jit _jit;
 
-		typedef struct
-		{
-			opcode branch;
-			int lif;
-			int lelse;
-		} ifStackElement;
-		vector<ifStackElement> ifStack;
-
 		typedef enum
 		{
 			free,
@@ -252,6 +244,8 @@ namespace nightowl
 		void emitFloatingOperation(opcode o);
 		void emitPushArg(unsigned char r);
 		void emitPopArg(unsigned char r);
+
+		BuilderInstructionPage convertToInline(vector<int *> args);
 	};
 }
 

@@ -482,5 +482,35 @@ namespace nightowl
 		regDirty(r, true);
 		emit(_poparg, r, 0, 0);
 	}
+
+	BuilderInstructionPage Builder::convertToInline(vector<int *> args)
+	{
+		if (!enableOutputToPage)
+			return BuilderInstructionPage();
+
+		BuilderInstructionPage rtn = BuilderInstructionPage();
+		for (BuilderInstructionPage::iterator i = _page.begin(); i != _page.end(); i++)
+		{
+			if (i->getOp() == _pusharg && i->getReg0() == O_EBP)
+				continue;
+			else if (i->getOp() == _mov && (i->getReg0() == O_EBP && i->getReg1() == O_ESP))
+				continue;
+			else if (i->getOp() == _mov_disp && i->getReg1() == O_EBP)
+			{
+				rtn << BuilderInstruction(_const, i->getReg0(), 0, 0);
+				rtn << BuilderInstruction(_ld, i->getReg0(), i->getReg0(), 0);
+			}
+			else if (i->getOp() == _leave)
+				continue;
+			else if (i->getOp() == _ret)
+				continue;
+			else
+			{
+				rtn << *i;
+			}
+		}
+
+		return rtn;
+	}
 }
 
