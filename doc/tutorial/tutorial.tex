@@ -253,7 +253,14 @@ b.emitRefF64(&aDouble);
 b.emitPullF64();
 \end{verbatim}
 
-\section{Error Handling}
+\subsection{Error Handling}
+If, while emitting machine code, errors occur, you can find them with the following functions:
+\begin{verbatim}
+while(b.countErrors() > 0)
+	Builder::error e = b.popError();
+\end{verbatim}
 
+\section{Conclusion}
+I hope this tutorial has helped you learn how to use Night Owl. Please look at the documentation for more information on use or email me any questions that you may have at: \verb|olivetti.katz@gmail.com|. Thank you for reading.
 
 \end{document}
