@@ -1,0 +1,159 @@
+\hypertarget{vector_8h}{\section{kernel/vector.h File Reference}
+\label{vector_8h}\index{kernel/vector.\-h@{kernel/vector.\-h}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$malloc.\-h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structo__vector__entry}{o\-\_\-vector\-\_\-entry}
+\item 
+struct \hyperlink{structo__vector}{o\-\_\-vector}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{vector_8h_a0905202392563911355980d4b22158b6}{\#define {\bfseries O\-\_\-\-V\-E\-C\-T\-O\-R\-\_\-\-M\-E\-M\-S\-I\-Z\-E}~1024}\label{vector_8h_a0905202392563911355980d4b22158b6}
+
+\item 
+\hypertarget{vector_8h_a9ce5d179c910384d4e9ef5f280438530}{\#define {\bfseries O\-\_\-\-V\-E\-C\-T\-O\-R\-\_\-\-M\-E\-M\-S\-I\-Z\-E\-\_\-\-S\-C\-A\-L\-E}(s)~((s)+512)}\label{vector_8h_a9ce5d179c910384d4e9ef5f280438530}
+
+\item 
+\hypertarget{vector_8h_a2592207ffb62ada8b2381ca83afd65cb}{\#define {\bfseries O\-\_\-\-V\-E\-C\-T\-O\-R\-\_\-\-E\-N\-T\-R\-Y\-S\-I\-Z\-E}~64}\label{vector_8h_a2592207ffb62ada8b2381ca83afd65cb}
+
+\item 
+\hypertarget{vector_8h_a28133636fe2a617067f7ec4e1a1aa8eb}{\#define {\bfseries O\-\_\-\-V\-E\-C\-T\-O\-R\-\_\-\-E\-N\-T\-R\-Y\-S\-I\-Z\-E\-\_\-\-S\-C\-A\-L\-E}(s)~((s)+32)}\label{vector_8h_a28133636fe2a617067f7ec4e1a1aa8eb}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structo__vector}{o\-\_\-vector} \hyperlink{vector_8h_a9ca603cb5e2323fdadb30e89aa3b7079}{o\-\_\-vector\-\_\-init} ()
+\item 
+\hyperlink{structo__vector}{o\-\_\-vector} \hyperlink{vector_8h_ac2904d7b771d33da6205eabd80d1f32a}{o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries} ()
+\item 
+void \hyperlink{vector_8h_a1078d134a97a7594eb0930582030539d}{o\-\_\-vector\-\_\-release} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v)
+\item 
+size\-\_\-t \hyperlink{vector_8h_a2c1df0a8448460ba3a093e6533827afe}{o\-\_\-vector\-\_\-headsize} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v)
+\item 
+size\-\_\-t \hyperlink{vector_8h_a06e5255d5c8add6e4cd35636bb2f1b95}{o\-\_\-vector\-\_\-memsize} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v)
+\item 
+size\-\_\-t \hyperlink{vector_8h_a45ccadcbbc591de0db885d6b6c4ce420}{o\-\_\-vector\-\_\-length} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v)
+\item 
+int \hyperlink{vector_8h_ac1c0cb5d4f040b23e9184415b50b4f3c}{o\-\_\-vector\-\_\-alloc} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v, size\-\_\-t s)
+\item 
+void \hyperlink{vector_8h_a01658981f17a5c888a2daa2851a7375f}{o\-\_\-vector\-\_\-free} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v, size\-\_\-t i)
+\item 
+void $\ast$ \hyperlink{vector_8h_a48377f548daf785779c6d4f6c2e5f57d}{o\-\_\-vector\-\_\-at} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v, size\-\_\-t i)
+\item 
+size\-\_\-t \hyperlink{vector_8h_a704e97d6818d8ecf6dac6383dabfaedf}{o\-\_\-vector\-\_\-at\-\_\-size} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v, size\-\_\-t i)
+\item 
+void \hyperlink{vector_8h_a7865841e6fa79e79e706faa406645272}{o\-\_\-vector\-\_\-set\-\_\-head} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v, size\-\_\-t h)
+\item 
+void $\ast$ \hyperlink{vector_8h_aeac81d831f07cf0fcbe04a9588dcf686}{o\-\_\-vector\-\_\-body} (\hyperlink{structo__vector}{o\-\_\-vector} $\ast$v)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A heterogenous vector. 
+
+\subsection{Function Documentation}
+\hypertarget{vector_8h_ac1c0cb5d4f040b23e9184415b50b4f3c}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-alloc@{o\-\_\-vector\-\_\-alloc}}
+\index{o\-\_\-vector\-\_\-alloc@{o\-\_\-vector\-\_\-alloc}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-alloc}]{\setlength{\rightskip}{0pt plus 5cm}int o\-\_\-vector\-\_\-alloc (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v, }
+\item[{size\-\_\-t}]{s}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_ac1c0cb5d4f040b23e9184415b50b4f3c}
+Allocates a new element in a vector. 
+\begin{DoxyParams}{Parameters}
+{\em s} & The size of the element in bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index of the element in the vector. 
+\end{DoxyReturn}
+\hypertarget{vector_8h_a48377f548daf785779c6d4f6c2e5f57d}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-at@{o\-\_\-vector\-\_\-at}}
+\index{o\-\_\-vector\-\_\-at@{o\-\_\-vector\-\_\-at}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-at}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ o\-\_\-vector\-\_\-at (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v, }
+\item[{size\-\_\-t}]{i}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a48377f548daf785779c6d4f6c2e5f57d}
+Gets the element in a vector at an index. \hypertarget{vector_8h_a704e97d6818d8ecf6dac6383dabfaedf}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-at\-\_\-size@{o\-\_\-vector\-\_\-at\-\_\-size}}
+\index{o\-\_\-vector\-\_\-at\-\_\-size@{o\-\_\-vector\-\_\-at\-\_\-size}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-at\-\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t o\-\_\-vector\-\_\-at\-\_\-size (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v, }
+\item[{size\-\_\-t}]{i}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a704e97d6818d8ecf6dac6383dabfaedf}
+Gets the size of an element in a vector at an index (in bytes). \hypertarget{vector_8h_aeac81d831f07cf0fcbe04a9588dcf686}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-body@{o\-\_\-vector\-\_\-body}}
+\index{o\-\_\-vector\-\_\-body@{o\-\_\-vector\-\_\-body}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-body}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ o\-\_\-vector\-\_\-body (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_aeac81d831f07cf0fcbe04a9588dcf686}
+Gets the memory space of the vector. \hypertarget{vector_8h_a01658981f17a5c888a2daa2851a7375f}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-free@{o\-\_\-vector\-\_\-free}}
+\index{o\-\_\-vector\-\_\-free@{o\-\_\-vector\-\_\-free}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void o\-\_\-vector\-\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v, }
+\item[{size\-\_\-t}]{i}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a01658981f17a5c888a2daa2851a7375f}
+Frees an element from a vector and the memory it takes up. \hypertarget{vector_8h_a2c1df0a8448460ba3a093e6533827afe}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-headsize@{o\-\_\-vector\-\_\-headsize}}
+\index{o\-\_\-vector\-\_\-headsize@{o\-\_\-vector\-\_\-headsize}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-headsize}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t o\-\_\-vector\-\_\-headsize (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a2c1df0a8448460ba3a093e6533827afe}
+Gets the number of bytes used in a vector. \hypertarget{vector_8h_a9ca603cb5e2323fdadb30e89aa3b7079}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-init@{o\-\_\-vector\-\_\-init}}
+\index{o\-\_\-vector\-\_\-init@{o\-\_\-vector\-\_\-init}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf o\-\_\-vector} o\-\_\-vector\-\_\-init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a9ca603cb5e2323fdadb30e89aa3b7079}
+Initialize a vector with entries. \hypertarget{vector_8h_ac2904d7b771d33da6205eabd80d1f32a}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries@{o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries}}
+\index{o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries@{o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries}]{\setlength{\rightskip}{0pt plus 5cm}{\bf o\-\_\-vector} o\-\_\-vector\-\_\-init\-\_\-no\-\_\-entries (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_ac2904d7b771d33da6205eabd80d1f32a}
+Initialize a vector without any entries (all entries are of size 1). \hypertarget{vector_8h_a45ccadcbbc591de0db885d6b6c4ce420}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-length@{o\-\_\-vector\-\_\-length}}
+\index{o\-\_\-vector\-\_\-length@{o\-\_\-vector\-\_\-length}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-length}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t o\-\_\-vector\-\_\-length (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a45ccadcbbc591de0db885d6b6c4ce420}
+Gets the number of elements in a vector. \hypertarget{vector_8h_a06e5255d5c8add6e4cd35636bb2f1b95}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-memsize@{o\-\_\-vector\-\_\-memsize}}
+\index{o\-\_\-vector\-\_\-memsize@{o\-\_\-vector\-\_\-memsize}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-memsize}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t o\-\_\-vector\-\_\-memsize (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a06e5255d5c8add6e4cd35636bb2f1b95}
+Gets the number of bytes allocated for use in a vector. \hypertarget{vector_8h_a1078d134a97a7594eb0930582030539d}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-release@{o\-\_\-vector\-\_\-release}}
+\index{o\-\_\-vector\-\_\-release@{o\-\_\-vector\-\_\-release}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-release}]{\setlength{\rightskip}{0pt plus 5cm}void o\-\_\-vector\-\_\-release (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a1078d134a97a7594eb0930582030539d}
+Release the memory stored within a vector and wipe it's contents. \hypertarget{vector_8h_a7865841e6fa79e79e706faa406645272}{\index{vector.\-h@{vector.\-h}!o\-\_\-vector\-\_\-set\-\_\-head@{o\-\_\-vector\-\_\-set\-\_\-head}}
+\index{o\-\_\-vector\-\_\-set\-\_\-head@{o\-\_\-vector\-\_\-set\-\_\-head}!vector.h@{vector.\-h}}
+\subsubsection[{o\-\_\-vector\-\_\-set\-\_\-head}]{\setlength{\rightskip}{0pt plus 5cm}void o\-\_\-vector\-\_\-set\-\_\-head (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-vector} $\ast$}]{v, }
+\item[{size\-\_\-t}]{h}
+\end{DoxyParamCaption}
+)}}\label{vector_8h_a7865841e6fa79e79e706faa406645272}
+Sets the head of the vector in bytes. 

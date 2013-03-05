@@ -1,0 +1,133 @@
+\hypertarget{classnightowl_1_1BuilderInstruction}{\section{nightowl\-:\-:Builder\-Instruction Class Reference}
+\label{classnightowl_1_1BuilderInstruction}\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}}
+}
+
+
+{\ttfamily \#include $<$builder.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_a1a4e127e178e3f9ee87f9e4e0172a8c8}{Builder\-Instruction} ()
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_a5fa4f1c50e2bebc2569aa65793fc2848}{Builder\-Instruction} (opcode o)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_a50487df15dbfde3ac6d22abd1acd1957}{Builder\-Instruction} (opcode o, int a)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_acd98a1a14128ccd84d9e1d664e65496a}{Builder\-Instruction} (opcode o, unsigned char r0)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_aae490dcf303bd178c29ad6cdb0e62b58}{Builder\-Instruction} (opcode o, unsigned char r0, int a)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_a98b8e0f04bb8ee8ff3976cc7ebfa9044}{Builder\-Instruction} (opcode o, unsigned char r0, unsigned char r1)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction_a5e520b9b52b937ab5f9e61b3b800aae8}{Builder\-Instruction} (opcode o, unsigned char r0, unsigned char r1, int a)
+\item 
+opcode \hyperlink{classnightowl_1_1BuilderInstruction_ac979ad24571352c2f5e2490b7361e42d}{get\-Op} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1BuilderInstruction_a54e35eb62a892ae7fae3c50e80c0b2e0}{get\-Reg0} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1BuilderInstruction_a6d1a613883690e142da44acccf2607e4}{get\-Reg1} ()
+\item 
+int \hyperlink{classnightowl_1_1BuilderInstruction_aea9689fe23a753e345afd60ff6cdbf4c}{get\-Arg} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+One instruction's worth of bytecode (N\-O\-T machine code). You can emit these in Builders in place of the standard emit function. You can also create pages of instructions with the \hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} class, which is especially useful for optimizations and function inlining. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classnightowl_1_1BuilderInstruction_a1a4e127e178e3f9ee87f9e4e0172a8c8}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_a1a4e127e178e3f9ee87f9e4e0172a8c8}
+Initialize blank instruction (N\-O\-P). \hypertarget{classnightowl_1_1BuilderInstruction_a5fa4f1c50e2bebc2569aa65793fc2848}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_a5fa4f1c50e2bebc2569aa65793fc2848}
+Initialize instruction with no arguments. \hypertarget{classnightowl_1_1BuilderInstruction_a50487df15dbfde3ac6d22abd1acd1957}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{int}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_a50487df15dbfde3ac6d22abd1acd1957}
+Initialize instruction with an integer argument (registers are 0). \hypertarget{classnightowl_1_1BuilderInstruction_acd98a1a14128ccd84d9e1d664e65496a}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{unsigned char}]{r0}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_acd98a1a14128ccd84d9e1d664e65496a}
+Initialize instruction with a register argument. \hypertarget{classnightowl_1_1BuilderInstruction_aae490dcf303bd178c29ad6cdb0e62b58}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{unsigned char}]{r0, }
+\item[{int}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_aae490dcf303bd178c29ad6cdb0e62b58}
+Initialize instruction with a register argument and an integer arguments. \hypertarget{classnightowl_1_1BuilderInstruction_a98b8e0f04bb8ee8ff3976cc7ebfa9044}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{unsigned char}]{r0, }
+\item[{unsigned char}]{r1}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_a98b8e0f04bb8ee8ff3976cc7ebfa9044}
+Initialize instruction with two register arguments. \hypertarget{classnightowl_1_1BuilderInstruction_a5e520b9b52b937ab5f9e61b3b800aae8}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!Builder\-Instruction@{Builder\-Instruction}}
+\index{Builder\-Instruction@{Builder\-Instruction}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{Builder\-Instruction}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-::\-Builder\-Instruction (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{unsigned char}]{r0, }
+\item[{unsigned char}]{r1, }
+\item[{int}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstruction_a5e520b9b52b937ab5f9e61b3b800aae8}
+Initialize instruction with two register arguments and an integer arguemnt (full initializer). 
+
+\subsection{Member Function Documentation}
+\hypertarget{classnightowl_1_1BuilderInstruction_aea9689fe23a753e345afd60ff6cdbf4c}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!get\-Arg@{get\-Arg}}
+\index{get\-Arg@{get\-Arg}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{get\-Arg}]{\setlength{\rightskip}{0pt plus 5cm}int nightowl\-::\-Builder\-Instruction\-::get\-Arg (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstruction_aea9689fe23a753e345afd60ff6cdbf4c}
+Get the integer argument. \hypertarget{classnightowl_1_1BuilderInstruction_ac979ad24571352c2f5e2490b7361e42d}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!get\-Op@{get\-Op}}
+\index{get\-Op@{get\-Op}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{get\-Op}]{\setlength{\rightskip}{0pt plus 5cm}opcode nightowl\-::\-Builder\-Instruction\-::get\-Op (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstruction_ac979ad24571352c2f5e2490b7361e42d}
+Get opcode. \hypertarget{classnightowl_1_1BuilderInstruction_a54e35eb62a892ae7fae3c50e80c0b2e0}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!get\-Reg0@{get\-Reg0}}
+\index{get\-Reg0@{get\-Reg0}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{get\-Reg0}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-Instruction\-::get\-Reg0 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstruction_a54e35eb62a892ae7fae3c50e80c0b2e0}
+Get the first register. \hypertarget{classnightowl_1_1BuilderInstruction_a6d1a613883690e142da44acccf2607e4}{\index{nightowl\-::\-Builder\-Instruction@{nightowl\-::\-Builder\-Instruction}!get\-Reg1@{get\-Reg1}}
+\index{get\-Reg1@{get\-Reg1}!nightowl::BuilderInstruction@{nightowl\-::\-Builder\-Instruction}}
+\subsubsection[{get\-Reg1}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-Instruction\-::get\-Reg1 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstruction_a6d1a613883690e142da44acccf2607e4}
+Get the second register. 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{builder_8h}{builder.\-h}\item 
+builder.\-cpp\end{DoxyCompactItemize}

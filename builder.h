@@ -1,3 +1,6 @@
+/*! \file builder.h
+ * C++ library to access the (^v^) kernel and add some optimization features. */
+
 #ifndef __NIGHTOWL_BUILDER_H
 #define __NIGHTOWL_BUILDER_H
 
@@ -18,7 +21,7 @@ extern "C"
 namespace nightowl
 {
 	using namespace std;
-		
+	
 	typedef enum
 	{
 		_nop,
@@ -112,6 +115,7 @@ namespace nightowl
 		{_fsqrt, o_emit_fsqrt}
 	};
 
+	/*! One instruction's worth of bytecode (NOT machine code). You can emit these in Builders in place of the standard emit function. You can also create pages of instructions with the BuilderInstructionPage class, which is especially useful for optimizations and function inlining. */
 	class BuilderInstruction
 	{
 	private:
@@ -121,22 +125,45 @@ namespace nightowl
 		int arg;
 
 	public:
+		/*! Initialize blank instruction (NOP). */
 		BuilderInstruction() : op(_nop), reg0(0), reg1(0), arg(0) {}
+		
+		/*! Initialize instruction with no arguments. */
 		BuilderInstruction(opcode o) : op(o), reg0(0), reg1(0), arg(0) {}
+		
+		/*! Initialize instruction with an integer argument (registers are 0). */
 		BuilderInstruction(opcode o, int a) : op(o), reg0(0), reg1(0), arg(a) {}
+		
+		/*! Initialize instruction with a register argument. */
 		BuilderInstruction(opcode o, unsigned char r0) : op(o), reg0(r0), reg1(0), arg(0) {}
+		
+		/*! Initialize instruction with a register argument and an integer arguments. */
 		BuilderInstruction(opcode o, unsigned char r0, int a) : op(o), reg0(r0), reg1(0), arg(a) {}
+		
+		/*! Initialize instruction with two register arguments. */
 		BuilderInstruction(opcode o, unsigned char r0, unsigned char r1) : op(o), reg0(r0), reg1(r1), arg(0) {}
+		
+		/*! Initialize instruction with two register arguments and an integer arguemnt (full initializer). */
 		BuilderInstruction(opcode o, unsigned char r0, unsigned char r1, int a) : op(o), reg0(r0), reg1(r1), arg(a) {}
+
+		/*! Get opcode. */
 		opcode getOp();
+
+		/*! Get the first register. */
 		unsigned char getReg0();
+
+		/*! Get the second register. */
 		unsigned char getReg1();
+
+		/*! Get the integer argument. */
 		int getArg();
 	};
 
+	/*! Pages of instructions of bytecode (NOT machine code). You can emit pages of instructions in place of the standard emit function. You can use these for optimizations and function inlining. */
 	class BuilderInstructionPage
 	{
 	public:
+		/*! To iterate over the contents. If you have an iterator i, *i will give you a BuilderInstruction. */
 		typedef vector<BuilderInstruction>::iterator iterator;
 
 	private:
@@ -144,29 +171,74 @@ namespace nightowl
 		vector<BuilderInstruction> content;
 
 	public:
+		/*! Initialize a blank page. */
 		BuilderInstructionPage() {}
+
+		/*! Initialize a page containing one instruction: i. */
 		BuilderInstructionPage(BuilderInstruction i) {content.push_back(i);}
+
+		/*! Get the iterator marking the beginning instruction of a function n.
+		* @return Will return end() if n is not a declared function. */
 		iterator function(string n);
+
+		/*! Get a BuilderInstruction vector containing ONLY instructions pertaining to the function n. Used for function inlining.
+		* @return Will return a blank vector if n is not a declared function. */
 		vector<BuilderInstruction> getFunctionSegment(string n);
+
+		/*! Append an instruction. */
 		BuilderInstructionPage &operator << (BuilderInstruction i);
+
+		/*! Append a page of instructions. */
 		BuilderInstructionPage &operator << (BuilderInstructionPage p);
+
+		/*! Get the instruction at an index. Used for relocation reemition in Builder. */
 		BuilderInstruction &operator [] (unsigned int idx);
+
+		/*! Gets an iterator to the beginning of the page vector. */
 		iterator begin();
+
+		/*! Gets an iterator to the end of the page vector. */
 		iterator end();
+
+		/*! Gets the size of the page vector. */
 		size_t size();
+
+		/*! Gets the last register used in the bytecode. */
 		unsigned char getLastReg();
 	};
 
+	/*! Builds machine code programs or bytecode programs. This is where the magic happens. */
 	class Builder
 	{
+	public:
+		typedef enum
+		{
+			reg0AboveLimit,
+			reg1AboveLimit,
+			nopWarning,
+			nullDisplacement,
+			operatingDuplicateRegisters,
+			nullCall
+		} errorcode;
+
+		typedef struct
+		{
+			errorcode c;
+			opcode o;
+			unsigned char r0;
+			unsigned char r1;
+			int a;
+			int cp;
+		} error;
+
 	private:
 		typedef struct
 		{
 			opcode o;
 			unsigned int from;
-			unsigned int to;
+			string to;
 		} relocation;
-		vector<relocation> relocations;
+		map<string, relocation> relocations;
 
 		unsigned int ap;
 
@@ -197,54 +269,137 @@ namespace nightowl
 		fpinfo fpst[O_FPST_SIZE];
 		unsigned int fpstUsed;
 
+		vector<error> errorStack;
+
+		bool checkForErrors(opcode &o, unsigned char &r0, unsigned char &r1, int &a);
+
 	public:
 		Builder();
 		~Builder();
+
+		/*! This enables outputting to a BuilderInstructionPage instead of the (^v^) kernel. */
 		void outputToPage();
+
+		unsigned int countErrors();
+		error popError();
+
+		/*! Emit an instruction.
+		* \param o The instruction opcode.
+		* \param r0 The first register.
+		* \param r1 The second register.
+		* \param a An integer argument. */
 		void emit(opcode o, unsigned char r0, unsigned char r1, int a);
+
+		/*! Emit an instruction from bytecode. */
 		void emit(BuilderInstruction i);
+
+		/*! Emit a page of instructions from bytecode. */
 		void emit(BuilderInstructionPage p);
+
+		/*! Gets a reference to the (^v^) kernel's JIT compiler struct (will be NULL if outputToPage() is used). */
 		o_jit *jit();
+
+		/*! Gets the BuilderInstructionPage (will be blank unless outputToPage() is used). */
 		BuilderInstructionPage page();
 
+		/*! Gets the current code pointer value (used for jumps and branches). */
 		int label();
 
+		/*! Emits the first few instructions of a function decleration. */
 		int emitFunction();
+
+		/*! Emits a function argument (do not mismatch this with the emitFunction() function or segfaults will occur).
+		* \param s The size of the argument in bytes.
+		* \return The register in which the argument is stored (allocates a new one). */
 		unsigned char emitFunctionArgument(unsigned int s);
+
+		/*! Emits a few instructions to handle a function return (returns the eax register). */
 		void emitFunctionReturn();
 
-		unsigned int emitRelocatableBranch(opcode br, unsigned int target);
-		unsigned int emitRelocatableJump(unsigned int target);
+		/*! Emits a branch instruction that can be relocated later. */
+		string emitRelocatableBranch(string name, opcode br, string target);
+
+		/*! Emits a jump instruction that can be relocated later. */
+		string emitRelocatableJump(string name, string target);
+
+		/*! Emits a relocatable label for use as a target. */
+		string emitRelocatableLabel(string name);
+
+		/*! Relocations all relocatable instructions. */
 		void reemitRelocations();
 
+		/*! Allocates a new register for use.
+		* \param d Whether the register will be dirty or not. */
 		unsigned char regAlloc(bool d);
+
+		/*! Returns whether a register is allocated or not. */
 		bool regIsAllocated(unsigned char r);
+
+		/*! Sets the value of the register (to be lazily evaluated later). */
 		int regValue(unsigned char r, int v);
+
+		/*! Gets the value of the register (if not evaluated yet). */
 		int regValue(unsigned char r);
+
+		/*! Sets whether the register is dirty or not. */
 		bool regDirty(unsigned char r, bool d);
+		
+		/*! Gets whether the register is dirty or not. */
 		bool regDirty(unsigned char r);
+
+		/*! Frees the register. */
 		void regFree(unsigned char r);
+
+		/*! Evaluates the register. */
 		void emitReg(unsigned char r);
 
+		/*! Gets whether the float at index i in the stack is dirty or not. */
 		bool fpDirty(unsigned int i);
+
+		/*! Sets whether the float at index i in the stack is dirty or not. */
 		bool fpDirty(unsigned int i, bool d);
+
+		/*! Gets the value of the float at index i in the stack (if not evaluated yet). */
 		double fpValue(unsigned int i);
+
+		/*! Sets the value of the float at index i in the stack (to be lazily evaluated later). */
 		double fpValue(unsigned int i, double v);
+
+		/*! Gets the reference in the floating pointer stack at index i. */
 		double *fpRef(unsigned int i);
+
+		/*! Evaluates the float at the top of the stack. */
 		void emitFp();
 
+		/*! Emits a constant integer (32-bits).
+		* \return The register it is stored in. */
 		unsigned char emitConstI32(int v);
+
+		/*! Emits a reference to an integer (32-bits).
+		* \return The register it is stored in. */
 		unsigned char emitRefI32(int *v);
+
+		/*! Emits an instruction to pull the value of a register to an integer reference (32-bits). */
 		void emitPullI32(unsigned char r, int *v);
 
+		/*! Emits a reference to a float (64-bits). */
 		void emitRefF64(double *v);
+
+		/*! Emits an instruction to pull the value of the float at the top of the stack to its reference. */
 		void emitPullF64();
 
+		/*! Emits an operation. */
 		unsigned char emitOperation(opcode o, unsigned char r0, unsigned char r1);
-		void emitFloatingOperation(opcode o);
-		void emitPushArg(unsigned char r);
-		void emitPopArg(unsigned char r);
 
+		/*! Emits a floating-point operation between the first and second elements from the top of the stack. */
+		void emitFloatingOperation(opcode o);
+
+		/*! Emits an instruction to push an argument from a register. */
+		void emitPushArg(unsigned char r);
+
+		/*! As long as outputToPage() is enabled and only one function is declared within the Builder, you can convert it to an inline function call.
+		* \param args The list of integer references to be used for arguments to be loaded into registers by the function code.
+		* \return The BuilderInstructionPage containing the inlined function code. */
 		BuilderInstructionPage convertToInline(vector<int *> args);
 	};
 }

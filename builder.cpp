@@ -80,6 +80,59 @@ namespace nightowl
 		return content.back().getReg0();
 	}
 
+	bool Builder::checkForErrors(opcode &o, unsigned char &r0, unsigned char &r1, int &a)
+	{
+		if (r0 >= O_REGISTER_HB)
+		{
+			error e = {reg0AboveLimit, o, r0, r1, a, label()};
+			errorStack.push_back(e);
+			return true;
+		}
+
+		if (r1 >= O_REGISTER_HB)
+		{
+			error e = {reg1AboveLimit, o, r0, r1, a, label()};
+			errorStack.push_back(e);
+			return true;
+		}
+
+		if (o == _nop || o == _fnop)
+		{
+			error e = {nopWarning, o, r0, r1, a, label()};
+			errorStack.push_back(e);
+			return true;
+		}
+		else if (o == _mov_disp)
+		{
+			if (a == 0)
+			{
+				error e = {nullDisplacement, o, r0, r1, a, label()};
+				errorStack.push_back(e);
+				o = _mov;
+			}
+		}
+		else if (o >= _add && o <= _xor)
+		{
+			if (r0 == r1)
+			{
+				error e = {operatingDuplicateRegisters, o, r0, r1, a, label()};
+				errorStack.push_back(e);
+				return true;
+			}
+		}
+		else if (o == _call)
+		{
+			if (a == 0)
+			{
+				error e = {nullCall, o, r0, r1, a, label()};
+				errorStack.push_back(e);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	Builder::Builder()
 	{
 		enableOutputToPage = false;
@@ -111,8 +164,23 @@ namespace nightowl
 		o_jit_release(&_jit);
 	}
 
+	unsigned int Builder::countErrors()
+	{
+		return errorStack.size();
+	}
+
+	Builder::error Builder::popError()
+	{
+		error tmp = errorStack.back();
+		errorStack.pop_back();
+		return tmp;
+	}
+
 	void Builder::emit(opcode o, unsigned char r0, unsigned char r1, int a)
 	{
+		if (checkForErrors(o, r0, r1, a))
+			return ;
+
 		if (enableOutputToPage)
 			_page << BuilderInstruction(o, r0, r1, a);
 		else
@@ -181,41 +249,54 @@ namespace nightowl
 		emit(_ret, 0, 0, 0);
 	}
 
-	unsigned int Builder::emitRelocatableBranch(opcode br, unsigned int target)
+	string Builder::emitRelocatableBranch(string name, opcode br, string target)
 	{
 		relocation relo;
 		relo.o = br;
 		relo.from = label();
 		relo.to = target;
-		relocations.push_back(relo);
+		relocations[name] = relo;
 		emit(br, 0, 0, 0);
-		return relocations.size()-1;
+		return name;
 	}
 
-	unsigned int Builder::emitRelocatableJump(unsigned int target)
+	string Builder::emitRelocatableJump(string name, string target)
 	{
 		relocation relo;
 		relo.o = _jmp;
 		relo.from = label();
 		relo.to = target;
-		relocations.push_back(relo);
+		relocations[name] = relo;
 		emit(_jmp, 0, 0, 0);
-		return relocations.size()-1;
+		return name;
+	}
+
+	string Builder::emitRelocatableLabel(string name)
+	{
+		relocation relo;
+		relo.o = _nop;
+		relo.from = label();
+		relo.to = "";
+		relocations[name] = relo;
+		return name;
 	}
 
 	void Builder::reemitRelocations()
 	{
-		for (vector<relocation>::iterator i = relocations.begin(); i != relocations.end(); i++)
+		for (map<string, relocation>::iterator i = relocations.begin(); i != relocations.end(); i++)
 		{
+			if (i->second.o == _nop && i->second.to.empty())
+				continue;
+
 			if (enableOutputToPage)
 			{
-				_page[i->from] = BuilderInstruction(i->o, 0, 0, relocations[i->to].from);
+				_page[i->second.from] = BuilderInstruction(i->second.o, 0, 0, relocations[i->second.to].from);
 			}
 			else
 			{
 				int tmp = label();
-				o_jit_insert(&_jit, i->from);
-				emit(i->o, 0, 0, relocations[i->to].from);
+				o_jit_insert(&_jit, i->second.from);
+				emit(i->second.o, 0, 0, relocations[i->second.to].from);
 				o_jit_insert(&_jit, tmp);
 			}
 		}
@@ -475,12 +556,6 @@ namespace nightowl
 		if (regDirty(r) == false)
 			emit(_const, r, 0, regValue(r));
 		emit(_pusharg, r, 0, 0);
-	}
-
-	void Builder::emitPopArg(unsigned char r)
-	{
-		regDirty(r, true);
-		emit(_poparg, r, 0, 0);
 	}
 
 	BuilderInstructionPage Builder::convertToInline(vector<int *> args)

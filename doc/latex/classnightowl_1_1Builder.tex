@@ -1,0 +1,430 @@
+\hypertarget{classnightowl_1_1Builder}{\section{nightowl\-:\-:Builder Class Reference}
+\label{classnightowl_1_1Builder}\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}}
+}
+
+
+{\ttfamily \#include $<$builder.\-h$>$}
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structnightowl_1_1Builder_1_1error}{error}
+\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries errorcode} \{ \\*
+{\bfseries reg0\-Above\-Limit}, 
+{\bfseries reg1\-Above\-Limit}, 
+{\bfseries nop\-Warning}, 
+{\bfseries null\-Displacement}, 
+\\*
+{\bfseries operating\-Duplicate\-Registers}, 
+{\bfseries null\-Call}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classnightowl_1_1Builder_a5ce57746bc8b306051408e36672bbc5e}{output\-To\-Page} ()
+\item 
+\hypertarget{classnightowl_1_1Builder_a17dc29bcab6ec44e794c5fbea3ddf461}{unsigned int {\bfseries count\-Errors} ()}\label{classnightowl_1_1Builder_a17dc29bcab6ec44e794c5fbea3ddf461}
+
+\item 
+\hypertarget{classnightowl_1_1Builder_a5e9037bce75a09ca561a7599833e6dd9}{\hyperlink{structnightowl_1_1Builder_1_1error}{error} {\bfseries pop\-Error} ()}\label{classnightowl_1_1Builder_a5e9037bce75a09ca561a7599833e6dd9}
+
+\item 
+void \hyperlink{classnightowl_1_1Builder_a5bf7959fb0c2ce0c306eb166fcd5ecf8}{emit} (opcode o, unsigned char r0, unsigned char r1, int a)
+\item 
+void \hyperlink{classnightowl_1_1Builder_aa5e591e8e6f043d8270e27f3d4be4bad}{emit} (\hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} i)
+\item 
+void \hyperlink{classnightowl_1_1Builder_ab2967c52565f90ceab53981dd8235466}{emit} (\hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} p)
+\item 
+\hyperlink{structo__jit}{o\-\_\-jit} $\ast$ \hyperlink{classnightowl_1_1Builder_aa9240228357ef8c48a09ffffc32569d7}{jit} ()
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} \hyperlink{classnightowl_1_1Builder_ad4d081293f3ee12bfe5cd610c5068c9c}{page} ()
+\item 
+int \hyperlink{classnightowl_1_1Builder_a6abd501c570a864c3567381a0d3b9339}{label} ()
+\item 
+int \hyperlink{classnightowl_1_1Builder_ad7c2e547af5ddfd5478efb03de54ce12}{emit\-Function} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1Builder_adbd0aa5aac88ce77386cc7813f532c7d}{emit\-Function\-Argument} (unsigned int s)
+\item 
+void \hyperlink{classnightowl_1_1Builder_a8aca1d2fd69778536a666fab504320d9}{emit\-Function\-Return} ()
+\item 
+string \hyperlink{classnightowl_1_1Builder_af0947c455090727a5f43a4f36643572a}{emit\-Relocatable\-Branch} (string name, opcode br, string target)
+\item 
+string \hyperlink{classnightowl_1_1Builder_aa1ad37c79ca9492affd266ccff0a1330}{emit\-Relocatable\-Jump} (string name, string target)
+\item 
+string \hyperlink{classnightowl_1_1Builder_a9bc68b24f03a893afdb21e18d5214e1a}{emit\-Relocatable\-Label} (string name)
+\item 
+void \hyperlink{classnightowl_1_1Builder_a15eab7a9904b55ea17be8c4a9e86a95c}{reemit\-Relocations} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1Builder_a5f921d6326433248f8a73be93b3c3961}{reg\-Alloc} (bool d)
+\item 
+bool \hyperlink{classnightowl_1_1Builder_ae433f2e3753075ae96ba032ceb701d6b}{reg\-Is\-Allocated} (unsigned char r)
+\item 
+int \hyperlink{classnightowl_1_1Builder_a5a4122e0638cf0c8f1eb948b763d6c37}{reg\-Value} (unsigned char r, int v)
+\item 
+int \hyperlink{classnightowl_1_1Builder_aa5bbaf7d3212e18433e3cf37e2dabc65}{reg\-Value} (unsigned char r)
+\item 
+bool \hyperlink{classnightowl_1_1Builder_ade57674302a3049d39d8415f7b8a57f8}{reg\-Dirty} (unsigned char r, bool d)
+\item 
+bool \hyperlink{classnightowl_1_1Builder_a5d4dcb1f40b8b49e2fe96fd946b1d427}{reg\-Dirty} (unsigned char r)
+\item 
+void \hyperlink{classnightowl_1_1Builder_acfdf9c3cc11f4e7f7c99a7d6e05ff378}{reg\-Free} (unsigned char r)
+\item 
+void \hyperlink{classnightowl_1_1Builder_a81de0277884344743c0bfe347af818cc}{emit\-Reg} (unsigned char r)
+\item 
+bool \hyperlink{classnightowl_1_1Builder_a56095d67b20ff747c22203325be99c87}{fp\-Dirty} (unsigned int i)
+\item 
+bool \hyperlink{classnightowl_1_1Builder_a727f1525e1aaa3e72a58d1ac79661425}{fp\-Dirty} (unsigned int i, bool d)
+\item 
+double \hyperlink{classnightowl_1_1Builder_a702ec16584a1b1c9db469c54bb254c82}{fp\-Value} (unsigned int i)
+\item 
+double \hyperlink{classnightowl_1_1Builder_a09cea2791f29e46b10fa69de3ead05da}{fp\-Value} (unsigned int i, double v)
+\item 
+double $\ast$ \hyperlink{classnightowl_1_1Builder_ac4afa1fb5c5497f1d66f8e70014786c0}{fp\-Ref} (unsigned int i)
+\item 
+void \hyperlink{classnightowl_1_1Builder_acc3abe19c736078a015263a4af4a8d79}{emit\-Fp} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1Builder_ab357d48d43855f8706ae513ccee976a5}{emit\-Const\-I32} (int v)
+\item 
+unsigned char \hyperlink{classnightowl_1_1Builder_a8be641f244fc23bbf88cc31613831ca4}{emit\-Ref\-I32} (int $\ast$v)
+\item 
+void \hyperlink{classnightowl_1_1Builder_adecf4a9b7ca3d7ebb910d60477e4bdae}{emit\-Pull\-I32} (unsigned char r, int $\ast$v)
+\item 
+void \hyperlink{classnightowl_1_1Builder_adec8eaa6414ced56fbf5e90754c9e55c}{emit\-Ref\-F64} (double $\ast$v)
+\item 
+void \hyperlink{classnightowl_1_1Builder_a956e0bb10ad0155cd507c4569f6ce105}{emit\-Pull\-F64} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1Builder_ac000d57e3b37cf973e19bc7ac36caad2}{emit\-Operation} (opcode o, unsigned char r0, unsigned char r1)
+\item 
+void \hyperlink{classnightowl_1_1Builder_a038698fb5f2b7328a66185dacff24096}{emit\-Floating\-Operation} (opcode o)
+\item 
+void \hyperlink{classnightowl_1_1Builder_ac8c3f1706099016585199549dae2a9b8}{emit\-Push\-Arg} (unsigned char r)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} \hyperlink{classnightowl_1_1Builder_abcafb5a55b2ab1fbcd469b71202d2c20}{convert\-To\-Inline} (vector$<$ int $\ast$ $>$ args)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Builds machine code programs or bytecode programs. This is where the magic happens. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classnightowl_1_1Builder_abcafb5a55b2ab1fbcd469b71202d2c20}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!convert\-To\-Inline@{convert\-To\-Inline}}
+\index{convert\-To\-Inline@{convert\-To\-Inline}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{convert\-To\-Inline}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page} nightowl\-::\-Builder\-::convert\-To\-Inline (
+\begin{DoxyParamCaption}
+\item[{vector$<$ int $\ast$ $>$}]{args}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_abcafb5a55b2ab1fbcd469b71202d2c20}
+As long as \hyperlink{classnightowl_1_1Builder_a5ce57746bc8b306051408e36672bbc5e}{output\-To\-Page()} is enabled and only one function is declared within the \hyperlink{classnightowl_1_1Builder}{Builder}, you can convert it to an inline function call. 
+\begin{DoxyParams}{Parameters}
+{\em args} & The list of integer references to be used for arguments to be loaded into registers by the function code. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The \hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} containing the inlined function code. 
+\end{DoxyReturn}
+\hypertarget{classnightowl_1_1Builder_a5bf7959fb0c2ce0c306eb166fcd5ecf8}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit@{emit}}
+\index{emit@{emit}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{unsigned char}]{r0, }
+\item[{unsigned char}]{r1, }
+\item[{int}]{a}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a5bf7959fb0c2ce0c306eb166fcd5ecf8}
+Emit an instruction. 
+\begin{DoxyParams}{Parameters}
+{\em o} & The instruction opcode. \\
+\hline
+{\em r0} & The first register. \\
+\hline
+{\em r1} & The second register. \\
+\hline
+{\em a} & An integer argument. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classnightowl_1_1Builder_aa5e591e8e6f043d8270e27f3d4be4bad}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit@{emit}}
+\index{emit@{emit}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit (
+\begin{DoxyParamCaption}
+\item[{{\bf Builder\-Instruction}}]{i}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_aa5e591e8e6f043d8270e27f3d4be4bad}
+Emit an instruction from bytecode. \hypertarget{classnightowl_1_1Builder_ab2967c52565f90ceab53981dd8235466}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit@{emit}}
+\index{emit@{emit}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit (
+\begin{DoxyParamCaption}
+\item[{{\bf Builder\-Instruction\-Page}}]{p}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ab2967c52565f90ceab53981dd8235466}
+Emit a page of instructions from bytecode. \hypertarget{classnightowl_1_1Builder_ab357d48d43855f8706ae513ccee976a5}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Const\-I32@{emit\-Const\-I32}}
+\index{emit\-Const\-I32@{emit\-Const\-I32}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Const\-I32}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-::emit\-Const\-I32 (
+\begin{DoxyParamCaption}
+\item[{int}]{v}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ab357d48d43855f8706ae513ccee976a5}
+Emits a constant integer (32-\/bits). \begin{DoxyReturn}{Returns}
+The register it is stored in. 
+\end{DoxyReturn}
+\hypertarget{classnightowl_1_1Builder_a038698fb5f2b7328a66185dacff24096}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Floating\-Operation@{emit\-Floating\-Operation}}
+\index{emit\-Floating\-Operation@{emit\-Floating\-Operation}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Floating\-Operation}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Floating\-Operation (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a038698fb5f2b7328a66185dacff24096}
+Emits a floating-\/point operation between the first and second elements from the top of the stack. \hypertarget{classnightowl_1_1Builder_acc3abe19c736078a015263a4af4a8d79}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Fp@{emit\-Fp}}
+\index{emit\-Fp@{emit\-Fp}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Fp}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Fp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_acc3abe19c736078a015263a4af4a8d79}
+Evaluates the float at the top of the stack. \hypertarget{classnightowl_1_1Builder_ad7c2e547af5ddfd5478efb03de54ce12}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Function@{emit\-Function}}
+\index{emit\-Function@{emit\-Function}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Function}]{\setlength{\rightskip}{0pt plus 5cm}int nightowl\-::\-Builder\-::emit\-Function (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ad7c2e547af5ddfd5478efb03de54ce12}
+Emits the first few instructions of a function decleration. \hypertarget{classnightowl_1_1Builder_adbd0aa5aac88ce77386cc7813f532c7d}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Function\-Argument@{emit\-Function\-Argument}}
+\index{emit\-Function\-Argument@{emit\-Function\-Argument}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Function\-Argument}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-::emit\-Function\-Argument (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{s}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_adbd0aa5aac88ce77386cc7813f532c7d}
+Emits a function argument (do not mismatch this with the \hyperlink{classnightowl_1_1Builder_ad7c2e547af5ddfd5478efb03de54ce12}{emit\-Function()} function or segfaults will occur). 
+\begin{DoxyParams}{Parameters}
+{\em s} & The size of the argument in bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The register in which the argument is stored (allocates a new one). 
+\end{DoxyReturn}
+\hypertarget{classnightowl_1_1Builder_a8aca1d2fd69778536a666fab504320d9}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Function\-Return@{emit\-Function\-Return}}
+\index{emit\-Function\-Return@{emit\-Function\-Return}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Function\-Return}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Function\-Return (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a8aca1d2fd69778536a666fab504320d9}
+Emits a few instructions to handle a function return (returns the eax register). \hypertarget{classnightowl_1_1Builder_ac000d57e3b37cf973e19bc7ac36caad2}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Operation@{emit\-Operation}}
+\index{emit\-Operation@{emit\-Operation}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Operation}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-::emit\-Operation (
+\begin{DoxyParamCaption}
+\item[{opcode}]{o, }
+\item[{unsigned char}]{r0, }
+\item[{unsigned char}]{r1}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ac000d57e3b37cf973e19bc7ac36caad2}
+Emits an operation. \hypertarget{classnightowl_1_1Builder_a956e0bb10ad0155cd507c4569f6ce105}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Pull\-F64@{emit\-Pull\-F64}}
+\index{emit\-Pull\-F64@{emit\-Pull\-F64}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Pull\-F64}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Pull\-F64 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a956e0bb10ad0155cd507c4569f6ce105}
+Emits an instruction to pull the value of the float at the top of the stack to its reference. \hypertarget{classnightowl_1_1Builder_adecf4a9b7ca3d7ebb910d60477e4bdae}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Pull\-I32@{emit\-Pull\-I32}}
+\index{emit\-Pull\-I32@{emit\-Pull\-I32}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Pull\-I32}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Pull\-I32 (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r, }
+\item[{int $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_adecf4a9b7ca3d7ebb910d60477e4bdae}
+Emits an instruction to pull the value of a register to an integer reference (32-\/bits). \hypertarget{classnightowl_1_1Builder_ac8c3f1706099016585199549dae2a9b8}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Push\-Arg@{emit\-Push\-Arg}}
+\index{emit\-Push\-Arg@{emit\-Push\-Arg}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Push\-Arg}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Push\-Arg (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ac8c3f1706099016585199549dae2a9b8}
+Emits an instruction to push an argument from a register. \hypertarget{classnightowl_1_1Builder_adec8eaa6414ced56fbf5e90754c9e55c}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Ref\-F64@{emit\-Ref\-F64}}
+\index{emit\-Ref\-F64@{emit\-Ref\-F64}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Ref\-F64}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Ref\-F64 (
+\begin{DoxyParamCaption}
+\item[{double $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_adec8eaa6414ced56fbf5e90754c9e55c}
+Emits a reference to a float (64-\/bits). \hypertarget{classnightowl_1_1Builder_a8be641f244fc23bbf88cc31613831ca4}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Ref\-I32@{emit\-Ref\-I32}}
+\index{emit\-Ref\-I32@{emit\-Ref\-I32}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Ref\-I32}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-::emit\-Ref\-I32 (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{v}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a8be641f244fc23bbf88cc31613831ca4}
+Emits a reference to an integer (32-\/bits). \begin{DoxyReturn}{Returns}
+The register it is stored in. 
+\end{DoxyReturn}
+\hypertarget{classnightowl_1_1Builder_a81de0277884344743c0bfe347af818cc}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Reg@{emit\-Reg}}
+\index{emit\-Reg@{emit\-Reg}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Reg}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::emit\-Reg (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a81de0277884344743c0bfe347af818cc}
+Evaluates the register. \hypertarget{classnightowl_1_1Builder_af0947c455090727a5f43a4f36643572a}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Relocatable\-Branch@{emit\-Relocatable\-Branch}}
+\index{emit\-Relocatable\-Branch@{emit\-Relocatable\-Branch}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Relocatable\-Branch}]{\setlength{\rightskip}{0pt plus 5cm}string nightowl\-::\-Builder\-::emit\-Relocatable\-Branch (
+\begin{DoxyParamCaption}
+\item[{string}]{name, }
+\item[{opcode}]{br, }
+\item[{string}]{target}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_af0947c455090727a5f43a4f36643572a}
+Emits a branch instruction that can be relocated later. \hypertarget{classnightowl_1_1Builder_aa1ad37c79ca9492affd266ccff0a1330}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Relocatable\-Jump@{emit\-Relocatable\-Jump}}
+\index{emit\-Relocatable\-Jump@{emit\-Relocatable\-Jump}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Relocatable\-Jump}]{\setlength{\rightskip}{0pt plus 5cm}string nightowl\-::\-Builder\-::emit\-Relocatable\-Jump (
+\begin{DoxyParamCaption}
+\item[{string}]{name, }
+\item[{string}]{target}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_aa1ad37c79ca9492affd266ccff0a1330}
+Emits a jump instruction that can be relocated later. \hypertarget{classnightowl_1_1Builder_a9bc68b24f03a893afdb21e18d5214e1a}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!emit\-Relocatable\-Label@{emit\-Relocatable\-Label}}
+\index{emit\-Relocatable\-Label@{emit\-Relocatable\-Label}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{emit\-Relocatable\-Label}]{\setlength{\rightskip}{0pt plus 5cm}string nightowl\-::\-Builder\-::emit\-Relocatable\-Label (
+\begin{DoxyParamCaption}
+\item[{string}]{name}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a9bc68b24f03a893afdb21e18d5214e1a}
+Emits a relocatable label for use as a target. \hypertarget{classnightowl_1_1Builder_a56095d67b20ff747c22203325be99c87}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!fp\-Dirty@{fp\-Dirty}}
+\index{fp\-Dirty@{fp\-Dirty}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{fp\-Dirty}]{\setlength{\rightskip}{0pt plus 5cm}bool nightowl\-::\-Builder\-::fp\-Dirty (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{i}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a56095d67b20ff747c22203325be99c87}
+Gets whether the float at index i in the stack is dirty or not. \hypertarget{classnightowl_1_1Builder_a727f1525e1aaa3e72a58d1ac79661425}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!fp\-Dirty@{fp\-Dirty}}
+\index{fp\-Dirty@{fp\-Dirty}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{fp\-Dirty}]{\setlength{\rightskip}{0pt plus 5cm}bool nightowl\-::\-Builder\-::fp\-Dirty (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{i, }
+\item[{bool}]{d}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a727f1525e1aaa3e72a58d1ac79661425}
+Sets whether the float at index i in the stack is dirty or not. \hypertarget{classnightowl_1_1Builder_ac4afa1fb5c5497f1d66f8e70014786c0}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!fp\-Ref@{fp\-Ref}}
+\index{fp\-Ref@{fp\-Ref}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{fp\-Ref}]{\setlength{\rightskip}{0pt plus 5cm}double $\ast$ nightowl\-::\-Builder\-::fp\-Ref (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{i}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ac4afa1fb5c5497f1d66f8e70014786c0}
+Gets the reference in the floating pointer stack at index i. \hypertarget{classnightowl_1_1Builder_a702ec16584a1b1c9db469c54bb254c82}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!fp\-Value@{fp\-Value}}
+\index{fp\-Value@{fp\-Value}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{fp\-Value}]{\setlength{\rightskip}{0pt plus 5cm}double nightowl\-::\-Builder\-::fp\-Value (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{i}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a702ec16584a1b1c9db469c54bb254c82}
+Gets the value of the float at index i in the stack (if not evaluated yet). \hypertarget{classnightowl_1_1Builder_a09cea2791f29e46b10fa69de3ead05da}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!fp\-Value@{fp\-Value}}
+\index{fp\-Value@{fp\-Value}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{fp\-Value}]{\setlength{\rightskip}{0pt plus 5cm}double nightowl\-::\-Builder\-::fp\-Value (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{i, }
+\item[{double}]{v}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a09cea2791f29e46b10fa69de3ead05da}
+Sets the value of the float at index i in the stack (to be lazily evaluated later). \hypertarget{classnightowl_1_1Builder_aa9240228357ef8c48a09ffffc32569d7}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!jit@{jit}}
+\index{jit@{jit}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{jit}]{\setlength{\rightskip}{0pt plus 5cm}{\bf o\-\_\-jit} $\ast$ nightowl\-::\-Builder\-::jit (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_aa9240228357ef8c48a09ffffc32569d7}
+Gets a reference to the ($^\wedge$v$^\wedge$) kernel's J\-I\-T compiler struct (will be N\-U\-L\-L if \hyperlink{classnightowl_1_1Builder_a5ce57746bc8b306051408e36672bbc5e}{output\-To\-Page()} is used). \hypertarget{classnightowl_1_1Builder_a6abd501c570a864c3567381a0d3b9339}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!label@{label}}
+\index{label@{label}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{label}]{\setlength{\rightskip}{0pt plus 5cm}int nightowl\-::\-Builder\-::label (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a6abd501c570a864c3567381a0d3b9339}
+Gets the current code pointer value (used for jumps and branches). \hypertarget{classnightowl_1_1Builder_a5ce57746bc8b306051408e36672bbc5e}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!output\-To\-Page@{output\-To\-Page}}
+\index{output\-To\-Page@{output\-To\-Page}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{output\-To\-Page}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::output\-To\-Page (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a5ce57746bc8b306051408e36672bbc5e}
+This enables outputting to a \hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} instead of the ($^\wedge$v$^\wedge$) kernel. \hypertarget{classnightowl_1_1Builder_ad4d081293f3ee12bfe5cd610c5068c9c}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!page@{page}}
+\index{page@{page}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{page}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page} nightowl\-::\-Builder\-::page (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ad4d081293f3ee12bfe5cd610c5068c9c}
+Gets the \hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} (will be blank unless \hyperlink{classnightowl_1_1Builder_a5ce57746bc8b306051408e36672bbc5e}{output\-To\-Page()} is used). \hypertarget{classnightowl_1_1Builder_a15eab7a9904b55ea17be8c4a9e86a95c}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reemit\-Relocations@{reemit\-Relocations}}
+\index{reemit\-Relocations@{reemit\-Relocations}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reemit\-Relocations}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::reemit\-Relocations (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a15eab7a9904b55ea17be8c4a9e86a95c}
+Relocations all relocatable instructions. \hypertarget{classnightowl_1_1Builder_a5f921d6326433248f8a73be93b3c3961}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Alloc@{reg\-Alloc}}
+\index{reg\-Alloc@{reg\-Alloc}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Alloc}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-::reg\-Alloc (
+\begin{DoxyParamCaption}
+\item[{bool}]{d}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a5f921d6326433248f8a73be93b3c3961}
+Allocates a new register for use. 
+\begin{DoxyParams}{Parameters}
+{\em d} & Whether the register will be dirty or not. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classnightowl_1_1Builder_ade57674302a3049d39d8415f7b8a57f8}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Dirty@{reg\-Dirty}}
+\index{reg\-Dirty@{reg\-Dirty}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Dirty}]{\setlength{\rightskip}{0pt plus 5cm}bool nightowl\-::\-Builder\-::reg\-Dirty (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r, }
+\item[{bool}]{d}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ade57674302a3049d39d8415f7b8a57f8}
+Sets whether the register is dirty or not. \hypertarget{classnightowl_1_1Builder_a5d4dcb1f40b8b49e2fe96fd946b1d427}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Dirty@{reg\-Dirty}}
+\index{reg\-Dirty@{reg\-Dirty}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Dirty}]{\setlength{\rightskip}{0pt plus 5cm}bool nightowl\-::\-Builder\-::reg\-Dirty (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a5d4dcb1f40b8b49e2fe96fd946b1d427}
+Gets whether the register is dirty or not. \hypertarget{classnightowl_1_1Builder_acfdf9c3cc11f4e7f7c99a7d6e05ff378}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Free@{reg\-Free}}
+\index{reg\-Free@{reg\-Free}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Free}]{\setlength{\rightskip}{0pt plus 5cm}void nightowl\-::\-Builder\-::reg\-Free (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_acfdf9c3cc11f4e7f7c99a7d6e05ff378}
+Frees the register. \hypertarget{classnightowl_1_1Builder_ae433f2e3753075ae96ba032ceb701d6b}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Is\-Allocated@{reg\-Is\-Allocated}}
+\index{reg\-Is\-Allocated@{reg\-Is\-Allocated}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Is\-Allocated}]{\setlength{\rightskip}{0pt plus 5cm}bool nightowl\-::\-Builder\-::reg\-Is\-Allocated (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_ae433f2e3753075ae96ba032ceb701d6b}
+Returns whether a register is allocated or not. \hypertarget{classnightowl_1_1Builder_a5a4122e0638cf0c8f1eb948b763d6c37}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Value@{reg\-Value}}
+\index{reg\-Value@{reg\-Value}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Value}]{\setlength{\rightskip}{0pt plus 5cm}int nightowl\-::\-Builder\-::reg\-Value (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r, }
+\item[{int}]{v}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_a5a4122e0638cf0c8f1eb948b763d6c37}
+Sets the value of the register (to be lazily evaluated later). \hypertarget{classnightowl_1_1Builder_aa5bbaf7d3212e18433e3cf37e2dabc65}{\index{nightowl\-::\-Builder@{nightowl\-::\-Builder}!reg\-Value@{reg\-Value}}
+\index{reg\-Value@{reg\-Value}!nightowl::Builder@{nightowl\-::\-Builder}}
+\subsubsection[{reg\-Value}]{\setlength{\rightskip}{0pt plus 5cm}int nightowl\-::\-Builder\-::reg\-Value (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1Builder_aa5bbaf7d3212e18433e3cf37e2dabc65}
+Gets the value of the register (if not evaluated yet). 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{builder_8h}{builder.\-h}\item 
+builder.\-cpp\end{DoxyCompactItemize}

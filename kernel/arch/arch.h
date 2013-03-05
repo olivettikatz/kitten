@@ -1,3 +1,6 @@
+/*! \file arch.h
+ * Architecture-specific code. Contains a list of functions for emitting certain bytecodes on any architecture which are automatically mapped to the correct emittion functions for the architecture (^v^) is compiled on. */
+
 #ifndef __NIGHTOWL_JIT_ARCH_H
 #define __NIGHTOWL_JIT_ARCH_H
 
@@ -5,6 +8,7 @@
 
 #define O_UNSUPPORTED 0
 #define O_X86 1
+/*! Contains the ID value of the architecture (^v^) is compiled on (will error if architecture is unsupported). */
 #define O_ARCH O_UNSUPPORTED
 
 #ifdef __i386__
