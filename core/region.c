@@ -8,6 +8,7 @@ tse_region tse_region_new(int x, int y, int w, int h)
 		w,
 		h,
 		TSE_COLOR_BLACK,
+		1,
 		TSE_REGION_VERT,
 		TSE_REGION_HORIZ,
 		TSE_REGION_TOPLEFT,
@@ -46,18 +47,18 @@ int tse_region_render(tse_region *r)
 	tse_attr_bg(r->bg);
 	
 	tse_puts(r->topleft);
-	for (int i = 0; i < r->w-2; i++)
+	for (int i = 0; i < r->w-r->border*2; i++)
 	{
 		tse_puts(r->horiz);
 	}
 	tse_puts(r->topright);
 	tse_putch(TSE_NEWLINE);
 
-	for (int i = 0; i < r->h-2; i++)
+	for (int i = 0; i < r->h-r->border*2; i++)
 	{
 		tse_moverel_right(r->x-1);
 		tse_puts(r->vert);
-		for (int j = 0; j < r->w-2; j++)
+		for (int j = 0; j < r->w-r->border*2; j++)
 		{
 			tse_puts(r->empty);
 		}
@@ -67,12 +68,12 @@ int tse_region_render(tse_region *r)
 
 	tse_moverel_right(r->x-1);
 	tse_puts(r->bottomleft);
-	for (int i = 0; i < r->w-2; i++)
+	for (int i = 0; i < r->w-r->border*2; i++)
 	{
 		tse_puts(r->horiz);
 	}
 	tse_puts(r->bottomright);
-	tse_moveabs(r->x+1, r->y+1);
+	tse_moveabs(r->x+r->border, r->y+r->border);
 	tse_attr_reset();
 
 	return 0;

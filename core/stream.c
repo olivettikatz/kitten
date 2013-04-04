@@ -81,7 +81,7 @@ int tse_stream_to_region(tse_stream *s, tse_region *r)
 		}
 		else
 		{
-			if (c >= r->w-3)
+			if (c >= r->w-1-r->border*2)
 			{
 				c = 0;
 				l++;
@@ -93,21 +93,21 @@ int tse_stream_to_region(tse_stream *s, tse_region *r)
 			}
 		}
 
-		if (l >= r->h-2)
+		if (l >= r->h-r->border*2)
 		{
-			for (int j = 1; j < r->h-2; j++)
+			for (int j = 1; j < r->h-r->border*2; j++)
 			{
-				memcpy(tmp[j-1], tmp[j], sizeof(char)*(r->w-3));
+				memcpy(tmp[j-1], tmp[j], sizeof(char)*(r->w-1-r->border*2));
 			}
 
 			l--;
-			memset(tmp[l], ' ', r->w-3);
+			memset(tmp[l], ' ', r->w-1-r->border*2);
 		}
 	}
 
-	for (int i = 0; i < r->h-2; i++)
+	for (int i = 0; i < r->h-r->border*2; i++)
 	{
-		tse_moveabs(r->x+1, r->y+1+i);
+		tse_moveabs(r->x+r->border, r->y+r->border+i);
 		tse_puts(tmp[i]);
 	}
 

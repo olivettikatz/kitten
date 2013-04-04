@@ -19,6 +19,7 @@ typedef struct
 	int w;
 	int h;
 	int bg;
+	int border;
 	char *vert;
 	char *horiz;
 	char *topleft;
