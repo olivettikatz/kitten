@@ -191,6 +191,7 @@ namespace nmc
 		ComplexValue() {}
 		vector<Any> getContent();
 		ComplexValue &parse(vector<Token> toks, int &off);
+		string display();
 	};
 		
 	const int precedence[32] = {

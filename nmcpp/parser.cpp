@@ -576,6 +576,20 @@ namespace nmc
 		return *this;
 	}
 
+	string ComplexValue::display()
+	{
+		if (content.empty())
+			return "[]";
+
+		stringstream ss;
+		ss << "[ " << content[0].display() << "\n";
+		for (int i = 1; i < content.size(); i++)
+			ss << ", " << content[i].display() << "\n";
+		string tmp = ss.str();
+		tmp = tmp.substr(0, tmp.size()-1);
+		return tmp+" ]\n";
+	}
+
 	Operation::opsym Operation::parseOpsym(Token tok)
 	{
 		if (tok == "=")
@@ -653,12 +667,6 @@ namespace nmc
 
 	Operation Operation::parseBase(vector<Token> toks, int *m)
 	{
-		// debug message to tell user what's going on
-		cout << "parsing operation ";
-		for (vector<Token>::iterator i = toks.begin(); i != toks.end(); i++)
-			cout << i->display() << " ";
-		cout << "\n";
-
 		vector<Token> stack; // the token stack (max 2 values/operations)
 		Operation root; // the root operation (this is what is returned)
 		Operation *head = &root; // the head operation
@@ -672,12 +680,9 @@ namespace nmc
 		int n = 0;
 		for (int i = 0; i < toks.size() && (toks[i] != ";" || toks[i] != ","); i++)
 		{
-			// display the current token in the parsing stream
-			cout << toks[i].display() << " (n: " << n << ")\n";
 			if (toks[i] == "(")
 			{
 				// we parse and append the new operation in the sub-scope
-				cout << "\tincreasing operation scope...\n";
 				if (n == 0)
 				{
 					if (stack.empty() && root.sym == opsym::_notAnOperation)
@@ -743,22 +748,18 @@ namespace nmc
 						// error
 					}
 
-					cout << "\treached end of operation scope...\n";
 					return root; // exiting...
 				}
 			}
 			else if (n == 0 && (toks[i].getType() == Token::category::value || toks[i].getType() == Token::category::symbol))
 			{
 				// if we've reached a value that is in our scope, we append it
-				cout << "\tappending value...\n";
 				if (stack.size() > 0 && stack[stack.size()-1].getType() == Token::category::operation)
 				{
 					// if there is already an operation on the stack, we can complete it
-					cout << "\tcompleting operation...\n";
 					if (stack.size() == 2 && root.sym == opsym::_notAnOperation)
 					{
 						// if there is no root, we make a new root
-						cout << "\tcreating new root operation...\n";
 						root.sym = parseOpsym(stack[stack.size()-1]);
 						root.left = stack[stack.size()-2];
 						root.right = toks[i];
@@ -768,11 +769,9 @@ namespace nmc
 					else if (getPrecedence(parseOpsym(stack[stack.size()-1])) <= getPrecedence(head->sym))
 					{
 						// if the precedence of the new operation is lower than the root
-						cout << "\tlower precedence...\n";
 						if (stack.size() == 1 && root.sym != opsym::_notAnOperation)
 						{
 							// wrap the head
-							cout << "\twrapping head operation...\n";
 							Operation tmp;
 							tmp.sym = parseOpsym(stack[stack.size()-1]);
 							tmp.left = *head;
@@ -788,10 +787,8 @@ namespace nmc
 					else
 					{
 						// if the precedence of the new operation is lower than the root
-						cout << "\thigher precedence...\n";
 						if (stack.size() == 1 && root.sym != opsym::_notAnOperation)
 						{
-							cout << "\tcombining with head operation...\n";
 							Operation tmp;
 							tmp.sym = parseOpsym(stack[stack.size()-1]);
 							tmp.left = head->right;
@@ -809,14 +806,12 @@ namespace nmc
 				else
 				{
 					// the symbol is loose and can only be pushed to the stack for further use
-					cout << "\tpushing to stack...\n";
 					stack.push_back(toks[i]);
 				}
 			}
 			else if (n == 0 && toks[i].getType() == Token::category::operation)
 			{
 				// operations are always pushed to the stack
-				cout << "\tpushing to stack...\n";
 				stack.push_back(toks[i]);
 			}
 			else
@@ -938,26 +933,46 @@ namespace nmc
 
 	Expression &Expression::parse(vector<Token> toks, int &off)
 	{
+		cout << "parsing expression: ";
+		for (vector<Token>::iterator i = toks.begin(); i != toks.end(); i++)
+			cout << i->display() << " ";
+		cout << "\n";
+
 		while(toks[off].getType() == Token::category::type)
-			types.push_back(parseType(toks[off++]));
+		{
+			typeQualifier tmp = parseType(toks[off]);
+			cout << toks[off].display() << " -> " << tmp << "\n";
+			types.push_back(tmp);
+			off++;
+		}
 
 		if (toks[off].getType() != Token::category::symbol)
 		{
 			// error
 		}
 		
+		cout << toks[off].display() << " -> symbol\n";
 		symbol = toks[off++];
 
 		if (toks[off] == "[")
+		{
 			cva = ComplexValue().parse(toks, off);
+			cout << "cva ->\n" << cva.display() << "\n";
+			cout << "\n";
+		}
 
 		if (toks[off] == "(")
 		{
 			off++;
+			cout << "parsing arguments: ";
+			for (int i = off; i < toks.size(); i++)
+				cout << toks[i].display() << " ";
+			cout << "\n";
 
 			while(1)
 			{
-				args.push_back(Any().parse(toks, off));
+				Any tmp = Any().parse(toks, off);
+				args.push_back(tmp);
 				if (toks[off] == ",")
 				{
 				}

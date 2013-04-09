@@ -18,5 +18,11 @@ int main(int argc, char *argv[])
 	op.parse(optoks, i);
 	cout << op.display() << "\n";
 
+	vector<Token> exprtoks = Lexer().lex("int main\n");
+
+	Expression expr = Expression();
+	i = 0;
+	expr.parse(exprtoks, i);
+
 	return 0;
 }
