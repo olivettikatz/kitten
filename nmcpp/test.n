@@ -1,0 +1,18 @@
+import("std");
+
+int main(vector args)
+{    
+	// well isn't this fun!
+	byte c0 = 'A'; // blah blah blah
+	byte c1 = '\n';
+	byte c2 = '\x90';
+	int x = 5;
+	print(x);
+	/* hmm 
+	*/
+	float y = 10.5;
+	y = .5;
+	y = -10.5;
+	y = -.5;
+}
+
