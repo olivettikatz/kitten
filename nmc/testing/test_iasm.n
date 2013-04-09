@@ -1,0 +1,4 @@
+const eax 1; const ecx 2;
+
+add8 eax ecx;
+st32 eax x;
