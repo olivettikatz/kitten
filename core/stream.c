@@ -29,37 +29,28 @@ int tse_stream_del(tse_stream *s)
 	return 0;
 }
 
-FILE *tse_stream_file_get(tse_stream *s)
+int tse_stream_clear(tse_stream *s)
+{
+	if (s == NULL)
+		return 1;
+
+	tse_memstream_del(s->desc);
+	s->desc = tse_memstream_new(&s->buf, &s->bufsize);
+	return 0;
+}
+
+char *tse_stream_read(tse_stream *s)
 {
 	if (s == NULL)
 		return NULL;
-	return s->desc;
-}
 
-FILE *tse_stream_file_set(tse_stream *s, FILE *f)
-{
-	if (s == NULL)
-		return NULL;
-	return (s->desc = f);
-}
-
-size_t tse_stream_bufsize_get(tse_stream *s)
-{
-	if (s == NULL)
-		return 0;
-	return s->bufsize;
-}
-
-char *tse_stream_buffer_pull(tse_stream *s)
-{
-	if (s == NULL)
-		return NULL;
-	return tse_memstream_pull(s->desc, &s->buf, &s->bufsize);
+	fflush(s->desc);
+	return s->buf;
 }
 
 int tse_stream_to_region(tse_stream *s, tse_region *r)
 {
-	char *buf = tse_stream_buffer_pull(s);
+	char *buf = tse_stream_read(s);
 	if (buf == NULL)
 		return 1;
 

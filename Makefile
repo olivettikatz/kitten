@@ -12,7 +12,7 @@ OS=linux
 %.o : %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-OBJ=os/$(OS)/$(OS).o core/region.o core/stream.o
+OBJ=os/$(OS)/$(OS).o core/region.o core/stream.o core/async.o
 
 build : $(OBJ)
 	$(AR) $(ARFLAGS) libtse.a $(OBJ)

@@ -6,7 +6,8 @@ int main()
 	printf("Press enter to quit.\n");
 	tse_region r = tse_region_new(10, 10, 40, 20);
 	tse_stream s = tse_stream_new();
-	FILE *f = tse_stream_file_get(&s);
+	tse_stream_clear(&s);
+	FILE *f = s.desc;
 	fprintf(f, "hello, world\nhi\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 	tse_region_render(&r);
 	tse_stream_to_region(&s, &r);

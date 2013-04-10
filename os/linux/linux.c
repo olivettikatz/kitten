@@ -206,31 +206,25 @@ void tse_memstream_del(FILE *f)
 	fclose(f);
 }
 
-char *tse_memstream_pull(FILE *f, char **p, size_t *s)
-{
-	if (f == NULL)
-		return NULL;
-
-	char *buf = (char *)malloc(ftell(f));
-	memset(buf, 0, ftell(f));
-	fread(buf, 1, ftell(f), f);
-
-	if (*p != NULL)
-	{
-		tse_memstream_del(f);
-		f = tse_memstream_new(p, s);
-	}
-
-	return buf;
-}
+int tse_parent_pid = -1;
 
 int tse_fork()
 {
+	tse_parent_pid = getpid();
 	int pid = fork();
 	if (pid == 0)
 		return TSE_FORKED;
 	else
 		return pid;
+}
+
+int tse_kill_parent()
+{
+	if (tse_parent_pid == -1)
+		_exit(0);
+	else
+		kill(tse_parent_pid, SIGTERM);
+	return 0;
 }
 
 int tse_merge(int pid)

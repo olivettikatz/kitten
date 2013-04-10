@@ -34,6 +34,7 @@
 #define TSE_COLOR_MAGENTA 5
 #define TSE_COLOR_CYAN 6
 #define TSE_COLOR_WHITE 7
+#define TSE_N_COLORS 8
 
 #define TSE_KEY_LEFT 200
 #define TSE_KEY_RIGHT 201
@@ -77,11 +78,11 @@ int tse_termsize(int *x, int *y);
 
 FILE *tse_memstream_new(char **p, size_t *s);
 void tse_memstream_del(FILE *f);
-char *tse_memstream_pull(FILE *f, char **p, size_t *s);
 
 #define TSE_FORKED 0
 
 int tse_fork();
+int tse_kill_parent();
 int tse_merge(int pid);
 int tse_stdout_to_stdin();
 int tse_restore_stdin();
