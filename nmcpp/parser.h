@@ -330,6 +330,7 @@ namespace nmc
 		vector<Any> getBody();
 		vector<Any> getWhereBody();
 		Expression &parse(vector<Token> toks, int &off);
+		string display();
 	};
 
 	vector<Any> parse(vector<Token> toks);

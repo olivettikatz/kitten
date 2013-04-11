@@ -514,7 +514,7 @@ namespace nmc
 		{
 			Any(ComplexValue().parse(toks, off));
 		}
-		else if (toks[off+1].getType() == Token::category::operation || toks[off] == "(")
+		else if (toks[off+1].getType() == Token::category::value || toks[off] == "(")
 		{
 			Any(Operation().parse(toks, off));
 		}
@@ -933,15 +933,9 @@ namespace nmc
 
 	Expression &Expression::parse(vector<Token> toks, int &off)
 	{
-		cout << "parsing expression: ";
-		for (vector<Token>::iterator i = toks.begin(); i != toks.end(); i++)
-			cout << i->display() << " ";
-		cout << "\n";
-
 		while(toks[off].getType() == Token::category::type)
 		{
 			typeQualifier tmp = parseType(toks[off]);
-			cout << toks[off].display() << " -> " << tmp << "\n";
 			types.push_back(tmp);
 			off++;
 		}
@@ -951,25 +945,16 @@ namespace nmc
 			// error
 		}
 		
-		cout << toks[off].display() << " -> symbol\n";
 		symbol = toks[off++];
 
-		if (toks[off] == "[")
+		if (off < toks.size() && toks[off] == "[")
 		{
 			cva = ComplexValue().parse(toks, off);
-			cout << "cva ->\n" << cva.display() << "\n";
-			cout << "\n";
 		}
 
-		if (toks[off] == "(")
+		if (off < toks.size() && toks[off] == "(")
 		{
-			off++;
-			cout << "parsing arguments: ";
-			for (int i = off; i < toks.size(); i++)
-				cout << toks[i].display() << " ";
-			cout << "\n";
-
-			while(1)
+			while(off++ < toks.size())
 			{
 				Any tmp = Any().parse(toks, off);
 				args.push_back(tmp);
@@ -986,11 +971,11 @@ namespace nmc
 			}
 		}
 
-		if (toks[off] == "{")
+		if (off < toks.size() && toks[off] == "{")
 		{
 			off++;
 
-			while(1)
+			while(off++ < toks.size())
 			{
 				body.push_back(Any().parse(toks, off));
 				if (toks[off] == ";")
@@ -1007,7 +992,7 @@ namespace nmc
 			}
 		}
 
-		if (toks[off] == "where")
+		if (off < toks.size() && toks[off] == "where")
 		{
 			off += 2;
 
@@ -1031,6 +1016,23 @@ namespace nmc
 		return *this;
 	}
 
+	string Expression::display()
+	{
+		stringstream ss;
+		ss << "types: ";
+		for (vector<typeQualifier>::iterator i = types.begin(); i != types.end(); i++)
+			ss << *i << " ";
+		ss << "\nsymbol: " << symbol.display() << "\n";
+		ss << "cva: " << cva.display() << "\n";
+		for (int i = 0; i < args.size(); i++)
+			ss << "args[" << i << "]: " << args[i].display() << "\n";
+		for (int i = 0; i < body.size(); i++)
+			ss << "body[" << i << "]: " << body[i].display() << "\n";
+		for (int i = 0; i < where.size(); i++)
+			ss << "where[" << i << "]: " << where[i].display() << "\n";
+		return ss.str();
+	}
+
 	vector<Any> parse(vector<Token> toks)
 	{
 		vector<Any> rtn;
@@ -1047,3 +1049,4 @@ namespace nmc
 		return rtn;
 	}
 }
+

@@ -2,6 +2,7 @@
 #define __NMC_DATA_H
 
 #include <iostream>
+#include <vector>
 #include <fstream>
 #include <streambuf>
 #include <string>
@@ -57,6 +58,19 @@ namespace nmc
 		bool contains(string only);
 		string display();
 	};
+
+	template<typename T> string displayMulti(string n, vector<T> v)
+	{
+		return display(n, v, 0);
+	}
+
+	template<typename T> string displayMulti(string n, vector<T> v, int o)
+	{
+		stringstream ss;
+		for (int i = o; i < v.size(); i++)
+			ss << n << "[" << i << "]: " << v[i].display() << "\n";
+		return ss.str();
+	}
 }
 
 #endif
