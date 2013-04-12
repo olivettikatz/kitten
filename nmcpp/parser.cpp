@@ -954,7 +954,7 @@ namespace nmc
 
 		if (off < toks.size() && toks[off] == "(")
 		{
-			while(off++ < toks.size())
+			for (; off < toks.size(); off++)
 			{
 				Any tmp = Any().parse(toks, off);
 				args.push_back(tmp);
@@ -975,7 +975,7 @@ namespace nmc
 		{
 			off++;
 
-			while(off++ < toks.size())
+			for (; off < toks.size(); off++)
 			{
 				body.push_back(Any().parse(toks, off));
 				if (toks[off] == ";")
@@ -994,9 +994,9 @@ namespace nmc
 
 		if (off < toks.size() && toks[off] == "where")
 		{
-			off += 2;
+			off++;
 
-			while(1)
+			for (; off < toks.size(); off++)
 			{
 				where.push_back(Any().parse(toks, off));
 				if (toks[off] == ";")
