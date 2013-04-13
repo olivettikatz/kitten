@@ -67,8 +67,9 @@ namespace nmc
 	template<typename T> string displayMulti(string n, vector<T> v, int o)
 	{
 		stringstream ss;
+		ss << n << ":";
 		for (int i = o; i < v.size(); i++)
-			ss << n << "[" << i << "]: " << v[i].display() << "\n";
+			ss << " [" << i << "]" << v[i].display();
 		return ss.str();
 	}
 }

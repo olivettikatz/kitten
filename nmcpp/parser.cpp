@@ -933,8 +933,11 @@ namespace nmc
 
 	Expression &Expression::parse(vector<Token> toks, int &off)
 	{
+		cout << displayMulti<Token>("Expression::parse", toks, off) << "\n";
+
 		while(toks[off].getType() == Token::category::type)
 		{
+			cout << "\ttype: " << toks[off].display() << "\n";
 			typeQualifier tmp = parseType(toks[off]);
 			types.push_back(tmp);
 			off++;
@@ -946,18 +949,34 @@ namespace nmc
 		}
 		
 		symbol = toks[off++];
+		cout << "\tsymbol: " << symbol.display() << "\n";
+
+		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
+		{
+			return *this;
+		}
 
 		if (off < toks.size() && toks[off] == "[")
 		{
 			cva = ComplexValue().parse(toks, off);
+			cout << "\tcva:\n" << cva.display() << "\n";
+		}
+
+		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
+		{
+			return *this;
 		}
 
 		if (off < toks.size() && toks[off] == "(")
 		{
+			off++;
+			cout << "\targs beginning at " << off << "\n";
 			for (; off < toks.size(); off++)
 			{
+				cout << "\tone arg at " << off << "\n";
 				Any tmp = Any().parse(toks, off);
 				args.push_back(tmp);
+				cout << "\tafter: " << toks[off].display() << "\n";
 				if (toks[off] == ",")
 				{
 				}
@@ -969,6 +988,11 @@ namespace nmc
 				{
 				}
 			}
+		}
+
+		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
+		{
+			return *this;
 		}
 
 		if (off < toks.size() && toks[off] == "{")
@@ -990,6 +1014,11 @@ namespace nmc
 					// error
 				}
 			}
+		}
+
+		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
+		{
+			return *this;
 		}
 
 		if (off < toks.size() && toks[off] == "where")
