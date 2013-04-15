@@ -190,6 +190,7 @@ namespace nmc
 	public:
 		ComplexValue() {}
 		vector<Any> getContent();
+		bool ok();
 		ComplexValue &parse(vector<Token> toks, int &off);
 		string display();
 	};
@@ -285,6 +286,7 @@ namespace nmc
 		opsym getOpsym();
 		Any getLeft();
 		Any getRight();
+		bool ok();
 		Operation &parse(vector<Token> toks, int &off);
 		string display();
 	};
@@ -329,6 +331,7 @@ namespace nmc
 		vector<Any> getArguments();
 		vector<Any> getBody();
 		vector<Any> getWhereBody();
+		bool ok();
 		Expression &parse(vector<Token> toks, int &off);
 		string display();
 	};

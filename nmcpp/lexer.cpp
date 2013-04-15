@@ -68,6 +68,8 @@ namespace nmc
 			return Token::category::type;
 		else if (t == "f64")
 			return Token::category::type;
+		else if (t == "vector")
+			return Token::category::type;
 		else
 			return t.getType();
 	}

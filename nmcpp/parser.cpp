@@ -449,18 +449,24 @@ namespace nmc
 	{
 		type = category::_complexValue;
 		_c = shared_ptr<ComplexValue>(new ComplexValue(c));
+		if (!_c->ok())
+			type = category::_null;
 	}
 
 	Any::Any(Operation o)
 	{
 		type = category::_operation;
 		_o = shared_ptr<Operation>(new Operation(o));
+		if (!_o->ok())
+			type = category::_null;
 	}
 	
 	Any::Any(Expression e)
 	{
 		type = category::_expression;
 		_e = shared_ptr<Expression>(new Expression(e));
+		if (!_e->ok())
+			type = category::_null;
 	}
 
 	bool Any::isNull()
@@ -512,15 +518,15 @@ namespace nmc
 	{
 		if (toks[off] == "[")
 		{
-			Any(ComplexValue().parse(toks, off));
+			*this = Any(ComplexValue().parse(toks, off));
 		}
 		else if (toks[off+1].getType() == Token::category::value || toks[off] == "(")
 		{
-			Any(Operation().parse(toks, off));
+			*this = Any(Operation().parse(toks, off));
 		}
 		else
 		{
-			Any(Expression().parse(toks, off));
+			*this = Any(Expression().parse(toks, off));
 		}
 
 		return *this;
@@ -532,6 +538,10 @@ namespace nmc
 			return _t.display();
 		else if (type == category::_operation)
 			return _o->display();
+		else if (type == category::_complexValue)
+			return _c->display();
+		else if (type == category::_expression)
+			return _e->display();
 		else
 			return "_";
 	}
@@ -539,6 +549,11 @@ namespace nmc
 	vector<Any> ComplexValue::getContent()
 	{
 		return content;
+	}
+
+	bool ComplexValue::ok()
+	{
+		return !content.empty();
 	}
 
 	ComplexValue &ComplexValue::parse(vector<Token> toks, int &off)
@@ -846,6 +861,11 @@ namespace nmc
 		return right;
 	}
 
+	bool Operation::ok()
+	{
+		return (sym != _notAnOperation);
+	}
+
 	Operation &Operation::parse(vector<Token> toks, int &off)
 	{
 		int i = 0;
@@ -931,25 +951,33 @@ namespace nmc
 		}
 	}
 
+	bool Expression::ok()
+	{
+		return !symbol.getString().empty();
+	}
+
 	Expression &Expression::parse(vector<Token> toks, int &off)
 	{
-		cout << displayMulti<Token>("Expression::parse", toks, off) << "\n";
-
-		while(toks[off].getType() == Token::category::type)
+		while(off < toks.size() && toks[off].getType() == Token::category::type)
 		{
-			cout << "\ttype: " << toks[off].display() << "\n";
 			typeQualifier tmp = parseType(toks[off]);
 			types.push_back(tmp);
 			off++;
 		}
 
+		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}" || toks[off] == "{" || toks[off] == "[" || toks[off] == "("))
+		{
+			return *this;
+		}
+		
 		if (toks[off].getType() != Token::category::symbol)
 		{
 			// error
 		}
-		
-		symbol = toks[off++];
-		cout << "\tsymbol: " << symbol.display() << "\n";
+
+		symbol = toks[off];
+
+		off++;
 
 		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
 		{
@@ -959,28 +987,26 @@ namespace nmc
 		if (off < toks.size() && toks[off] == "[")
 		{
 			cva = ComplexValue().parse(toks, off);
-			cout << "\tcva:\n" << cva.display() << "\n";
+			off++;
 		}
 
 		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
 		{
+			cout << this->display() << "\n";
 			return *this;
 		}
 
 		if (off < toks.size() && toks[off] == "(")
 		{
 			off++;
-			cout << "\targs beginning at " << off << "\n";
 			for (; off < toks.size(); off++)
 			{
-				cout << "\tone arg at " << off << "\n";
 				Any tmp = Any().parse(toks, off);
 				args.push_back(tmp);
-				cout << "\tafter: " << toks[off].display() << "\n";
-				if (toks[off] == ",")
+				if (off < toks.size() && toks[off] == ",")
 				{
 				}
-				else if (toks[off] == ")")
+				else if (off < toks.size() && toks[off] == ")")
 				{
 					break;
 				}
@@ -988,6 +1014,8 @@ namespace nmc
 				{
 				}
 			}
+
+			off++;
 		}
 
 		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
@@ -1002,10 +1030,10 @@ namespace nmc
 			for (; off < toks.size(); off++)
 			{
 				body.push_back(Any().parse(toks, off));
-				if (toks[off] == ";")
+				if (off < toks.size() && toks[off] == ";")
 				{
 				}
-				else if (toks[off] == "}")
+				else if (off < toks.size() && toks[off] == "}")
 				{
 					break;
 				}
@@ -1014,6 +1042,8 @@ namespace nmc
 					// error
 				}
 			}
+
+			off++;
 		}
 
 		if (off < toks.size() && (toks[off] == ")" || toks[off] == "]" || toks[off] == "}"))
@@ -1028,10 +1058,10 @@ namespace nmc
 			for (; off < toks.size(); off++)
 			{
 				where.push_back(Any().parse(toks, off));
-				if (toks[off] == ";")
+				if (off < toks.size() && toks[off] == ";")
 				{
 				}
-				else if (toks[off] == "}")
+				else if (off < toks.size() && toks[off] == "}")
 				{
 					break;
 				}
@@ -1040,6 +1070,8 @@ namespace nmc
 					// error
 				}
 			}
+
+			off++;
 		}
 
 		return *this;
