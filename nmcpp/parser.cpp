@@ -48,7 +48,10 @@ namespace nmc
 			return reg::bl;
 		else
 		{
-			// error
+			NMC_ERROR(t, "this isn't a register type (" << t.getString() << ")");
+			NMC_NOTE("available: eax, ecx, ebx, esp, ebp, esi, edi,");
+			NMC_NOTE("ax, cx, dx, bx, al, cl, bl");
+			return reg::eax;
 		}
 	}
 
@@ -438,7 +441,8 @@ namespace nmc
 				st.append(toks[off+1].getString(), content.size());
 			else
 			{
-				// error
+				NMC_ERROR(toks[off], "this isn't a mnemonic (" << toks[off].getString() << ")");
+				NMC_NOTE("there are too many to list here; look them up");
 			}
 
 			content.push_back(tmp);
@@ -520,9 +524,13 @@ namespace nmc
 		{
 			*this = Any(ComplexValue().parse(toks, off));
 		}
-		else if (toks[off+1].getType() == Token::category::value || toks[off] == "(")
+		else if ((toks[off].getType() == Token::category::value && toks[off+1].getType() == Token::category::operation) || toks[off] == "(")
 		{
 			*this = Any(Operation().parse(toks, off));
+		}
+		else if (toks[off].getType() == Token::category::value)
+		{
+			*this = Any(toks[off]);
 		}
 		else
 		{
@@ -585,7 +593,7 @@ namespace nmc
 
 		if (n != 0)
 		{
-			// error
+			NMC_ERROR(toks[off], "mismatched square brackets");
 		}
 
 		return *this;
@@ -671,7 +679,8 @@ namespace nmc
 			return opsym::_decrement;
 		else
 		{
-			// error
+			NMC_ERROR(tok, "this isn't an operator (" << tok.getString() << ")");
+			return opsym::_notAnOperation;
 		}
 	}
 
@@ -741,7 +750,10 @@ namespace nmc
 					}
 					else
 					{
-						// error
+						NMC_ERROR(toks[i], "this operation isn't complete");
+						NMC_NOTE("often caused by two operations back to back (1+ +1),");
+						NMC_NOTE("or two values back to back (1 1 +)");
+						NMC_NOTE("it's bad, just leave it at that");
 					}
 				}
 
@@ -760,7 +772,9 @@ namespace nmc
 					{
 						// if we haven't made an operation yet and we've already overstepped our bounds,
 						// something is wrong
-						// error
+						NMC_ERROR(toks[i], "the operation has ended before it's began");
+						NMC_NOTE("a boundary token appeared before any operation stuff");
+						NMC_NOTE("for example: 1 + }");
 					}
 
 					return root; // exiting...
@@ -796,7 +810,10 @@ namespace nmc
 						}
 						else
 						{
-							// error
+							NMC_ERROR(toks[i], "this operation isn't complete");
+							NMC_NOTE("often caused by two operations back to back (1+ +1),");
+							NMC_NOTE("or two values back to back (1 1 +)");
+							NMC_NOTE("it's bad, just leave it at that");
 						}
 					}
 					else
@@ -814,7 +831,10 @@ namespace nmc
 						}
 						else
 						{
-							// error
+							NMC_ERROR(toks[i], "this operation isn't complete");
+							NMC_NOTE("often caused by two operations back to back (1+ +1),");
+							NMC_NOTE("or two values back to back (1 1 +)");
+							NMC_NOTE("it's bad, just leave it at that");
 						}
 					}
 				}
@@ -829,10 +849,6 @@ namespace nmc
 				// operations are always pushed to the stack
 				stack.push_back(toks[i]);
 			}
-			else
-			{
-				// error
-			}
 
 			if (m != NULL) // set the maximum length
 				*m = i;
@@ -840,7 +856,10 @@ namespace nmc
 
 		if (root.sym == opsym::_notAnOperation)
 		{
-			// error
+			NMC_ERROR(toks[0], "this operation isn't complete");
+			NMC_NOTE("often caused by two operations back to back (1+ +1),");
+			NMC_NOTE("or two values back to back (1 1 +)");
+			NMC_NOTE("it's bad, just leave it at that");
 		}
 
 		return root;
@@ -945,9 +964,15 @@ namespace nmc
 			return typeQualifier::_public;
 		else if (tok == "variadic")
 			return typeQualifier::_variadic;
+		else if (tok == "vector")
+			return typeQualifier::_vector;
 		else
 		{
-			// error
+			NMC_ERROR(tok, "this isn't a type qualifier (" << tok.getString() << ")");
+			NMC_NOTE("available: bool, byte, int, float,");
+			NMC_NOTE("ref, long, unsigned, const, void,");
+			NMC_NOTE("class, abstract, private, protected,");
+			NMC_NOTE("public, variadic");
 		}
 	}
 
@@ -972,7 +997,9 @@ namespace nmc
 		
 		if (toks[off].getType() != Token::category::symbol)
 		{
-			// error
+			NMC_ERROR(toks[off], "expected a symbol in this expression");
+			NMC_NOTE("instead got " << toks[off].display());
+			return *this;
 		}
 
 		symbol = toks[off];
@@ -1039,7 +1066,6 @@ namespace nmc
 				}
 				else
 				{
-					// error
 				}
 			}
 
@@ -1067,7 +1093,6 @@ namespace nmc
 				}
 				else
 				{
-					// error
 				}
 			}
 

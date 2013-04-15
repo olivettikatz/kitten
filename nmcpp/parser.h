@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include "lexer.h"
+#include "error.h"
 
 namespace nmc
 {
@@ -311,6 +312,7 @@ namespace nmc
 			_protected,
 			_public,
 			_variadic,
+			_vector
 		} typeQualifier;
 
 	private:

@@ -324,45 +324,6 @@ namespace nmc
 			}
 		}
 
-		/*for (vector<Token>::iterator i = rtn.begin(); i != rtn.end(); i++)
-		{
-			if (*i == "-")
-			{
-				if ((i-1)->getType() != Token::category::symbol && (i-1)->getType() != Token::category::value)
-				{
-					Token tmp = *(i+1);
-					rtn.erase(i+1);
-					rtn.erase(i);
-					rtn.insert(i, Token("-"+tmp.getString(), tmp.getLine(), tmp.getCol()-1).setType(tmp.getType()));
-					i--;
-				}
-			}
-			else if (*i == ".")
-			{
-				if ((i-1)->getType() != Token::category::symbol)
-				{
-					string pref = "";
-					Token tmp = *(i+1);
-					if ((i-1)->getType() == Token::category::value)
-						pref = (i-1)->getString();
-					rtn.erase(i+1);
-					rtn.erase(i);
-					if (!pref.empty())
-						rtn.erase(i-1);
-					rtn.insert(i, Token(pref+"."+tmp.getString(), tmp.getLine(), tmp.getCol()-1).setType(tmp.getType()));
-					i--;
-				}
-			}
-			else if (*i == "-.")
-			{
-				Token tmp = *(i+1);
-				rtn.erase(i+1);
-				rtn.erase(i);
-				rtn.insert(i, Token("-."+tmp.getString(), tmp.getLine(), tmp.getCol()-2).setType(tmp.getType()));
-				i--;
-			}
-		}*/
-
 		return rtn;
 	}
 }
