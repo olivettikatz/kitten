@@ -138,7 +138,7 @@ namespace nmc
 		InternalAssembly() {}
 		void append(opcode o, reg r0, reg r1, int val);
 		vector<instruction> getContent();
-		void parse(vector<Token> toks, int &off, SymbolTable &st);
+		InternalAssembly &parse(vector<Token> toks, int &off, SymbolTable &st);
 	};
 
 	class ComplexValue;
@@ -154,12 +154,14 @@ namespace nmc
 			_complexValue,
 			_operation,
 			_expression,
+			_internalAssembly,
 			_null
 		} category;
 
 	private:
 		category type;
 		Token _t;
+		InternalAssembly _a;
 		shared_ptr<ComplexValue> _c;
 		shared_ptr<Operation> _o;
 		shared_ptr<Expression> _e;
@@ -167,6 +169,7 @@ namespace nmc
 	public:
 		Any() : type(category::_null) {}
 		Any(Token t) : type(category::_token), _t(t) {}
+		Any(InternalAssembly a) : type(category::_internalAssembly), _a(a) {}
 		Any(ComplexValue c);
 		Any(Operation o);
 		Any(Expression e);
@@ -175,11 +178,13 @@ namespace nmc
 		bool isComplexValue();
 		bool isOperation();
 		bool isExpression();
+		bool isInternalAssembly();
 		Token &getToken();
+		InternalAssembly &getInternalAssembly();
 		ComplexValue &getComplexValue();
 		Operation &getOperation();
 		Expression &getExpression();
-		Any &parse(vector<Token> toks, int &off);
+		Any &parse(vector<Token> toks, int &off, SymbolTable &st);
 		string display();
 	};
 
@@ -192,7 +197,7 @@ namespace nmc
 		ComplexValue() {}
 		vector<Any> getContent();
 		bool ok();
-		ComplexValue &parse(vector<Token> toks, int &off);
+		ComplexValue &parse(vector<Token> toks, int &off, SymbolTable &st);
 		string display();
 	};
 		
@@ -280,7 +285,7 @@ namespace nmc
 
 		opsym parseOpsym(Token tok);
 		int getPrecedence(opsym o);
-		Operation parseBase(vector<Token> toks, int *m);
+		Operation parseBase(vector<Token> toks, int *m, SymbolTable &st);
 
 	public:
 		Operation() : sym(opsym::_notAnOperation) {}
@@ -288,7 +293,7 @@ namespace nmc
 		Any getLeft();
 		Any getRight();
 		bool ok();
-		Operation &parse(vector<Token> toks, int &off);
+		Operation &parse(vector<Token> toks, int &off, SymbolTable &st);
 		string display();
 	};
 
@@ -334,11 +339,11 @@ namespace nmc
 		vector<Any> getBody();
 		vector<Any> getWhereBody();
 		bool ok();
-		Expression &parse(vector<Token> toks, int &off);
+		Expression &parse(vector<Token> toks, int &off, SymbolTable &st);
 		string display();
 	};
 
-	vector<Any> parse(vector<Token> toks);
+	vector<Any> parse(vector<Token> toks, SymbolTable &st);
 }
 
 #endif

@@ -83,7 +83,7 @@ namespace nmc
 		return content;
 	}
 
-	void InternalAssembly::parse(vector<Token> toks, int &off, SymbolTable &st)
+	InternalAssembly &InternalAssembly::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		for (; off < toks.size(); off++)
 		{
@@ -447,6 +447,8 @@ namespace nmc
 
 			content.push_back(tmp);
 		}
+
+		return *this;
 	}
 
 	Any::Any(ComplexValue c)
@@ -483,6 +485,11 @@ namespace nmc
 		return (type == category::_token);
 	}
 
+	bool Any::isInternalAssembly()
+	{
+		return (type == category::_internalAssembly);
+	}
+
 	bool Any::isComplexValue()
 	{
 		return (type == category::_complexValue);
@@ -503,6 +510,11 @@ namespace nmc
 		return _t;
 	}
 
+	InternalAssembly &Any::getInternalAssembly()
+	{
+		return _a;
+	}
+
 	ComplexValue &Any::getComplexValue()
 	{
 		return *_c;
@@ -518,23 +530,28 @@ namespace nmc
 		return *_e;
 	}
 
-	Any &Any::parse(vector<Token> toks, int &off)
+	Any &Any::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		if (toks[off] == "[")
 		{
-			*this = Any(ComplexValue().parse(toks, off));
+			*this = Any(ComplexValue().parse(toks, off, st));
 		}
 		else if ((toks[off].getType() == Token::category::value && toks[off+1].getType() == Token::category::operation) || toks[off] == "(")
 		{
-			*this = Any(Operation().parse(toks, off));
+			*this = Any(Operation().parse(toks, off, st));
 		}
 		else if (toks[off].getType() == Token::category::value)
 		{
 			*this = Any(toks[off]);
 		}
+		else if (toks[off] == "any")
+		{
+			off += 2;
+			*this = Any(InternalAssembly().parse(toks, off, st));
+		}
 		else
 		{
-			*this = Any(Expression().parse(toks, off));
+			*this = Any(Expression().parse(toks, off, st));
 		}
 
 		return *this;
@@ -564,7 +581,7 @@ namespace nmc
 		return !content.empty();
 	}
 
-	ComplexValue &ComplexValue::parse(vector<Token> toks, int &off)
+	ComplexValue &ComplexValue::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		int n = 0;
 
@@ -587,7 +604,7 @@ namespace nmc
 			}
 			else
 			{
-				content.push_back(Any().parse(toks, off));
+				content.push_back(Any().parse(toks, off, st));
 			}
 		}
 
@@ -689,7 +706,7 @@ namespace nmc
 		return precedence[o];
 	}
 
-	Operation Operation::parseBase(vector<Token> toks, int *m)
+	Operation Operation::parseBase(vector<Token> toks, int *m, SymbolTable &st)
 	{
 		vector<Token> stack; // the token stack (max 2 values/operations)
 		Operation root; // the root operation (this is what is returned)
@@ -714,7 +731,7 @@ namespace nmc
 						// there is no root, so we make a new one by parsing the sub-scope
 						vector<Token> tmp2(toks.begin()+(i+1), toks.end());
 						int tmpm = 0;
-						root = parseBase(tmp2, &tmpm);
+						root = parseBase(tmp2, &tmpm, st);
 						i += tmpm;
 						head = &root;
 						stack.clear();
@@ -729,7 +746,7 @@ namespace nmc
 						vector<Token> tmp2(toks.begin()+(i+1), toks.end());
 						// parse the sub-scope
 						int tmpm = 0;
-						tmp.right = parseBase(tmp2, &tmpm);
+						tmp.right = parseBase(tmp2, &tmpm, st);
 						i += tmpm;
 						// append it properly
 						*head = tmp;
@@ -743,7 +760,7 @@ namespace nmc
 						root.left = stack[stack.size()-2];
 						vector<Token> tmp(toks.begin()+(i+1), toks.end());
 						int tmpm = 0;
-						root.right = parseBase(tmp, &tmpm);
+						root.right = parseBase(tmp, &tmpm, st);
 						i += tmpm;
 						head = &root;
 						stack.clear();
@@ -885,11 +902,11 @@ namespace nmc
 		return (sym != _notAnOperation);
 	}
 
-	Operation &Operation::parse(vector<Token> toks, int &off)
+	Operation &Operation::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		int i = 0;
 		vector<Token> tmp(toks.begin()+off, toks.end());
-		Operation rtn = parseBase(tmp, &i);
+		Operation rtn = parseBase(tmp, &i, st);
 		off = i;
 		*this = rtn;
 		return *this;
@@ -981,7 +998,7 @@ namespace nmc
 		return !symbol.getString().empty();
 	}
 
-	Expression &Expression::parse(vector<Token> toks, int &off)
+	Expression &Expression::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		while(off < toks.size() && toks[off].getType() == Token::category::type)
 		{
@@ -1013,7 +1030,7 @@ namespace nmc
 
 		if (off < toks.size() && toks[off] == "[")
 		{
-			cva = ComplexValue().parse(toks, off);
+			cva = ComplexValue().parse(toks, off, st);
 			off++;
 		}
 
@@ -1028,7 +1045,7 @@ namespace nmc
 			off++;
 			for (; off < toks.size(); off++)
 			{
-				Any tmp = Any().parse(toks, off);
+				Any tmp = Any().parse(toks, off, st);
 				args.push_back(tmp);
 				if (off < toks.size() && toks[off] == ",")
 				{
@@ -1056,7 +1073,7 @@ namespace nmc
 
 			for (; off < toks.size(); off++)
 			{
-				body.push_back(Any().parse(toks, off));
+				body.push_back(Any().parse(toks, off, st));
 				if (off < toks.size() && toks[off] == ";")
 				{
 				}
@@ -1083,7 +1100,7 @@ namespace nmc
 
 			for (; off < toks.size(); off++)
 			{
-				where.push_back(Any().parse(toks, off));
+				where.push_back(Any().parse(toks, off, st));
 				if (off < toks.size() && toks[off] == ";")
 				{
 				}
@@ -1119,13 +1136,13 @@ namespace nmc
 		return ss.str();
 	}
 
-	vector<Any> parse(vector<Token> toks)
+	vector<Any> parse(vector<Token> toks, SymbolTable &st)
 	{
 		vector<Any> rtn;
 		int i = 0;
 		while(i < toks.size()-1)
 		{
-			rtn.push_back(Any().parse(toks, i));
+			rtn.push_back(Any().parse(toks, i, st));
 			if (toks[i] == ";")
 			{
 				i++;
