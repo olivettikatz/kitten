@@ -2,6 +2,9 @@ CC=gcc
 CFLAGS=-g -O0 --std=c99
 LIBS=-lm
 
+AR=ar
+ARFLAGS=rcs
+
 RM=rm
 RMFLAGS=-f
 
@@ -40,9 +43,10 @@ endif
 	$(CC) $(CFLAGS) $< $(OBJ) -o $@ $(LIBS)
 
 build : $(OBJ)
+	$(AR) $(ARFLAGS) libincandescense.a $(OBJ)
 
 test : $(TEST)
 
 clean :
-	$(RM) $(RMFLAGS) $(OBJ)
+	$(RM) $(RMFLAGS) $(OBJ) libincandescense.a
 	for i in $(TEST); do $(RM) $(RMFLAGS) $$i $$(dirname $$i)/$$(basename $$i .bin).o; done
