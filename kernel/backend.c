@@ -109,15 +109,15 @@ int ids_render_pixel(ids_coord loc)
 #endif
 }
 
-int ids_render_line(ids_coord start, ids_coord end)
+int ids_render_line(ids_coord start, ids_coord end, int thickness, int rounded)
 {
 #ifndef IDS_DISABLE_X11
 	if (ids_current_backend == x11)
-		return ids_render_line_x11(start, end);
+		return ids_render_line_x11(start, end, thickness, rounded);
 #endif
 #ifndef IDS_DISABLE_OPENGL
 	if (ids_current_backend == opengl)
-		return ids_render_line_opengl(start, end);
+		return ids_render_line_opengl(start, end, thickness, rounded);
 #endif
 }
 
@@ -130,6 +130,18 @@ int ids_render_rect(ids_coord topleft, ids_coord bottomright)
 #ifndef IDS_DISABLE_OPENGL
 	if (ids_current_backend == opengl)
 		return ids_render_rect_opengl(topleft, bottomright);
+#endif
+}
+
+int ids_render_arc(ids_coord center, int innerradius, int outerradius, double startangle, double endangle, int rounded)
+{
+#ifndef IDS_DISABLE_X11
+	if (ids_current_backend == x11)
+		return ids_render_arc_x11(center, innerradius, outerradius, startangle, endangle, rounded);
+#endif
+#ifndef IDS_DISABLE_OPENGL
+	if (ids_current_backend == opengl)
+		return ids_render_arc_opengl(center, innerradius, outerradius, startangle, endangle, rounded);
 #endif
 }
 

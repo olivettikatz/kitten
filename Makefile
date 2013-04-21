@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-g -O0 --std=c99
-LIBS=
+LIBS=-lm
 
 RM=rm
 RMFLAGS=-f

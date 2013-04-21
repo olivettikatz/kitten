@@ -1,5 +1,6 @@
 #include "../backend.h"
 #include <string.h>
+#include <math.h>
 #include <malloc.h>
 #include <GL/glut.h>
 #include <ft2build.h>
@@ -189,6 +190,7 @@ int ids_main_opengl_lazy()
 
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_LINE_SMOOTH);
 
 	glutMainLoop();
 	return 0;
@@ -239,18 +241,31 @@ int ids_color_opengl(char *color)
 int ids_render_pixel_opengl(ids_coord loc)
 {
 	glPointSize(1.0f);
+	glDisable(GL_POINT_SMOOTH);
 	glBegin(GL_POINTS);
 	glVertex2f(IDS_OPENGL_X(loc), IDS_OPENGL_Y(loc));
 	glEnd();
 	return 0;
 }
 
-int ids_render_line_opengl(ids_coord start, ids_coord end)
+int ids_render_line_opengl(ids_coord start, ids_coord end, int thickness, int rounded)
 {
+	glLineWidth(thickness);
 	glBegin(GL_LINES);
 	glVertex2f(IDS_OPENGL_X(start), IDS_OPENGL_Y(start));
 	glVertex2f(IDS_OPENGL_X(end), IDS_OPENGL_Y(end));
 	glEnd();
+
+	if (rounded)
+	{
+		glPointSize(thickness);
+		glEnable(GL_POINT_SMOOTH);
+		glBegin(GL_POINTS);
+		glVertex2f(IDS_OPENGL_X(start), IDS_OPENGL_Y(start));
+		glVertex2f(IDS_OPENGL_X(end), IDS_OPENGL_Y(end));
+		glEnd();
+	}
+
 	return 0;
 }
 
@@ -262,6 +277,15 @@ int ids_render_rect_opengl(ids_coord topleft, ids_coord bottomright)
 	glVertex2f(IDS_OPENGL_X(bottomright), IDS_OPENGL_Y(bottomright));
 	glVertex2f(IDS_OPENGL_X(topleft), IDS_OPENGL_Y(bottomright));
 	glEnd();
+	return 0;
+}
+
+int ids_render_arc_opengl(ids_coord center, int innerradius, int outerradius, double startangle, double endangle, int rounded)
+{
+	GLUquadric *q = gluNewQuadric();
+	double h = sqrt(ids_size.x*ids_size.x+ids_size.y*ids_size.y);
+	gluPartialDisk(q, (double)innerradius/h, (double)outerradius/h, 16, 1, startangle*180/M_PI, (endangle-startangle)*180/M_PI);
+	gluDeleteQuadric(q);
 	return 0;
 }
 

@@ -45,8 +45,9 @@ int ids_title_x11(char *t);
 int ids_request_render_x11();
 int ids_color_x11(char *color);
 int ids_render_pixel_x11(ids_coord loc);
-int ids_render_line_x11(ids_coord start, ids_coord end);
+int ids_render_line_x11(ids_coord start, ids_coord end, int thickness, int rounded);
 int ids_render_rect_x11(ids_coord topleft, ids_coord bottomright);
+int ids_render_arc_x11(ids_coord center, int innerradius, int outerradius, double startangle, double endangle, int rounded);
 char **ids_fontlist_x11();
 int ids_font_x11(char *f, int s);
 int ids_render_text_x11(ids_coord topleft, char *str);
@@ -63,8 +64,9 @@ int ids_title_opengl(char *t);
 int ids_request_render_opengl();
 int ids_color_opengl(char *color);
 int ids_render_pixel_opengl(ids_coord loc);
-int ids_render_line_opengl(ids_coord start, ids_coord end);
+int ids_render_line_opengl(ids_coord start, ids_coord end, int thickness, int rounded);
 int ids_render_rect_opengl(ids_coord topleft, ids_coord bottomright);
+int ids_render_arc_opengl(ids_coord center, int innerradius, int outerradius, double startangle, double endangle, int rounded);
 char **ids_fontlist_opengl();
 int ids_font_opengl(char *f, int s);
 int ids_render_text_opengl(ids_coord topleft, char *str);
@@ -79,8 +81,9 @@ int ids_title(char *t);
 int ids_request_render();
 int ids_color(char *color);
 int ids_render_pixel(ids_coord loc);
-int ids_render_line(ids_coord start, ids_coord end);
+int ids_render_line(ids_coord start, ids_coord end, int thickness, int rounded);
 int ids_render_rect(ids_coord topleft, ids_coord bottomright);
+int ids_render_arc(ids_coord center, int innerradius, int outerradius, double startangle, double endangle, int rounded);
 char **ids_fontlist();
 int ids_font(char *f, int s);
 int ids_render_text(ids_coord topleft, char *str);
@@ -118,6 +121,10 @@ extern ids_coord ids_mouse;
 #define IDS_MOD_SHIFT 0x2
 #define IDS_MOD_ALT 0x4
 #define IDS_MOD_META 0x8
+
+#ifndef M_PI
+#define M_PI 3.141592653589
+#endif
 
 #define IDS_ERROR_INIT(msg...) printf("[incandescence-init] " # msg "\n", ##msg)
 

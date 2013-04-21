@@ -1,5 +1,6 @@
 #include "../backend.h"
 #include <string.h>
+#include <math.h>
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 #include <Imlib2.h>
@@ -194,14 +195,26 @@ int ids_render_pixel_x11(ids_coord loc)
 	return 0;
 }
 
-int ids_render_line_x11(ids_coord start, ids_coord end)
+int ids_render_line_x11(ids_coord start, ids_coord end, int thickness, int rounded)
 {
+	XSetLineAttributes(dsp, gc, thickness, LineSolid, (rounded ? CapRound : CapNotLast), JoinBevel);
 	XDrawLine(dsp, win, gc, start.x, start.y, end.x, end.y);
+	return 0;
 }
 
 int ids_render_rect_x11(ids_coord topleft, ids_coord bottomright)
 {
 	XFillRectangle(dsp, win, gc, topleft.x, topleft.y, bottomright.x-topleft.x, bottomright.y-topleft.y);
+	return 0;
+}
+
+#define IDS_X11_ANGLE(a) (int)(a*11520/M_PI)
+
+int ids_render_arc_x11(ids_coord center, int innerradius, int outerradius, double startangle, double endangle, int rounded)
+{
+	XSetLineAttributes(dsp, gc, outerradius-innerradius, LineSolid, (rounded ? CapRound : CapNotLast), JoinBevel);
+	XDrawArc(dsp, win, gc, center.x-(innerradius+outerradius)*0.5, center.y-(innerradius+outerradius)*0.5, innerradius+outerradius, innerradius+outerradius, IDS_X11_ANGLE(startangle), IDS_X11_ANGLE(endangle));
+	return 0;
 }
 
 char **ids_fontlist_x11()
