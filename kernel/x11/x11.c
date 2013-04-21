@@ -30,7 +30,7 @@ int ids_halt_x11()
 int ids_main_x11_lazy()
 {
 	win = XCreateSimpleWindow(dsp, RootWindow(dsp, DefaultScreen(dsp)), 1, 1, ids_size.x, ids_size.y, 0, BlackPixel(dsp, DefaultScreen(dsp)), BlackPixel(dsp, DefaultScreen(dsp)));
-	XSelectInput(dsp, win, ExposureMask|KeyPressMask|KeyReleaseMask|ButtonPressMask|PointerMotionMask);
+	XSelectInput(dsp, win, ExposureMask|KeyPressMask|KeyReleaseMask|ButtonPressMask|PointerMotionMask|StructureNotifyMask);
 	XMapWindow(dsp, win);
 	gc = XCreateGC(dsp, win, 0, 0);
 	XSetBackground(dsp, gc, BlackPixel(dsp, DefaultScreen(dsp)));
@@ -48,13 +48,16 @@ int ids_main_x11_lazy()
 			if (ids_render)
 				ids_render(ids_size, 0, 0);
 		}
+		else if (e.type == DestroyNotify)
+		{
+			break;
+		}
 		else if (e.type == KeyPress || e.type == KeyRelease)
 		{
 			char buf[32];
 			KeySym sym;
 			XComposeStatus status;
 			int l = XLookupString(&e.xkey, buf, 32, &sym, &status);
-			printf("%04x '%s' (%i)\n", sym, buf, l);
 			unsigned int k = 0;
 			if (l == 1)
 				k = (unsigned int)buf[0];
@@ -208,7 +211,7 @@ char **ids_fontlist_x11()
 	return tmp;
 }
 
-int ids_font_x11(char *f)
+int ids_font_x11(char *f, int s)
 {
 	if (f == NULL)
 		return 1;

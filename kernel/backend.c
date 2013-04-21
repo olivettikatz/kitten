@@ -145,15 +145,15 @@ char **ids_fontlist()
 #endif
 }
 
-int ids_font(char *f)
+int ids_font(char *f, int s)
 {
 #ifndef IDS_DISABLE_X11
 	if (ids_current_backend == x11)
-		return ids_font_x11(f);
+		return ids_font_x11(f, s);
 #endif
 #ifndef IDS_DISABLE_OPENGL
 	if (ids_current_backend == opengl)
-		return ids_font_opengl(f);
+		return ids_font_opengl(f, s);
 #endif
 }
 

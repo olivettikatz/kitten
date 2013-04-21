@@ -26,6 +26,7 @@ void ids_opengl_render()
 {
 	if (ids_render)
 	{
+		printf("rendering... %ix%i\n", ids_size.x, ids_size.y);
 		glClear(GL_COLOR_BUFFER_BIT);
 		ids_render(ids_size, 0, 0);
 		glutSwapBuffers();
@@ -38,14 +39,14 @@ void ids_opengl_reshape(int w, int h)
 	ids_size.y = h;
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
 	glViewport(0, 0, w, h);
-	gluPerspective(45, (float)w/(float)h, 1, 1000);
-	glOrtho(0, w, h, 0, 0, 1);
-	glMatrixMode(GL_MODELVIEW);
+	glOrtho(-1, w+1, h+1, -1, -1, 2);
 
 	if (ids_resize)
+	{
 		ids_resize(ids_size, 0, 0);
+		ids_opengl_render();
+	}
 }
 
 unsigned int ids_opengl_key_convert(unsigned char glk)
@@ -206,7 +207,8 @@ int ids_title_opengl(char *t)
 
 int ids_request_render_opengl()
 {
-	return 1;
+	ids_opengl_render();
+	return 0;
 }
 
 int ids_color_opengl(char *color)
@@ -230,11 +232,12 @@ int ids_color_opengl(char *color)
 	return 0;
 }
 
-#define IDS_OPENGL_X(c) ((float)(c.x-ids_size.x>>1)/(float)ids_size.x)
-#define IDS_OPENGL_Y(c) ((float)(c.y-ids_size.y>>1)/(float)ids_size.y)
+#define IDS_OPENGL_X(c) (float)c.x
+#define IDS_OPENGL_Y(c) (float)c.y
 
 int ids_render_pixel_opengl(ids_coord loc)
 {
+	glPointSize(1.0f);
 	glBegin(GL_POINTS);
 	glVertex2f(IDS_OPENGL_X(loc), IDS_OPENGL_Y(loc));
 	glEnd();
@@ -362,9 +365,12 @@ int ids_font_opengl_base(char *f, unsigned int h)
 	return 0;
 }
 
-int ids_font_opengl(char *f)
+int ids_font_opengl(char *f, int size)
 {
-	return ids_font_opengl_base(f, 16);
+	if (f == NULL)
+		return 1;
+
+	return ids_font_opengl_base(f, size);
 }
 
 int ids_render_text_opengl(ids_coord topleft, char *str)
@@ -392,7 +398,7 @@ int ids_render_text_opengl(ids_coord topleft, char *str)
 
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslatef(topleft.x, topleft.y, 0);
+	glTranslatef(IDS_OPENGL_X(topleft), IDS_OPENGL_Y(ids_size)-IDS_OPENGL_Y(topleft), 0);
 	glMultMatrixf(modelview);
 	glCallLists(strlen(str), GL_UNSIGNED_BYTE, str);
 	glPopMatrix();

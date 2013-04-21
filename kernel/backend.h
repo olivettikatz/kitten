@@ -42,7 +42,7 @@ int ids_render_pixel_x11(ids_coord loc);
 int ids_render_line_x11(ids_coord start, ids_coord end);
 int ids_render_rect_x11(ids_coord topleft, ids_coord bottomright);
 char **ids_fontlist_x11();
-int ids_font_x11(char *f);
+int ids_font_x11(char *f, int s);
 int ids_render_text_x11(ids_coord topleft, char *str);
 #endif
 #ifndef IDS_DISABLE_OPENGL
@@ -57,7 +57,7 @@ int ids_render_pixel_opengl(ids_coord loc);
 int ids_render_line_opengl(ids_coord start, ids_coord end);
 int ids_render_rect_opengl(ids_coord topleft, ids_coord bottomright);
 char **ids_fontlist_opengl();
-int ids_font_opengl(char *f);
+int ids_font_opengl(char *f, int s);
 int ids_render_text_opengl(ids_coord topleft, char *str);
 #endif
 int ids_init(ids_backend b);
@@ -70,7 +70,7 @@ int ids_render_pixel(ids_coord loc);
 int ids_render_line(ids_coord start, ids_coord end);
 int ids_render_rect(ids_coord topleft, ids_coord bottomright);
 char **ids_fontlist();
-int ids_font(char *f);
+int ids_font(char *f, int s);
 int ids_render_text(ids_coord topleft, char *str);
 
 extern ids_backend ids_current_backend;
