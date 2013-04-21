@@ -2,6 +2,7 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
+#include <Imlib2.h>
 
 Display *dsp;
 Window win;
@@ -233,6 +234,44 @@ int ids_render_text_x11(ids_coord topleft, char *str)
 		return 4;
 
 	XftDrawString8(draw, &xftcolor, font, topleft.x, topleft.y, (XftChar8 *)str, strlen(str));
+	return 0;
+}
+
+ids_bitmap ids_load_bitmap_x11(char *path)
+{
+	int x, y;
+	unsigned int w, h;
+	Pixmap bitmap;
+
+	ids_bitmap rtn;
+	rtn.size = ids_at(0, 0);
+	rtn.data = NULL;
+
+	Imlib_Image img = imlib_load_image(path);
+	if (!img)
+		return rtn;
+
+	imlib_context_set_image(img);
+
+	rtn.size.x = imlib_image_get_width();
+	rtn.size.y = imlib_image_get_height();
+	rtn.data = malloc(sizeof(Imlib_Image));
+	memcpy(rtn.data, &img, sizeof(Imlib_Image));
+	return rtn;
+}
+
+int ids_render_bitmap_x11(ids_coord topleft, ids_bitmap b)
+{
+	imlib_context_set_image(*(Imlib_Image *)b.data);
+	imlib_blend_image_onto_image(*(Imlib_Image *)b.data, 0, 0, 0, b.size.x, b.size.y, topleft.x, topleft.y, b.size.x, b.size.y);
+	return 0;
+}
+
+int ids_destroy_bitmap_x11(ids_bitmap b)
+{
+	imlib_context_set_image(*(Imlib_Image *)b.data);
+	imlib_free_image();
+	free(b.data);
 	return 0;
 }
 

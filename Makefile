@@ -5,11 +5,11 @@ LIBS=
 RM=rm
 RMFLAGS=-f
 
-CFLAGS_X11=$(shell pkg-config --cflags x11 xft)
-LIBS_X11=$(shell pkg-config --libs x11 xft)
+CFLAGS_X11=$(shell pkg-config --cflags x11 xft imlib2)
+LIBS_X11=$(shell pkg-config --libs x11 xft imlib2)
 
 CFLAGS_OPENGL=$(shell pkg-config --cflags gl freetype2)
-LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut
+LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL
 
 OBJ=kernel/backend.o
 TEST=test/test_kernel.bin

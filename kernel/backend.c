@@ -169,3 +169,39 @@ int ids_render_text(ids_coord topleft, char *str)
 #endif
 }
 
+ids_bitmap ids_load_bitmap(char *path)
+{
+#ifndef IDS_DISABLE_X11
+	if (ids_current_backend == x11)
+		return ids_load_bitmap_x11(path);
+#endif
+#ifndef IDS_DISABLE_OPENGL
+	if (ids_current_backend == opengl)
+		return ids_load_bitmap_opengl(path);
+#endif
+}
+
+int ids_render_bitmap(ids_coord topleft, ids_bitmap b)
+{
+#ifndef IDS_DISABLE_X11
+	if (ids_current_backend == x11)
+		return ids_render_bitmap_x11(topleft, b);
+#endif
+#ifndef IDS_DISABLE_OPENGL
+	if (ids_current_backend == opengl)
+		return ids_render_bitmap_opengl(topleft, b);
+#endif
+}
+
+int ids_destroy_bitmap(ids_bitmap b)
+{
+#ifndef IDS_DISABLE_X11
+	if (ids_current_backend == x11)
+		return ids_destroy_bitmap_x11(b);
+#endif
+#ifndef IDS_DISABLE_OPENGL
+	if (ids_current_backend == opengl)
+		return ids_destroy_bitmap_opengl(b);
+#endif
+}
+

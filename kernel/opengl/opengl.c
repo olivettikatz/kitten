@@ -7,6 +7,7 @@
 #include <freetype/ftglyph.h>
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
+#include <SOIL/SOIL.h>
 
 int ids_init_opengl()
 {
@@ -410,6 +411,47 @@ int ids_render_text_opengl(ids_coord topleft, char *str)
 	glPopMatrix();
 	glPopAttrib();
 
+	return 0;
+}
+
+ids_bitmap ids_load_bitmap_opengl(char *path)
+{
+	ids_bitmap rtn;
+	rtn.size = ids_at(0, 0);
+	rtn.data = NULL;
+
+	GLuint tex = SOIL_load_OGL_texture(path, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (tex == 0)
+		return rtn;
+
+	rtn.data = (void *)tex;
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WIDTH, &rtn.size.x);
+	glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_HEIGHT, &rtn.size.y);
+
+	return rtn;
+}
+
+int ids_render_bitmap_opengl(ids_coord topleft, ids_bitmap b)
+{
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, (GLuint)b.data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex2f(IDS_OPENGL_X(topleft), IDS_OPENGL_Y(topleft));
+	glTexCoord2f(0, 1); glVertex2f(IDS_OPENGL_X(topleft), IDS_OPENGL_Y(topleft)+IDS_OPENGL_Y(b.size));
+	glTexCoord2f(1, 1); glVertex2f(IDS_OPENGL_X(topleft)+IDS_OPENGL_X(b.size), IDS_OPENGL_Y(topleft)+IDS_OPENGL_Y(b.size));
+	glTexCoord2f(1, 0); glVertex2f(IDS_OPENGL_X(topleft)+IDS_OPENGL_X(b.size), IDS_OPENGL_Y(topleft));
+	glEnd();
+
+	return 0;
+}
+
+int ids_destroy_bitmap_opengl(ids_bitmap b)
+{
+	GLuint tmp = (GLuint)b.data;
+	glDeleteTextures(1, &tmp);
 	return 0;
 }
 

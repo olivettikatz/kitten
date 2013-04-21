@@ -10,6 +10,12 @@ typedef struct
 	unsigned int y;
 } ids_coord;
 
+typedef struct
+{
+	ids_coord size;
+	void *data;
+} ids_bitmap;
+
 ids_coord ids_at(int x, int y);
 
 typedef int (*ids_callback)(ids_coord, unsigned int, unsigned int);
@@ -44,6 +50,9 @@ int ids_render_rect_x11(ids_coord topleft, ids_coord bottomright);
 char **ids_fontlist_x11();
 int ids_font_x11(char *f, int s);
 int ids_render_text_x11(ids_coord topleft, char *str);
+ids_bitmap ids_load_bitmap_x11(char *path);
+int ids_render_bitmap_x11(ids_coord topleft, ids_bitmap b);
+int ids_destroy_bitmap_x11(ids_bitmap b);
 #endif
 #ifndef IDS_DISABLE_OPENGL
 int ids_init_opengl();
@@ -59,6 +68,9 @@ int ids_render_rect_opengl(ids_coord topleft, ids_coord bottomright);
 char **ids_fontlist_opengl();
 int ids_font_opengl(char *f, int s);
 int ids_render_text_opengl(ids_coord topleft, char *str);
+ids_bitmap ids_load_bitmap_opengl(char *path);
+int ids_render_bitmap_opengl(ids_coord topleft, ids_bitmap b);
+int ids_destroy_bitmap_opengl(ids_bitmap b);
 #endif
 int ids_init(ids_backend b);
 int ids_halt();
@@ -72,6 +84,9 @@ int ids_render_rect(ids_coord topleft, ids_coord bottomright);
 char **ids_fontlist();
 int ids_font(char *f, int s);
 int ids_render_text(ids_coord topleft, char *str);
+ids_bitmap ids_load_bitmap(char *path);
+int ids_render_bitmap(ids_coord topleft, ids_bitmap b);
+int ids_destroy_bitmap(ids_bitmap b);
 
 extern ids_backend ids_current_backend;
 
