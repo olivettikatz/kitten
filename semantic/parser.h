@@ -15,18 +15,18 @@ namespace taurus
 		string id;
 		string expectation;
 		bool _keep;
-		bool many;
+		bool _many;
 		vector<string> sequence;
 		vector<string> alternates;
 
 	public:
-		Expectation() : expectation(0), _keep(false), many(false) {}
-		Expectation(string e) : expectation(e), _keep(false), many(false) {}
-		Expectation &identify(string i);
-		Expectation &operator || (Expectation e);
-		Expectation &operator , (Expectation e);
-		Expectation &operator ++ ();
-		Expectation &keep();
+		Expectation() : expectation(0), _keep(false), _many(false) {}
+		Expectation(string e) : expectation(e), _keep(false), _many(false) {}
+		Expectation identify(string i);
+		Expectation operator || (Expectation e);
+		Expectation operator << (Expectation e);
+		Expectation keep();
+		Expectation many();
 
 		string getID();
 		string getExpectation();
@@ -47,7 +47,9 @@ namespace taurus
 		Expectation operator () ();
 		Expectation operator () (string n, string e);
 		Expectation operator () (string n);
-		Parser &add(Expectation e);
+		Parser add(Expectation e);
+		Parser add(string n, Expectation e);
+		Parser many(string n);
 		AST parse(string n, vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
 	};
 }

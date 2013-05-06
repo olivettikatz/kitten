@@ -42,6 +42,11 @@ namespace taurus
 		return content;
 	}
 
+	string Token::set(string s)
+	{
+		return (content = s);
+	}
+
 	string Token::getContent()
 	{
 		return content;

@@ -2,34 +2,33 @@
 
 namespace taurus
 {
-	Expectation &Expectation::identify(string i)
+	Expectation Expectation::identify(string i)
 	{
 		id = i;
 		return *this;
 	}
 
-	Expectation &Expectation::operator || (Expectation e)
+	Expectation Expectation::operator || (Expectation e)
 	{
 		alternates.push_back(e.id);
 		return *this;
 	}
 
-	Expectation &Expectation::operator , (Expectation e)
+	Expectation Expectation::operator << (Expectation e)
 	{
 		sequence.push_back(e.id);
 		return *this;
 	}
 
-	Expectation &Expectation::operator ++ ()
-	{
-		many = true;
-		return *this;
-	}
-
-	Expectation &Expectation::keep()
+	Expectation Expectation::keep()
 	{
 		_keep = true;
 		return *this;
+	}
+
+	Expectation Expectation::many()
+	{
+		_many = true;
 	}
 
 	string Expectation::getID()
@@ -49,7 +48,7 @@ namespace taurus
 
 	bool Expectation::getMany()
 	{
-		return many;
+		return _many;
 	}
 
 	vector<string> Expectation::getSequence()
@@ -88,9 +87,23 @@ namespace taurus
 			return Expectation(n);
 	}
 
-	Parser &Parser::add(Expectation e)
+	Parser Parser::add(Expectation e)
 	{
 		content[e.getID()] = e;
+		return *this;
+	}
+
+	Parser Parser::add(string n, Expectation e)
+	{
+		e.identify(n);
+		cout << "N '" << n << "'\n";
+		content[n] = e;
+		return *this;
+	}
+
+	Parser Parser::many(string n)
+	{
+		content[n].many();
 		return *this;
 	}
 

@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-g -O2 -std=c++11
+CXXFLAGS=-g -O0 -std=c++11
 
 AR=ar
 ARFLAGS=rcs
