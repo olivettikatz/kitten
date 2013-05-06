@@ -11,15 +11,15 @@ namespace taurus
 	{
 	private:
 		Token source;
-		unsigned int etype;
-		unsigned int eid;
+		string etype;
+		string eid;
 
 	public:
-		Error() : etype(0), eid(0) {}
-		Error(Token s, unsigned int et, unsigned int ei) : source(s), etype(et), eid(ei) {}
+		Error() {}
+		Error(Token s, string et, string ei) : source(s), etype(et), eid(ei) {}
 		Token getSource();
-		unsigned int getExpectedType();
-		unsigned int getExpectationID();
+		string getExpectedType();
+		string getExpectationID();
 	};
 }
 

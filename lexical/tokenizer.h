@@ -36,7 +36,6 @@ namespace taurus
 		string get();
 		string set(string s);
 		string getContent();
-		string setContent(string s);
 		unsigned int getLine();
 		unsigned int getColumn();
 		string getType();
@@ -44,7 +43,6 @@ namespace taurus
 
 		bool operator == (Token other);
 		bool operator == (string other);
-		bool operator == (unsigned int other);
 		bool operator != (Token other);
 		bool operator != (string other);
 	};
@@ -52,10 +50,10 @@ namespace taurus
 	class Tokenizer
 	{
 	private:
-		vector<pair<Pattern, Pattern> > noDelim;
-		vector<pair<Pattern, Pattern> > skip;
-		vector<Pattern> whitespace;
-		vector<Pattern> deliminator;
+		vector<pair<Pattern, Pattern> > _noDelim;
+		vector<pair<Pattern, Pattern> > _skip;
+		vector<Pattern> _whitespace;
+		vector<Pattern> _deliminator;
 		vector<pair<string, Pattern> > categorizers;
 		vector<pair<Pattern, Pattern> > combinators;
 

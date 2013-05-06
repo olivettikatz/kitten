@@ -28,7 +28,7 @@ namespace taurus
 
 	Expectation &Expectation::keep()
 	{
-		keep = true;
+		_keep = true;
 		return *this;
 	}
 
@@ -44,7 +44,7 @@ namespace taurus
 
 	bool Expectation::getKeep()
 	{
-		return keep;
+		return _keep;
 	}
 
 	bool Expectation::getMany()
@@ -85,7 +85,7 @@ namespace taurus
 		if (content.find(n) != content.end())
 			return content[n];
 		else
-			return Expectation(e);
+			return Expectation(n);
 	}
 
 	Parser &Parser::add(Expectation e)
@@ -98,7 +98,7 @@ namespace taurus
 	{
 		AST rtn = AST();
 
-		if (toks[off].getType() != content[n].getExpectation() && content[n].getExpectation() != 0)
+		if (toks[off].getType().compare(content[n].getExpectation()) != 0 && content[n].getExpectation().compare(""))
 		{
 			for (vector<string>::iterator i = content[n].getAlternates().begin(); i != content[n].getAlternates().end(); i++)
 			{

@@ -77,11 +77,6 @@ namespace taurus
 		return (content.compare(other) == 0);
 	}
 
-	bool Token::operator == (unsigned int other)
-	{
-		return (type == other);
-	}
-
 	bool Token::operator != (Token other)
 	{
 		return (content.compare(other.content) != 0);
@@ -119,34 +114,14 @@ namespace taurus
 		return 0;
 	}
 
-	unsigned int Tokenizer::isNoDelimStart(string s)
-	{
-		return fitsPatternVector(s, noDelimStart);
-	}
-
-	unsigned int Tokenizer::isNoDelimEnd(string s)
-	{
-		return fitsPatternVector(s, noDelimEnd);
-	}
-
-	unsigned int Tokenizer::isSkipStart(string s)
-	{
-		return fitsPatternVector(s, skipStart);
-	}
-
-	unsigned int Tokenizer::isSkipEnd(string s)
-	{
-		return fitsPatternVector(s, skipEnd);
-	}
-
 	unsigned int Tokenizer::isWhitespace(string s)
 	{
-		return fitsPatternVector(s, whitespace);
+		return fitsPatternVector(s, _whitespace);
 	}
 
 	unsigned int Tokenizer::isDeliminator(string s)
 	{
-		return fitsPatternVector(s, deliminator);
+		return fitsPatternVector(s, _deliminator);
 	}
 
 	string Tokenizer::categorize(Token t)
@@ -172,7 +147,7 @@ namespace taurus
 		pair<Pattern, Pattern> tmp;
 		tmp.first = ps;
 		tmp.second = pe;
-		noDelim.push_back(tmp);
+		_noDelim.push_back(tmp);
 		return *this;
 	}
 
@@ -181,19 +156,19 @@ namespace taurus
 		pair<Pattern, Pattern> tmp;
 		tmp.first = ps;
 		tmp.second = pe;
-		skip.push_back(tmp);
+		_skip.push_back(tmp);
 		return *this;
 	}
 
 	Tokenizer &Tokenizer::whitespace(Pattern p)
 	{
-		appendPatternToVectorSorted(whitespace, p);
+		appendPatternToVectorSorted(_whitespace, p);
 		return *this;
 	}
 
 	Tokenizer &Tokenizer::deliminator(Pattern p)
 	{
-		appendPatternToVectorSorted(deliminator, p);
+		appendPatternToVectorSorted(_deliminator, p);
 		return *this;
 	}
 
@@ -206,12 +181,12 @@ namespace taurus
 		return *this;
 	}
 
-	Tokenizer &Tokenizer::addCategorizerDeliminator(string t, Pattern p)
+	Tokenizer &Tokenizer::token(string t, Pattern p)
 	{
 		bool isdelim = false;
-		for (vector<Pattern>::iterator i = deliminator.begin(); i != deliminator.end(); i++)
+		for (vector<Pattern>::iterator i = _deliminator.begin(); i != _deliminator.end(); i++)
 		{
-			if (*i == p)
+			if (i->compare(p))
 			{
 				isdelim = true;
 				break;
@@ -219,12 +194,12 @@ namespace taurus
 		}
 
 		if (isdelim == false)
-			addDeliminator(p);
+			deliminator(p);
 
-		return addCategorizer(t, p);
+		return categorizer(t, p);
 	}
 
-	Tokenizer &Tokenizer::addCombinator(Pattern pa, Pattern pb)
+	Tokenizer &Tokenizer::combine(Pattern pa, Pattern pb)
 	{
 		pair<Pattern, Pattern> tmp;
 		tmp.first = pa;
@@ -245,9 +220,9 @@ namespace taurus
 			unsigned int toksize = 0;
 			unsigned int toktype = 0;
 
-			for (vector<pair<Pattern, Pattern> >::iterator i = noDelim.begin(); i != noDelim.end(); i++)
+			for (vector<pair<Pattern, Pattern> >::iterator j = _noDelim.begin(); j != _noDelim.end(); j++)
 			{
-				if (toksize = i->first.match(s.substr(i)))
+				if (toksize = j->first.match(s.substr(i)))
 				{
 					if (i-last > 0)
 					{
@@ -260,10 +235,10 @@ namespace taurus
 
 					for (; i < s.size(); i++)
 					{
-						if (toksize = i->second.match(s.substr(i)))
+						if (toksize = j->second.match(s.substr(i)))
 						{
 							Token tmp = Token(s.substr(last-i, i-last+toksize), line, column);
-							tmp.setType(category(tmp));
+							tmp.setType(categorize(tmp));
 							rtn.push_back(tmp);
 							last = i+toksize-1;
 							break;
@@ -274,9 +249,9 @@ namespace taurus
 				}
 			}
 			
-			for (vector<pair<Pattern, Pattern> >::iterator i = skip.begin(); i != skip.end(); i++)
+			for (vector<pair<Pattern, Pattern> >::iterator j = _skip.begin(); j != _skip.end(); j++)
 			{
-				if (toksize = i->first.match(s.substr(i)))
+				if (toksize = j->first.match(s.substr(i)))
 				{
 					if (i-last > 0)
 					{
@@ -289,7 +264,7 @@ namespace taurus
 
 					for (; i < s.size(); i++)
 					{
-						if (toksize = i->second.match(s.substr(i)))
+						if (toksize = j->second.match(s.substr(i)))
 						{
 							last = i+toksize-1;
 							break;
@@ -343,7 +318,7 @@ namespace taurus
 				if (j->first.match(rtn[i-1].get()) && j->second.match(rtn[i].get()))
 				{
 					rtn[i-1].set(rtn[i-1].get()+rtn[i].get());
-					rtn.remove(i);
+					rtn.erase(rtn.begin()+i);
 					i--;
 				}
 			}

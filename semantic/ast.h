@@ -10,17 +10,17 @@ namespace taurus
 	class AST
 	{
 	private:
-		unsigned int eid;
+		string eid;
 		Token content;
 		vector<AST> children;
 
 	public:
-		AST() : eid(0) {}
-		AST(unsigned int e, Token c) : eid(e), content(c) {}
+		AST() {}
+		AST(string e, Token c) : eid(e), content(c) {}
 		bool good();
 		bool empty();
 		AST &add(AST a);
-		unsigned int getExpectationID();
+		string getExpectationID();
 		Token getContent();
 		unsigned int getChildrenSize();
 		AST getChild(unsigned int idx);

@@ -4,7 +4,7 @@ namespace taurus
 {
 	bool AST::good()
 	{
-		return (eid > 0);
+		return (eid.empty() == false);
 	}
 
 	bool AST::empty()
@@ -18,7 +18,7 @@ namespace taurus
 		return *this;
 	}
 
-	unsigned int AST::getExpectationID()
+	string AST::getExpectationID()
 	{
 		return eid;
 	}

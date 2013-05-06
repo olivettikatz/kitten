@@ -1,7 +1,9 @@
 #ifndef __TAURUS_PARSER_H
 #define __TAURUS_PARSER_H
 
-#include "expectation.h"
+#include <map>
+#include "error.h"
+#include "ast.h"
 
 namespace taurus
 {
@@ -12,14 +14,14 @@ namespace taurus
 	private:
 		string id;
 		string expectation;
-		bool keep;
+		bool _keep;
 		bool many;
 		vector<string> sequence;
 		vector<string> alternates;
 
 	public:
-		Expectation() : expectation(0), keep(false), many(false) {}
-		Expectation(string e) : expectation(e), keep(false), many(false) {}
+		Expectation() : expectation(0), _keep(false), many(false) {}
+		Expectation(string e) : expectation(e), _keep(false), many(false) {}
 		Expectation &identify(string i);
 		Expectation &operator || (Expectation e);
 		Expectation &operator , (Expectation e);

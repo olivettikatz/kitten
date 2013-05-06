@@ -31,43 +31,43 @@ namespace taurus
 
 	Pattern &Pattern::operator == (string s)
 	{
-		this->Pattern(isEqualTo, s);
+		*this = Pattern(isEqualTo, s);
 		return *this;
 	}
 
 	Pattern &Pattern::operator != (string s)
 	{
-		this->Pattern(isNotEqualTo, s);
+		*this = Pattern(isNotEqualTo, s);
 		return *this;
 	}
 
 	Pattern &Pattern::operator += (string s)
 	{
-		this->Pattern(onlyContains, s);
+		*this = Pattern(onlyContains, s);
 		return *this;
 	}
 
 	Pattern &Pattern::operator -= (string s)
 	{
-		this->Pattern(doesNotContain, s);
+		*this = Pattern(doesNotContain, s);
 		return *this;
 	}
 
 	Pattern &Pattern::operator < (string s)
 	{
-		this->Pattern(startsWith, s);
+		*this = Pattern(startsWith, s);
 		return *this;
 	}
 
 	Pattern &Pattern::operator > (string s)
 	{
-		this->Pattern(endsWith, s);
+		*this = Pattern(endsWith, s);
 		return *this;
 	}
 
 	Pattern &Pattern::operator () (Pattern::callback a)
 	{
-		this->Pattern(alternate, a);
+		*this = Pattern(a);
 		return *this;
 	}
 
@@ -96,7 +96,7 @@ namespace taurus
 			return false;
 
 		for (int i = 0; i < andPatterns.size(); i++)
-			if (andPatterns[i] != other.andPatterns[i])
+			if (andPatterns[i].compare(other.andPatterns[i]) == false)
 				return false;
 		
 		if (orPatterns.size() != other.orPatterns.size())
@@ -110,7 +110,7 @@ namespace taurus
 			return false;
 
 		for (int i = 0; i < attachments.size(); i++)
-			if (!attachments[i].first.compare(other.attachments[i].first) || !attachments[i].second.compare(other.attachments[i].second))
+			if ((attachments[i].first != other.attachments[i].first) || !attachments[i].second.compare(other.attachments[i].second))
 				return false;
 
 		return true;

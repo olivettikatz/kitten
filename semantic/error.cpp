@@ -7,12 +7,12 @@ namespace taurus
 		return source;
 	}
 
-	unsigned int Error::getExpectedType()
+	string Error::getExpectedType()
 	{
 		return etype;
 	}
 
-	unsigned int Error::getExpectationID()
+	string Error::getExpectationID()
 	{
 		return eid;
 	}
