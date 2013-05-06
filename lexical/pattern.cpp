@@ -29,6 +29,93 @@ namespace taurus
 		return *this;
 	}
 
+	Pattern &Pattern::operator == (string s)
+	{
+		this->Pattern(isEqualTo, s);
+		return *this;
+	}
+
+	Pattern &Pattern::operator != (string s)
+	{
+		this->Pattern(isNotEqualTo, s);
+		return *this;
+	}
+
+	Pattern &Pattern::operator += (string s)
+	{
+		this->Pattern(onlyContains, s);
+		return *this;
+	}
+
+	Pattern &Pattern::operator -= (string s)
+	{
+		this->Pattern(doesNotContain, s);
+		return *this;
+	}
+
+	Pattern &Pattern::operator < (string s)
+	{
+		this->Pattern(startsWith, s);
+		return *this;
+	}
+
+	Pattern &Pattern::operator > (string s)
+	{
+		this->Pattern(endsWith, s);
+		return *this;
+	}
+
+	Pattern &Pattern::operator () (Pattern::callback a)
+	{
+		this->Pattern(alternate, a);
+		return *this;
+	}
+
+	Pattern &Pattern::operator && (Pattern other)
+	{
+		return attach(attachAnd, other);
+	}
+
+	Pattern &Pattern::operator || (Pattern other)
+	{
+		return attach(attachOr, other);
+	}
+
+	bool Pattern::compare(Pattern other)
+	{
+		if (algorithm != other.algorithm)
+			return false;
+
+		if (argument.compare(other.argument) != 0)
+			return false;
+
+		if (alternateCallback != other.alternateCallback)
+			return false;
+
+		if (andPatterns.size() != other.andPatterns.size())
+			return false;
+
+		for (int i = 0; i < andPatterns.size(); i++)
+			if (andPatterns[i] != other.andPatterns[i])
+				return false;
+		
+		if (orPatterns.size() != other.orPatterns.size())
+			return false;
+
+		for (int i = 0; i < orPatterns.size(); i++)
+			if (!orPatterns[i].compare(other.orPatterns[i]))
+				return false;
+
+		if (attachments.size() != other.attachments.size())
+			return false;
+
+		for (int i = 0; i < attachments.size(); i++)
+			if (!attachments[i].first.compare(other.attachments[i].first) || !attachments[i].second.compare(other.attachments[i].second))
+				return false;
+
+		return true;
+	}
+
 	unsigned int Pattern::getLengthRequest()
 	{
 		if (algorithm == isEqualTo || algorithm == startsWith || algorithm == endsWith)

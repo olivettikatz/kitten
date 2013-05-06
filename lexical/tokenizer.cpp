@@ -20,7 +20,7 @@ namespace taurus
 		return *this;
 	}
 
-	Token &Token::setType(unsigned int t)
+	Token &Token::setType(string t)
 	{
 		type = t;
 		return *this;
@@ -57,7 +57,7 @@ namespace taurus
 		return column;
 	}
 
-	unsigned int Token::getType()
+	string Token::getType()
 	{
 		return type;
 	}
@@ -92,17 +92,12 @@ namespace taurus
 		return (content.compare(other) != 0);
 	}
 
-	bool Token::operator != (unsigned int other)
-	{
-		return (type != other);
-	}
-
 	void Tokenizer::appendPatternToVectorSorted(vector<Pattern> &v, Pattern p)
 	{
 		unsigned int idx = 0;
 		for (; idx < v.size(); idx++)
 		{
-			if (v[idx].getLengthRequest() > p.getLengthRequest())
+			if (v[idx].getLengthRequest() < p.getLengthRequest())
 			{
 				break;
 			}
@@ -154,9 +149,9 @@ namespace taurus
 		return fitsPatternVector(s, deliminator);
 	}
 
-	unsigned int Tokenizer::categorize(Token t)
+	string Tokenizer::categorize(Token t)
 	{
-		for (vector<pair<unsigned int, Pattern> >::iterator i = categorizers.begin(); i != categorizers.end(); i++)
+		for (vector<pair<string, Pattern> >::iterator i = categorizers.begin(); i != categorizers.end(); i++)
 		{
 			if (i->second.match(t.get()))
 			{
@@ -167,48 +162,74 @@ namespace taurus
 		return 0;
 	}
 
-	Tokenizer &Tokenizer::addNoDelimStart(Pattern p)
+	Pattern Tokenizer::operator () ()
 	{
-		appendPatternToVectorSorted(noDelimStart, p);
+		return Pattern();
+	}
+
+	Tokenizer &Tokenizer::noDelim(Pattern ps, Pattern pe)
+	{
+		pair<Pattern, Pattern> tmp;
+		tmp.first = ps;
+		tmp.second = pe;
+		noDelim.push_back(tmp);
 		return *this;
 	}
 
-	Tokenizer &Tokenizer::addNoDelimEnd(Pattern p)
+	Tokenizer &Tokenizer::skip(Pattern ps, Pattern pe)
 	{
-		appendPatternToVectorSorted(noDelimEnd, p);
+		pair<Pattern, Pattern> tmp;
+		tmp.first = ps;
+		tmp.second = pe;
+		skip.push_back(tmp);
 		return *this;
 	}
 
-	Tokenizer &Tokenizer::addSkipStart(Pattern p)
-	{
-		appendPatternToVectorSorted(skipStart, p);
-		return *this;
-	}
-
-	Tokenizer &Tokenizer::addSkipEnd(Pattern p)
-	{
-		appendPatternToVectorSorted(skipEnd, p);
-		return *this;
-	}
-
-	Tokenizer &Tokenizer::addWhitespace(Pattern p)
+	Tokenizer &Tokenizer::whitespace(Pattern p)
 	{
 		appendPatternToVectorSorted(whitespace, p);
 		return *this;
 	}
 
-	Tokenizer &Tokenizer::addDeliminator(Pattern p)
+	Tokenizer &Tokenizer::deliminator(Pattern p)
 	{
 		appendPatternToVectorSorted(deliminator, p);
 		return *this;
 	}
 
-	Tokenizer &Tokenizer::addCategorizer(unsigned int t, Pattern p)
+	Tokenizer &Tokenizer::categorizer(string t, Pattern p)
 	{
-		pair<unsigned int, Pattern> tmp;
+		pair<string, Pattern> tmp;
 		tmp.first = t;
 		tmp.second = p;
 		categorizers.push_back(tmp);
+		return *this;
+	}
+
+	Tokenizer &Tokenizer::addCategorizerDeliminator(string t, Pattern p)
+	{
+		bool isdelim = false;
+		for (vector<Pattern>::iterator i = deliminator.begin(); i != deliminator.end(); i++)
+		{
+			if (*i == p)
+			{
+				isdelim = true;
+				break;
+			}
+		}
+
+		if (isdelim == false)
+			addDeliminator(p);
+
+		return addCategorizer(t, p);
+	}
+
+	Tokenizer &Tokenizer::addCombinator(Pattern pa, Pattern pb)
+	{
+		pair<Pattern, Pattern> tmp;
+		tmp.first = pa;
+		tmp.second = pb;
+		combinators.push_back(tmp);
 		return *this;
 	}
 
@@ -218,56 +239,68 @@ namespace taurus
 		unsigned int last = 0;
 		unsigned int line = 0;
 		unsigned int column = 0;
-		bool noDelim = false;
 
 		for (unsigned int i = 0; i < s.size(); i++)
 		{
 			unsigned int toksize = 0;
 			unsigned int toktype = 0;
 
-			if (noDelim == false && (toksize = isNoDelimStart(s.substr(i))))
+			for (vector<pair<Pattern, Pattern> >::iterator i = noDelim.begin(); i != noDelim.end(); i++)
 			{
-				if (i-last > 0)
+				if (toksize = i->first.match(s.substr(i)))
 				{
-					Token tmp = Token(s.substr(last, i-last), line, column);
-					tmp.setType(categorize(tmp));
-					rtn.push_back(tmp);
-				}
+					if (i-last > 0)
+					{
+						Token tmp = Token(s.substr(last, i-last), line, column);
+						tmp.setType(categorize(tmp));
+						rtn.push_back(tmp);
+					}
 
-				last = i+1;
-				noDelim = true;
-			}
-			else if (noDelim == true && (toksize = isNoDelimEnd(s.substr(i))))
-			{
-				noDelim = false;
-				if (i-last > 0)
-				{
-					Token tmp = Token(s.substr(last-1, i-last+toksize), line, column);
-					tmp.setType(categorize(tmp));
-					rtn.push_back(tmp);
-					last = i+toksize-1;
+					last = i+1;
+
+					for (; i < s.size(); i++)
+					{
+						if (toksize = i->second.match(s.substr(i)))
+						{
+							Token tmp = Token(s.substr(last-i, i-last+toksize), line, column);
+							tmp.setType(category(tmp));
+							rtn.push_back(tmp);
+							last = i+toksize-1;
+							break;
+						}
+					}
+
+					break;
 				}
 			}
-			else if (noDelim == true)
+			
+			for (vector<pair<Pattern, Pattern> >::iterator i = skip.begin(); i != skip.end(); i++)
 			{
-			}
-			else if (toksize = isSkipStart(s.substr(i)))
-			{
-				while(isSkipEnd(s.substr(i++)) == false)
+				if (toksize = i->first.match(s.substr(i)))
 				{
-					if (s[i] == '\n')
+					if (i-last > 0)
 					{
-						column = 0;
-						line++;
+						Token tmp = Token(s.substr(last, i-last), line, column);
+						tmp.setType(categorize(tmp));
+						rtn.push_back(tmp);
 					}
-					else
+
+					last = i+1;
+
+					for (; i < s.size(); i++)
 					{
-						column++;
+						if (toksize = i->second.match(s.substr(i)))
+						{
+							last = i+toksize-1;
+							break;
+						}
 					}
+
+					break;
 				}
-				last = i+1;
 			}
-			else if (toksize = isDeliminator(s.substr(i)))
+
+			if (toksize = isDeliminator(s.substr(i)))
 			{
 				if (i-last > 0)
 				{
@@ -300,6 +333,19 @@ namespace taurus
 			else
 			{
 				column++;
+			}
+		}
+
+		for (int i = 1; i < rtn.size(); i++)
+		{
+			for (vector<pair<Pattern, Pattern> >::iterator j = combinators.begin(); j != combinators.end(); j++)
+			{
+				if (j->first.match(rtn[i-1].get()) && j->second.match(rtn[i].get()))
+				{
+					rtn[i-1].set(rtn[i-1].get()+rtn[i].get());
+					rtn.remove(i);
+					i--;
+				}
 			}
 		}
 

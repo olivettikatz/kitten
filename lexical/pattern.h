@@ -52,6 +52,20 @@ namespace taurus
 		Pattern &setAlternate(callback a);
 
 		Pattern &attach(attachmentType t, Pattern p);
+		
+		Pattern &operator == (string s);
+		Pattern &operator != (string s);
+		Pattern &operator += (string s);
+		Pattern &operator -= (string s);
+		Pattern &operator < (string s);
+		Pattern &operator > (string s);
+		Pattern &operator () (callback a);
+
+		Pattern &operator && (Pattern other);
+		Pattern &operator || (Pattern other);
+
+		bool compare(Pattern other);
+
 
 		unsigned int getLengthRequest();
 
