@@ -701,27 +701,33 @@ namespace nmc
 		}
 	}
 
+	bool Operation::isUnaryRight(Operation::opsym o)
+	{
+		return (o == _logicalNegate || o == _negate);
+	}
+
+	bool Operation::isUnaryLeft(Operation::opsym o)
+	{
+		return (o == _increment || o == _decrement);
+	}
+
 	int Operation::getPrecedence(Operation::opsym o)
 	{
 		return precedence[o];
 	}
 
-	Operation Operation::parseBase(vector<Token> toks, int *m, SymbolTable &st)
+	Operation &Operation::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		vector<Token> stack; // the token stack (max 2 values/operations)
 		Operation root; // the root operation (this is what is returned)
 		Operation *head = &root; // the head operation
 		root.sym = opsym::_notAnOperation; // initialize the root operation's symbol
 
-		// m is the length of the operation in the token listing
-		if (m != NULL)
-			*m = 0;
-
 		// n is the operation scope index (for every scope increase, n++)
 		int n = 0;
-		for (int i = 0; i < toks.size() && (toks[i] != ";" || toks[i] != ","); i++)
+		for (; off < toks.size() && (toks[off] != ";" || toks[off] != ","); off++)
 		{
-			if (toks[i] == "(")
+			if (toks[off] == "(")
 			{
 				// we parse and append the new operation in the sub-scope
 				if (n == 0)
@@ -729,10 +735,8 @@ namespace nmc
 					if (stack.empty() && root.sym == opsym::_notAnOperation)
 					{
 						// there is no root, so we make a new one by parsing the sub-scope
-						vector<Token> tmp2(toks.begin()+(i+1), toks.end());
-						int tmpm = 0;
-						root = parseBase(tmp2, &tmpm, st);
-						i += tmpm;
+						off++;
+						root = parse(toks, off, st);
 						head = &root;
 						stack.clear();
 					}
@@ -743,11 +747,9 @@ namespace nmc
 						// parse the operation on the stack
 						tmp.sym = parseOpsym(stack[0]);
 						tmp.left = *head;
-						vector<Token> tmp2(toks.begin()+(i+1), toks.end());
 						// parse the sub-scope
-						int tmpm = 0;
-						tmp.right = parseBase(tmp2, &tmpm, st);
-						i += tmpm;
+						off++;
+						tmp.right = parse(toks, off, st);
 						// append it properly
 						*head = tmp;
 						stack.clear();
@@ -758,16 +760,14 @@ namespace nmc
 						// so we parse the sub-scope and create a new root with what we have
 						root.sym = parseOpsym(stack[stack.size()-1]);
 						root.left = stack[stack.size()-2];
-						vector<Token> tmp(toks.begin()+(i+1), toks.end());
-						int tmpm = 0;
-						root.right = parseBase(tmp, &tmpm, st);
-						i += tmpm;
+						off++;
+						root.right = parse(toks, off, st);
 						head = &root;
 						stack.clear();
 					}
 					else
 					{
-						NMC_ERROR(toks[i], "this operation isn't complete");
+						NMC_ERROR(toks[off], "this operation isn't complete");
 						NMC_NOTE("often caused by two operations back to back (1+ +1),");
 						NMC_NOTE("or two values back to back (1 1 +)");
 						NMC_NOTE("it's bad, just leave it at that");
@@ -777,7 +777,7 @@ namespace nmc
 				// increase the scope index
 				n++;
 			}
-			else if (toks[i] == ")")
+			else if (toks[off] == ")")
 			{
 				// decrease the scope index
 				n--;
@@ -789,15 +789,16 @@ namespace nmc
 					{
 						// if we haven't made an operation yet and we've already overstepped our bounds,
 						// something is wrong
-						NMC_ERROR(toks[i], "the operation has ended before it's began");
+						NMC_ERROR(toks[off], "the operation has ended before it's began");
 						NMC_NOTE("a boundary token appeared before any operation stuff");
 						NMC_NOTE("for example: 1 + }");
 					}
 
-					return root; // exiting...
+					*this = root;
+					return *this; // exiting...
 				}
 			}
-			else if (n == 0 && (toks[i].getType() == Token::category::value || toks[i].getType() == Token::category::symbol))
+			else if (n == 0 && (toks[off].getType() == Token::category::value || toks[off].getType() == Token::category::symbol))
 			{
 				// if we've reached a value that is in our scope, we append it
 				if (stack.size() > 0 && stack[stack.size()-1].getType() == Token::category::operation)
@@ -808,7 +809,7 @@ namespace nmc
 						// if there is no root, we make a new root
 						root.sym = parseOpsym(stack[stack.size()-1]);
 						root.left = stack[stack.size()-2];
-						root.right = toks[i];
+						root.right = toks[off];
 						head = &root;
 						stack.clear();
 					}
@@ -821,13 +822,13 @@ namespace nmc
 							Operation tmp;
 							tmp.sym = parseOpsym(stack[stack.size()-1]);
 							tmp.left = *head;
-							tmp.right = toks[i];
+							tmp.right = toks[off];
 							*head = tmp;
 							stack.clear();
 						}
 						else
 						{
-							NMC_ERROR(toks[i], "this operation isn't complete");
+							NMC_ERROR(toks[off], "this operation isn't complete");
 							NMC_NOTE("often caused by two operations back to back (1+ +1),");
 							NMC_NOTE("or two values back to back (1 1 +)");
 							NMC_NOTE("it's bad, just leave it at that");
@@ -841,14 +842,14 @@ namespace nmc
 							Operation tmp;
 							tmp.sym = parseOpsym(stack[stack.size()-1]);
 							tmp.left = head->right;
-							tmp.right = toks[i];
+							tmp.right = toks[off];
 							head->right = tmp;
 							head = &head->right.getOperation();
 							stack.clear();
 						}
 						else
 						{
-							NMC_ERROR(toks[i], "this operation isn't complete");
+							NMC_ERROR(toks[off], "this operation isn't complete");
 							NMC_NOTE("often caused by two operations back to back (1+ +1),");
 							NMC_NOTE("or two values back to back (1 1 +)");
 							NMC_NOTE("it's bad, just leave it at that");
@@ -858,28 +859,26 @@ namespace nmc
 				else
 				{
 					// the symbol is loose and can only be pushed to the stack for further use
-					stack.push_back(toks[i]);
+					stack.push_back(toks[off]);
 				}
 			}
-			else if (n == 0 && toks[i].getType() == Token::category::operation)
+			else if (n == 0 && toks[off].getType() == Token::category::operation)
 			{
 				// operations are always pushed to the stack
-				stack.push_back(toks[i]);
+				stack.push_back(toks[off]);
 			}
-
-			if (m != NULL) // set the maximum length
-				*m = i;
 		}
 
 		if (root.sym == opsym::_notAnOperation)
 		{
-			NMC_ERROR(toks[0], "this operation isn't complete");
+			NMC_ERROR(toks[off], "this operation isn't complete");
 			NMC_NOTE("often caused by two operations back to back (1+ +1),");
 			NMC_NOTE("or two values back to back (1 1 +)");
 			NMC_NOTE("it's bad, just leave it at that");
 		}
 
-		return root;
+		*this = root;
+		return *this;
 	}
 
 	Operation::opsym Operation::getOpsym()
@@ -902,7 +901,7 @@ namespace nmc
 		return (sym != _notAnOperation);
 	}
 
-	Operation &Operation::parse(vector<Token> toks, int &off, SymbolTable &st)
+	/*Operation &Operation::parse(vector<Token> toks, int &off, SymbolTable &st)
 	{
 		int i = 0;
 		vector<Token> tmp(toks.begin()+off, toks.end());
@@ -910,7 +909,7 @@ namespace nmc
 		off = i;
 		*this = rtn;
 		return *this;
-	}
+	}*/
 
 	string Operation::display()
 	{

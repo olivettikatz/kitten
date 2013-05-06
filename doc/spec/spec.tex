@@ -22,6 +22,8 @@ A leading character or a character at the beginning of a token is assumed to be 
 
 An ellipsis means that ambiguous content should take its place.
 
+All "punctuation" tokens (brackets, whitespace, end-of-line tokens) are reprogrammable so that Mitten may be easily typed by anyone on any device. Although the specification must show the token-ambiguous definition of all parsed constructs, the default syntax will be shown also for clarity. 
+
 All character bytes are written in hexadecimal according to the ASCII (8-bit) encoding. 
 
 The coding style used in the examples is not required, nor is it recommended. It is just my coding style.
@@ -55,77 +57,137 @@ Block comments are started with a forward slash followed by an asterisk and ende
 /* ... */
 \end{verbatim}
 
+These are not reprogrammable, as most tokens are. These are constant across all files and compiler configurations. Otherwise, there would be no standard way to see where comments are. It would be easy to write confusing code where default comment symbols wiped hard drives and the apocalypse would come. Comments wiping hard drives is well known to be one of the four horsemen. It would also be difficult to extract documentation from comments with third-party programs. 
+
 If the first instance of a \verb|*/| in a file is before any instance of \verb|/*|, it is illegal and the sheriff will shoot you dead in the heart. If the last instance of \verb|/*| is not completed with an instance of \verb|*/|, it is illegal. If either boundary of a block comment is within a quoted string (see \ref{sec:strings}) or character (see \ref{sec:characters}) it is ignored (there is no comment). Feel free to comment amongst yourselves. 
+
+\subsection{Token Configuration Files}
+Token configuration files are passed to the compiler to tell it what tokens to search for. The syntax of the token configuration file is very simple. There are lines separated by either newline characters (0A), cartridge returns (0D), or semicolons (';'). The lines begin with a symbol describing what token type should be programmed with the line, followed with a left curly bracket ('{'). A sequence of string tokens separated by commas (','), followed by a right curly bracket ('}') finishes the line. Whitespace around these is ignored, although it deliminates tokens much like the default syntax. The contents of the strings are all the possible values for the token type. Symbols and values are dynamic, and thus cannot be reprogrammed.
+
+The purpose of token configuration files is to make typing easier on keyboards/devices/whatevers where typing the default tokens is difficult to the point where reprogramming these tokens is the only way that programming is possible. It is not to make Mitten into your own custom programming language. The structure of the language and most of the syntax does not change, only the tokens. If you find that certain symbols are difficult to type, then use variable names to alias them.
+
+It is recommended that, when releasing code to audiences outside of your keyboard/device/whatever, that you use the default tokens, instead of packaging the source code with a token configuration file for compilation, even though this is possible and you are, of course, more than free to do whatever you wish. 
+
+\subsubsection{Token Symbol List}
+\label{sec:tokenSymbolList}
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+Token Type Symbol & Default Values & Description \\
+\hline
+\hline
+\verb|Whitespace| & \verb|" ", "\t", "\n", "\r"| & Ignored deliminators \\
+\hline
+\verb|BoundaryBeginExpression| & \verb|"("| & Begins an expression \\
+\hline
+\verb|BoundaryEndExpression| & \verb|")"| & Ends an expression \\
+\hline
+\verb|BoundaryBeginComplex| & \verb|"["| & Begins a complex value \\
+\hline
+\verb|BoundaryEndComplex| & \verb|"]"| & Ends a complex value \\
+\hline
+\verb|BoundaryBeginScope| & \verb|"{"| & Begins a new scope \\
+\hline
+\verb|BoundaryEndScope| & \verb|"}"| & Ends an existing scope \\
+\hline
+\verb|ArgumentSeparator| & \verb|","| & Separates arguments \\
+\hline
+\verb|OperatorAssign| & \verb|"="| & Assignment operator \\
+\hline
+\verb|OperatorAccess| & \verb|"."| & Element access operator \\
+\hline
+\verb|OperatorAdd| & \verb|"+"| & Addition operator \\
+\hline
+\verb|OperatorSubtract| & \verb|"-"| & Subtraction operator \\
+\hline
+\verb|OperatorMultiply| & \verb|"*"| & Multiplication operator \\
+\hline
+\verb|OperatorDivide| & \verb|"/"| & Division operator \\
+\hline
+\verb|OperatorModulate| & \verb|"%"| & Modulation operator \\
+\hline
+\verb|OperatorAndBitwise| & \verb|"&"| & Bitwise and operator \\
+\hline
+\verb|OperatorAndLogical| & \verb|"&&"| & Logical and operator \\
+\hline
+\verb|OperatorOrBitwise| & \verb!"|"! & Bitwise or operator \\
+\hline
+\verb|OperatorOrLogical| & \verb!"||"! & Logical or operator \\
+\hline
+\verb|OperatorXOrBitwise| & \verb|^| & Bitwise exclusive or operator \\
+\hline
+\verb|OperatorNegateBitwise| & \verb|"~"| & Bitwise negation operator \\
+\hline
+\verb|OperatorNegateLogical| & \verb|"!"| & Logical negation operator \\
+\hline
+\verb|OperatorBitShiftLeft| & \verb|"<<"| & Bit-shift left operator \\
+\hline
+\verb|OperatorBitShiftRight| & \verb|">>"| & Bit-shift right operator \\
+\hline
+\verb|OperatorLessThan| & \verb|"<"| & Less-than comparison \\
+\hline
+\verb|OperatorLessThanOrEqualTo| & \verb|"<="| & Less-than-or-equal-to comparison \\
+\hline
+\verb|OperatorGreaterThan| & \verb|">"| & Greater-than comparison \\
+\hline
+\verb|OperatorGreaterThanOrEqualTo| & \verb|">="| & Greater-than-or-equal-to comparison \\
+\hline
+\verb|OperatorEqualTo| & \verb|"=="| & Equal-to comparison \\
+\hline
+\verb|OperatorNotEqualTo| & \verb|"!="| & Not-equal-to comparison \\
+\hline
+\verb|OperatorAssign| & \verb|"="| & Assignment operator \\
+\hline
+\verb|OperatorAddAssign| & \verb|"+="| & Add and assign operator \\
+\hline
+\verb|OperatorIncrement| & \verb|"++"| & Increment-by-one operator \\
+\hline
+\verb|OperatorSubtractAssign| & \verb|"-="| & Subtract and assign operator \\
+\hline
+\verb|OperatorDecrement| & \verb|"--"| & Decrement-by-one operator \\
+\hline
+\verb|OperatorMultiplyAssign| & \verb|"*="| & Multiply and assign operator \\
+\hline
+\verb|OperatorDivideAssign| & \verb|"/="| & Divide and assign operator \\
+\hline
+\verb|OperatorModulateAssign| & \verb|"%="| & Modulate and assign operator \\
+\hline
+\verb|OperatorAndBitwiseAssign| & \verb|"&="| & Bitwise and and assign operator \\
+\hline
+\verb|OperatorOrBitwiseAssign| & \verb!"|="! & Bitwise or and assign operator \\
+\hline
+\verb|OperatorXOrBitwiseAssign| & \verb|"^="| & Bitwise exclusive-or and assign operator \\
+\hline
+\verb|OperatorNegateBitwiseAssign| & \verb|"~="| & Bitwise negate and assign operator \\
+\hline
+\verb|OperatorBitShiftLeftAssign| & \verb|"<<="| & Bit-shift left and assign operator \\
+\hline
+\verb|OperatorBitShiftRightAssign| & \verb|">>="| & Bit-shift right and assign operator \\
+\hline
+\verb|EndOfLine| & \verb|";"| & End-of-line token \\
+\hline
+\end{tabular}
+\end{center}
 
 \subsection{Whitespace}
 \label{sec:whitespace}
-Whitespace may be a space (20), a horizontal tab (09), a newline (0A), or a cartridge return (0D). 
+Whitespace by default (see \ref{sec:tokenSymbolList}) may be a space (20), a horizontal tab (09), a newline (0A), or a cartridge return (0D). 
 
 \subsection{Tokens}
 \label{sec:operations}
 Many tokens are single characters or strings of characters. Some tokens are more complicated. Some tokens may span multiple lines.
 
-The tokens fall into categories: value, operation, boundary, separator, type, and end-of-line tokens. There is also the symbol category for symbols.
+The tokens fall into types (see \ref{sec:tokenSymbolList}). Additional types are \verb|Value|, \verb|Type|, and \verb|Symbol|. 
 
 Value tokens must be either string tokens (see \ref{sec:strings}), character tokens (see \ref{sec:characters}), be numeric values (only containing characters within \verb|"-.0123456789abcdefABCDEF"|), or be boolean values (see \ref{sec:booleans}).
-
-Operation, boundary, separator, and end-of-line tokens can all be found in the following table.
 
 Type tokens can be found in the data type tables (see \ref{sec:dataTypes}).
 
 Symbols, aside from being symbols within the programming language, happen to only be tokens which do not fit into any of the other categories. 
 
-The simplest tokens are as follows (all operation tokens unless otherwise specified):
-
-\begin{tabular}{l l}
-\verb|(| & Begin an expression (boundary token) \\
-\verb|)| & End an expression (boundary token) \\
-\verb|[| & Begin a complex literal (such as a tuple or an array - is a boundary token) \\
-\verb|]| & End a complex literal (boundary token) \\
-\verb|{| & Begin a scope (boundary token) \\
-\verb|}| & End a scope (boundary token) \\
-\verb|,| & Argument deliminator (separator token) \\
-\verb|.| & Access element in previous symbol \\
-\verb|+| & Addition \\
-\verb|-| & Subtraction \\
-\verb|*| & Multiplication \\
-\verb|/| & Division \\
-\verb|%| & Modulation \\
-\verb|&| & Bitwise and \\
-\verb|&&| & Logical and \\
-\verb/|/ & Bitwise or \\
-\verb/||/ & Logical or \\
-\verb|^| & Bitwise exclusive or \\
-\verb|~| & Bitwise negation \\
-\verb|!| & Logical negation \\
-\verb|<<| & Bit-shift left \\
-\verb|>>| & Bit-shift right \\
-\verb|<| & Less-than comparison \\
-\verb|<=| & Less-then-or-equal-to comparison \\
-\verb|>| & Greater-than comparison \\
-\verb|>=| & Greater-than-or-equal-to comparison \\
-\verb|==| & Equal-to comparison \\
-\verb|!=| & Not-equal-to comparison \\
-\verb|=| & Assignment \\
-\verb|+=| & Assign and add \\
-\verb|++| & Increment \\
-\verb|-=| & Assign and subtract \\
-\verb|--| & Decrement \\
-\verb|*=| & Assign and multiply \\
-\verb|/=| & Assign and divide \\
-\verb|%=| & Assign and modulate \\
-\verb|&=| & Assign and perform bitwise and \\
-\verb/|=/ & Assign and bitwise or \\
-\verb|^=| & Assign and bitwise exclusive or \\
-\verb|~=| & Assign and bitwise negate \\
-\verb|<<=| & Assign and bit-shift left \\
-\verb|>>=| & Assign and bit-shift right \\
-\verb|;| & End-of-line (end-of-line token) \\
-\end{tabular}
-
 \subsubsection{Data Types}
 \label{sec:dataTypes}
-The default data types for mitten are as follows (all type tokens):
+The following \verb|Type| tokens are all type keywords:
 
 \begin{tabular}{l l}
 \verb|any| & A compile-time construct for an ambiguous type \\
@@ -164,25 +226,7 @@ There are also the pedantic types:
 \verb|f64| & 64-bit float \\
 \end{tabular}
 
-Classes also act as types.
-
-The type IDs of these types are as follows:
-\begin{verbatim}
-void - 0
-byte - 1
-unsigned byte - 2
-long byte - 3
-long unsigned byte - 4
-int - 5
-unsigned int - 6
-long int - 7
-long unsigned int - 8
-float - 9
-unsigned float - 10
-long float - 11
-long unsigned float - 12
-ref - 13
-\end{verbatim}
+Classes act as types.
 
 \subsubsection{Binary Numbers}
 \label{sec:booleans}
@@ -365,7 +409,7 @@ fadd fsub fmul fdiv fcmp fchs fst_rot fnop ftan fatan fsin fcos
 fsincos fsqrt
 \end{verbatim}
 
-The instructions are separated by end-of-line tokens. The instructions can take up to three arguments. They can be either registers, symbols, or integer tokens.
+The instructions are separated by \verb|EndOfLine| tokens (see \ref{sec:tokenSymbolList}). The instructions can take up to three arguments separated by \verb|Whitespace|. They can be either registers, symbols, or integer tokens.
 
 The registers are as follows:
 \begin{verbatim}
@@ -471,9 +515,35 @@ asm
 \end{verbatim}
 will add 1 to 2 and store the result in the variable \verb|x|.
 
+\subsection{Type Expressions}
+\label{sec:typeExpressions}
+\begin{verbatim}
+... type
+... type BoundaryBeginExpression ... BoundaryEndExpression
+... ... OperatorAccess type BoundaryBeginExpression ... BoundaryEndExpression
+\end{verbatim}
+
+by default,
+\begin{verbatim}
+... type
+... type ( ... )
+... ... . type ( ... )
+\end{verbatim}
+
+They begin with a set of global type qualifiers. These can be \verb|long|, \verb|unsigned|, \verb|const|, \verb|abstract|, \verb|private|, \verb|protected|, \verb|public|, and \verb|variadic|. They can only be used as global type qualifiers.
+The type name is a \verb|Type| symbol, describing either an atomic type class or a defined class. The defined class may belong to an object or a class, so a sequence of element access operators may be used. The contents of the type expression may only be other type expressions. Arguments for types are not required.
+
+For example,
+\begin{verbatim}
+int
+unsigned int
+vector(int)
+vector(unsigned int)
+\end{verbatim}
+
 \subsection{Complex Values}
 \label{sec:complexValues}
-Complex values begin with a left square bracket ('\verb|[|') boundary token. They contain a sequence of any constructs separated with separator tokens. They end with a right square bracket ('\verb|]|').
+Complex values begin with a \verb|BoundaryBeginComplex| (see \ref{sec:tokenSymbolList}). They contain a sequence of any constructs separated with \verb|ArgumentSeparator|. They end with a \verb|BoundaryEndComplex|.
 
 For example,
 \begin{verbatim}
@@ -489,7 +559,7 @@ or,
 \label{sec:operations}
 All operations are to be evaluated before their parent is evaluated.
 
-An element access operation consists of a symbol followed by a period ('\verb|.|'), the operator for element access in the previous symbol.
+An element access operation consists of a \verb|Symbol| (see \ref{sec:tokenSymbolList}) followed by an \verb|ElementAccess|, the operator for element access in the previous symbol.
 \begin{verbatim}
 SYMBOL .
 \end{verbatim}
@@ -520,8 +590,8 @@ or,
 o.x + 10
 \end{verbatim}
 
-\subsubsection{Parenthesis}
-Expressions may be bound by parenthesis to directly specify a higher precedence (see \ref{sec:precedence}). For example in,
+\subsubsection{Expression Boundaries}
+Expressions may be bound by \verb|BoundaryBeginExpression| and \verb|BoundaryEndExpression| to directly specify a higher precedence (see \ref{sec:precedence}). For example in,
 \begin{verbatim}
 1 + 2 * 3
 \end{verbatim}
@@ -580,7 +650,7 @@ For example, \verb|1 + 2 * 3| is the same as \verb|1 + (2 * 3)|, while \verb|(1 
 Expressions are the most complex parsing constructs, but are the most used within Mitten. They are of the structure:
 \begin{verbatim}
 Expression
-    Type vector
+    Type expression
     Symbol
     Complex value argument
     Argument vector
@@ -588,13 +658,13 @@ Expression
     Where body
 \end{verbatim}
 
-The type vector contains a sequence (ranging from 0 to 6 in size - the most type tokens possible for a declaration is 6 and some declarations do not have types) of only type tokens. The symbol is a single symbol. The complex value argument consists of a single complex value (optional). The argument vector (optional) is a sequence of any constructs separated by separator tokens ('\verb|,'|') and bound with parenthesis ('\verb|(|' and '\verb|)|' - boundary tokens). The body (optional) is a sequence of expressions separated by end-of-line tokens (including one at the end of the sequence) and bound by curly brackets ('\verb|{|' and '\verb|}|' - boundary tokens). The where body (optional) is identical to the body except that it is prefixed by the symbol "\verb|where|".
+The type expression denotes the type of the expression. The symbol is a single \verb|Symbol|. The complex value argument consists of a single \verb|ComplexValue| (optional). The argument vector (optional) is a sequence of any constructs separated by \verb|ArgumentSeparator| tokens and bound with expression boundaries \verb|BoundaryBeginExpression| and \verb|BoundaryEndExpression|. The body (optional) is a sequence of expressions separated by \verb|EndOfLine| tokens (including one at the end of the sequence) and bound by scope boundaries \verb|BoundaryBeginScope| and \verb|BoundaryEndScope|. The where body (optional) is identical to the body except that it is prefixed by the symbol "\verb|where|".
 
-Expressions with no body (or where body) must be followed with an end-of-line token to denote their ending. Extra end-of-line tokens after the body (or where body) will not cause problems, but are not necessary. 
+Expressions with no body (or where body) must be followed with an \verb|EndOfLine| token to denote their ending. Extra \verb|EndOfLine| tokens after the body (or where body) will not cause problems, but are not necessary. 
 
 If there is both a where expression and a body, the where expression is generally executed prior to the body, but in the same manner. 
 
-Either a type token or a symbol must begin an expression. An expression must contain at least a complex value argument, an argument vector, or a body. It may contain all three. The ordering of the components is required. All of the following formats are legal expressions:
+Either a \verb|Type| token or a \verb|Symbol| must begin an expression. An expression must contain at least a complex value argument, an argument vector, or a body. It may contain all three. The ordering of the components is required. All of the following formats are legal expressions:
 \begin{verbatim}
 Symbol ComplexValue
 Symbol ArgumentVector
@@ -611,36 +681,47 @@ TypeVector Symbol ComplexValue ArgumentVector Body
 \end{verbatim}
 
 \subsection{Any}
-An any construct can be either a single value or type token, a complex value construct, an operation, or an expression.
+An any construct can be either a single value, a symbol, a type expression, a complex value construct, an operation, or an expression.
 
 \section{Special Expressions and Classes}
 \subsection{Casts}
 \begin{verbatim}
+cast BoundaryBeginComplex ... BoundaryEndComplex BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 cast [ ... ] ( ... ) ;
 \end{verbatim}
 
-The complex value argument is a single type token denoting the type to cast to. The single argument is the value to be casted.
+The complex value argument is a type expression (see \ref{sec:typeExpressions}) denoting the type to cast to. The single argument is the value to be casted.
 
 For example,
 \begin{verbatim}
 cast [bool] (1) == true
 cast [int] ("5") == 5
 cast [string] (5) == "5"
+cast [vector(int)] (5) == [5]
 \end{verbatim}
 
 \subsubsection{Casting between Internal Data Types}
-Integers may be casted around freely, although data may be lost in truncation from higher-precision types to lower-precision ones. Floats may be casted to integers with truncation. Integers may be casted to floats as whole numbers. Floats may be casted around freely, but again with the data loss in truncations between precisions. Unsigned data types and signed data types are casted directly: the same bits are used. Class definition tokens cannot be used within casts. A cast to an any type has no effect on the value. A value's type ID can also be used for casting (see \ref{sec:dataModel}), for example,
+Integers may be casted around freely, although data may be lost in truncation from higher-precision types to lower-precision ones. Floats may be casted to integers with truncation. Integers may be casted to floats as whole numbers. Floats may be casted around freely, but again with the data loss in truncations between precisions. Unsigned data types and signed data types are casted directly: the same bits are used. Class definition tokens cannot be used within casts. A cast to an any type has no effect on the value. A value's type object can also be used for casting (see \ref{sec:dataModel}), for example,
 \begin{verbatim}
 int x = 5;
-x = cast [typeid(x)] ("5");
+x = cast [typeobj(x)] ("5");
 \end{verbatim}
 
 \subsection{Returns}
 \begin{verbatim}
+return BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 return ( ... ) ;
 \end{verbatim}
 
-Return statements denote the value of an expression. Expression values by default have the any type unless otherwise specified, so the return type is often auto-detected by the return type of the contents of the single return argument.
+Return statements denote the value of an expression. Expression values by default have the any type unless otherwise specified, so the return type is often auto-detected by the return type of the contents of the single return argument and automatically casted if such a cast exists.
 
 For example,
 \begin{verbatim}
@@ -650,13 +731,18 @@ int x = if (5 > 4)
 }
 else
 {
-    return (0);
+    return ("0"); // still returns an integer, because a cast exists from 'string' to 'int'
 }
 \end{verbatim}
 \verb|x| should equal \verb|1|.
 
 \subsection{If-Statements}
 \label{sec:ifStatements}
+\begin{verbatim}
+if BoundaryBeginExpression ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 if ( ... ) { ... }
 \end{verbatim}
@@ -676,6 +762,11 @@ if (5 > 4 && 1 < 2)
 
 \subsection{Else-If-Statements}
 \begin{verbatim}
+elif BoundaryBeginExpression ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 elif ( ... ) { ... }
 \end{verbatim}
 
@@ -694,6 +785,11 @@ elif (1 < 2)
 The last expression must be an if-statement or another else-if-statement. It is identical to an if-statement, except that it will only execute upon the falsehood of all the previous if and else-if statements. Returns are legal within the body; upon falsehood a null value will be returned.
 
 \subsection{Else-Statements}
+\begin{verbatim}
+else BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 else { ... }
 \end{verbatim}
@@ -719,6 +815,11 @@ else
 \subsection{While Loops}
 \label{sec:whileLoops}
 \begin{verbatim}
+while BoundaryBeginExpression ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 while ( ... ) { ... }
 \end{verbatim}
 
@@ -736,10 +837,15 @@ while (true)
 
 \subsection{For Loops}
 \begin{verbatim}
+for BoundaryBeginExpression ... ArgumentSeparator ... ArgumentSeparator ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 for ( ... , ... , ... ) { ... }
 \end{verbatim}
 
-The first argument of the for loop is an expression to be run at the beginning of the loop. The second argument is a conditional expression (see \ref{sec:ifStatements}) on whether the loop repeats. The last argument is executed at the end of every cycle. Returns are legal within the body and are identical to while loops in nature (see \ref{sec:whileLoops}).
+The first argument of the for loop is an expression to be run at the beginning of the loop. The second argument is a conditional expression (see \ref{sec:ifStatements}) on whether the loop repeats. The last argument is executed at the end of every cycle. Returns are legal within the body and are identical to while loops in nature (see \ref{sec:whileLoops}). All arguments may be left empty.
 
 For example,
 \begin{verbatim}
@@ -747,18 +853,30 @@ for (int i = 0, i < 10, i++)
 {
     get_an_apple();
 }
-
 // you should have be able to keep the doctor away for 10 days
+
+for (,,)
+{
+	get_an_apple();
+}
+// you will have an infinite number of apples, possibly solving world hunger
+
+// did I just solve world hunger?
 \end{verbatim}
 
 \subsection{For-Each Loops}
 \begin{verbatim}
+for BoundaryBeginExpression ... ArgumentSeparator ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 for ( ... , ... ) { ... }
 \end{verbatim}
 
-The first argument of the for-each loop is a variable declaration (see \ref{sec:simpleVariableDeclarations} and \ref{sec:complexVariableDeclarations}). The second argument is a vector value. The body of the loop will be executed for each value of the type of the variable within the vector value. Returns are handled the same way as with for-loops (and while loops, see \ref{sec:whileLoops}).
+The first argument of the for-each loop is a variable declaration (see \ref{sec:simpleVariableDeclarations} and \ref{sec:complexVariableDeclarations}), although it may be empty. The second argument is a vector value. The body of the loop will be executed for each value of the type of the variable within the vector value. Returns are handled the same way as with for-loops (and while loops, see \ref{sec:whileLoops}).
 
-For-each loops only work on strings (using a character variable), vectors (using an element-type variable), or maps (using a key-type variable).
+For-each loops only work on strings (using a character variable - see \ref{sec:stringClass}), vectors (using an element-type variable - see \ref{sec:vectorClass}), or maps (using a key-type variable - see \ref{sec:mapClass}).
 
 For example (see \ref{sec:complexVariableDeclarations}),
 \begin{verbatim}
@@ -775,38 +893,61 @@ for (int i, [[1, "a"], [2, "b"], [3, "c"]])
 }
 \end{verbatim}
 
+\subsection{Continue and Break}
+\label{sec:continueAndBreak}
+\begin{verbatim}
+continue BoundaryBeginExpression BoundaryEndExpression
+break BoundaryBeginExpression BoundaryEndExpression
+\end{verbatim}
+
+by default,
+\begin{verbatim}
+continue ( )
+break ( )
+\end{verbatim}
+
+If you run continue in a loop, it skips the rest of the code in the loop body. It can only be run in a loop. A call to break is equivalent to a null return in a loop. It, also, can only be run in a loop.
+
+For example,
+\begin{verbatim}
+while (true) // this loop does nothing and is not infinite
+{
+    break();
+}
+
+int i = 0;
+for (, i < 10, i++)
+{
+    continue();
+    this_displays_something();
+}
+// nothing is displayed and i == 10
+\end{verbatim}
+
 \subsection{Simple Variable Declarations}
 \label{sec:simpleVariableDeclarations}
 \begin{verbatim}
-... ... ;
-... ... = ... ;
+... ...
 \end{verbatim}
 
-The first part of the declaration is a sequence of type tokens. The second part is a symbol denoting the variable's name. The third and last part is an expression denoting the value. Returns are illegal within the expression, as it is assumed that the expression's value is returned automatically. It is not possible to declare a variable within a variable declaration at any level. If no value expression is provided, a null value is assigned. You cannot declare a variable twice (with the same name) in the same scope.
+The first part of the declaration is a type expression. The second part is a symbol denoting the variable's name. If no value expression is provided by an \verb|OperatorAssign|, a null value is assigned. You cannot declare a variable twice (with the same name) in the same scope.
 
 For example,
 \begin{verbatim}
 int x; // will be 0
 int y = 5;
-\end{verbatim}
-
-\subsection{Complex Variable Declarations}
-\label{sec:complexVariableDeclarations}
-\begin{verbatim}
-... ... ;
-... ... = ... ;
-\end{verbatim}
-
-Complex variable declarations are identical to the simple kind except for the fact that the third and final part of the declaration is a complex value as opposed to an expression.
-
-For example,
-\begin{verbatim}
-map m;
-map m = [[1, "a"], [2, "b"], [3, "c"]];
+vector(int) z = [1, 2];
 \end{verbatim}
 
 \subsection{Method Declarations}
 \label{sec:methodDeclarations}
+\begin{verbatim}
+... ... BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+... ... BoundaryBeginExpression ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+... OperatorAccess ... BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+... OperatorAccess ... BoundaryBeginExpression ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
 \begin{verbatim}
 ... ... ( ... ) ;
 ... ... ( ... ) { ... }
@@ -822,7 +963,7 @@ A function without a body is only a prototype and is assumed to be externally li
 
 Functions can be overloaded by argument number and type as well as return type.
 
-You will notice that the last six forms contain a period, the operator for class member access. Instead of a symbol denoting the member's name an operation expression (see \ref{sec:operations}) can be used. The method will be declared within the scope of the class. Only one period may be used; you cannot declare methods within a member of a specified class.
+You will notice that the last two forms contain a period, the operator for class member access. Instead of a symbol denoting the member's name an operation expression (see \ref{sec:operations}) can be used. The method will be declared within the scope of the class. Only one period may be used; you cannot declare methods within a member of a specified class. You can think of these two forms as a \verb|Type Symbol| expression in an \verb|OperatorAccess| operation with a typeless method declaration.
 
 You can use the variadic type token to create variadic methods (see \ref{sec:variadic} and \ref{sec:internalMethods}). If the variadic type token is used, then no argument may be specified (empty argument list).
 
@@ -844,12 +985,27 @@ int max(int a, int b)
 
 variadic int first()
 {
-    return variadic_args()[0];
+	return (if (variadic_length() > 0)
+	{
+    	return (variadic_arg(0));
+    }
+    else
+    {
+    	return (0);
+    });
 }
 \end{verbatim}
 
 \subsection{Method Calls}
 \label{sec:methodCalls}
+\begin{verbatim}
+... BoundaryBeginExpression ... BoundaryEndExpression
+... BoundaryBeginComplex ... BoundaryEndComplex BoundaryBeginExpression ... BoundaryEndExpression
+... OperatorAccess ... BoundaryBeginExpression ... BoundaryEndExpression
+... OperatorAccess ... BoundaryBeginComplex ... BoundaryEndComplex BoundaryBeginExpression ... BoundaryEndExpression
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 ... ( ... )
 ... [ ... ] ( ... )
@@ -878,18 +1034,37 @@ o.m [int] (5)
 \subsection{Variadic}
 \label{sec:variadic}
 \begin{verbatim}
-... variadic_args ( )
+... variadic_length BoundaryBeginExpression BoundaryEndExpression
+... variadic_arg BoundaryBeginExpression ... BoundaryEndExpression
 \end{verbatim}
 
-This expression, which acts much like a method call, can only be used within variadic method declaration bodies. It returns a vector containing all of the arguments passed to the method. For example,
+\begin{verbatim}
+... variadic_length ( )
+... variadic_arg ( ... )
+\end{verbatim}
+
+These expressions, which act much like a method calls, can only be used within variadic method declaration bodies. The first returns the number of arguments. The second returns the argument the integral index passed it. For example,
 \begin{verbatim}
 variadic int first()
 {
-    return variadic_args()[0];
+	return (if (variadic_length() > 0)
+	{
+    	return (variadic_arg(0));
+    }
+    else
+    {
+    	return (0);
+    });
 }
 \end{verbatim}
 
 \subsection{Class Declarations}
+\begin{verbatim}
+class ... BoundaryBeginExpression ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+class ... BoundaryBeginScope ... BoundaryEndScope
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 class ... ( ... ) { ... }
 class ... { ... }
@@ -955,6 +1130,11 @@ pair_of_numbers p = pair_of_numbers(1, 2);
 
 \subsection{Address and Deference}
 \begin{verbatim}
+... addr BoundaryBeginExpression ... BoundaryEndExpression
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 ... addr ( ... )
 \end{verbatim}
 
@@ -967,6 +1147,11 @@ ref another_ptr = addr(if(true){return(5);}));
 \end{verbatim}
 
 Then there is \verb|deref|:
+\begin{verbatim}
+... deref BoundaryBeginComplex ... BoundaryEndComplex BoundaryBeginExpression ... BoundaryEndExpression
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 ... deref [ ... ] ( ... )
 \end{verbatim}
@@ -987,6 +1172,13 @@ If you attempt to dereference a null reference or memory location, a \verb|null_
 
 \subsection{Try/Catch/Throw Statements}
 \label{sec:tryCatch}
+\begin{verbatim}
+try BoundaryBeginScope ... BoundaryEndScope
+catch BoundaryBeginExpression ... ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope
+throw BoundaryBeginExpression ... ... BoundaryEndExpression
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 try { ... }
 catch ( ... ... ) { ... }
@@ -1022,6 +1214,12 @@ catch(exception e)
 \subsection{Imports}
 \label{sec:imports}
 \begin{verbatim}
+import BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+import_multi BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+\end{verbatim}
+
+by default,
+\begin{verbatim}
 import ( ... ) ;
 import_multi ( ... ) ;
 \end{verbatim}
@@ -1034,6 +1232,12 @@ If the path starts with a period, then it is relative. Otherwise the import path
 
 \subsection{Compatibility}
 \label{sec:compatibilityExpressions}
+\begin{verbatim}
+compatibility BoundaryBeginComplex "c" BoundaryEndComplex BoundaryBeginExpression ... BoundaryEndExpression EndOfLine
+compatibility BoundaryBeginComplex "c" BoundaryEndComplex BoundaryBeginExpression ... ArgumentSeparator ... BoundaryEndExpression EndOfLine
+\end{verbatim}
+
+by default,
 \begin{verbatim}
 compatibility [ "c" ] ( ... ) ;
 compatibility [ "c" ] ( ... , ... ) ;
@@ -1055,11 +1259,11 @@ C & Mitten \\
 \verb|double| & long float \\
 \verb|void *| & ref \\
 \verb|char *| & string (with a class wrapper) \\
-\verb|short *| & long byte vector \\
-\verb|int *| & int vector \\
-\verb|long *| & long int vector \\
-\verb|float *| & float vector \\
-\verb|double *| & double vector \\
+\verb|short *| & vector(long byte) \\
+\verb|int *| & vector(int) \\
+\verb|long *| & vector(long int) \\
+\verb|float *| & vector(float) \\
+\verb|double *| & vector(double) \\
 \end{tabular}
 
 Structs, unions, and enums are not supported. Use \verb|void *| instead and convert manually with pointer arithmetic and casting.
@@ -1083,6 +1287,49 @@ int max(int a, int b)
 {
     return (a > b ? a : b);
 }
+\end{verbatim}
+
+\subsection{Inline Debugging}
+\label{sec:inlineDebugging}
+\begin{verbatim}
+track BoundaryBeginExpression ... BoundaryEndExpression
+debug BoundaryBeginExpression ... BoundaryEndExpression
+\end{verbatim}
+
+by default,
+\begin{verbatim}
+track ( ... )
+debug ( ... )
+\end{verbatim}
+
+If you call \verb|track| with a symbol as an argument, it tracks the usage of that argument. If it is a method, it prints debug messages stating the arguments that it is called with, the overloaded version used, and what the return value is. If it is a variable, it prints debug messages on every value change. Whether these messages are visible or not should be able to be set at compile time.
+
+\subsection{Printing}
+\label{sec:printing}
+The display of data to the command line is an important feature. It is done with the originally-named \verb|print| methods:
+\begin{verbatim}
+void print ( ... )
+string print ( ... )
+void print_error ( ... )
+string print_error ( ... )
+\end{verbatim}
+
+For example,
+\begin{verbatim}
+string message = "hello, world";
+// I want to print message to the whole world:
+print(message);
+
+string buffer;
+// I want to print message into this buffer (it will not display on the command line):
+buffer = print [string] (message);
+
+// I want to print a number after the message:
+print(message, 7);
+// this will print "hello, world7"
+
+// I want to print to stderr
+print_error(message);
 \end{verbatim}
 
 \section{Data Model}
@@ -1200,6 +1447,10 @@ int __inherits__();
 
 All classes that do not specify which class they inherit from inherit from zygote by default.
 
+\subsection{Type Objects}
+\label{sec:typeObjects}
+
+
 \subsection{Exception}
 \label{sec:exceptions}
 The exception class (type ID 15) has the following methods:
@@ -1258,6 +1509,7 @@ void replace(unsigned int start, unsigned int end, string with);
 \verb|__new__| allows you to create a string with a single byte, a single byte repeated a number of times, or a reference to a memory location containing a string. You can access character references with \verb|__complex__|. \verb|data| returns a reference to the raw C-compatible data of the string. The other functions are relatively self-explanatory. If a find method cannot find the pattern, the size of the string is returned.
 
 \subsection{Vector}
+\label{sec:vectorClass}
 The vector class (type ID 17) has the following methods:
 \begin{verbatim}
 vector __new__();
@@ -1276,6 +1528,7 @@ void remove(unsigned int start, unsigned int end);
 \end{verbatim}
 
 \subsection{Map}
+\label{sec:mapClass}
 The map class (type ID 18) has the following methods:
 \begin{verbatim}
 map __new__();

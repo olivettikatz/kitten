@@ -284,8 +284,8 @@ namespace nmc
 		Any right;
 
 		opsym parseOpsym(Token tok);
+		bool isUnary(opsym o);
 		int getPrecedence(opsym o);
-		Operation parseBase(vector<Token> toks, int *m, SymbolTable &st);
 
 	public:
 		Operation() : sym(opsym::_notAnOperation) {}

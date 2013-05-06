@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Arch Linux) (format=pdflatex 2013.1.18)  27 MAR 2013 14:05
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Arch Linux) (format=pdflatex 2013.4.4)  26 APR 2013 08:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -506,42 +506,42 @@ LaTeX Font Info:    Font shape `U/ccicons/m/n' will be
  [2]
 
 LaTeX Warning: Reference `sec:evilPeopleAtObjectiveC' on page 3 undefined on in
-put line 41.
+put line 43.
 
 [3]
-Overfull \hbox (54.69376pt too wide) in paragraph at lines 70--71
-[]\OT1/cmr/m/n/10 3.4.6[]), be nu-meric val-ues (only con-tain-ing char-ac-ters
+Overfull \hbox (123.69252pt too wide) in paragraph at lines 74--170
+ [] 
+ []
+
+[4] [5]
+Overfull \hbox (54.69376pt too wide) in paragraph at lines 182--183
+[]\OT1/cmr/m/n/10 3.5.6[]), be nu-meric val-ues (only con-tain-ing char-ac-ters
  within []\OT1/cmtt/m/n/10 "-.0123456789abcdefABCDEF"\OT1/cmr/m/n/10 ),
  []
 
-
-Overfull \hbox (37.13937pt too wide) in paragraph at lines 80--125
-[][] 
- []
-
-[4] [5] [6] [7]
-Underfull \hbox (badness 2221) in paragraph at lines 304--305
+[6] [7] [8]
+Underfull \hbox (badness 2221) in paragraph at lines 348--349
 []\OT1/cmr/m/n/8 An in-te-ger rep-re-sent-ing the op-er-at-ing sys-tem (see the
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 311--312
+Underfull \hbox (badness 10000) in paragraph at lines 355--356
 []\OT1/cmr/m/n/8 An in-te-ger rep-re-sent-ing the ar-chi-tec-ture (see the
  []
 
 
-Overfull \hbox (61.87407pt too wide) in paragraph at lines 283--318
-[][] 
- []
-
-[8]
-Overfull \hbox (19.37346pt too wide) in paragraph at lines 319--335
+Overfull \hbox (61.87407pt too wide) in paragraph at lines 327--362
 [][] 
  []
 
 [9]
-Overfull \hbox (43.83055pt too wide) in paragraph at lines 354--355
+Overfull \hbox (19.37346pt too wide) in paragraph at lines 363--379
+[][] 
+ []
+
+[10]
+Overfull \hbox (43.83055pt too wide) in paragraph at lines 398--399
 []\OT1/cmr/m/n/10 The []\OT1/cmtt/m/n/10 __OS__\OT1/cmr/m/n/10 , []\OT1/cmtt/m/
 n/10 __OS_...__\OT1/cmr/m/n/10 , []\OT1/cmtt/m/n/10 __ARCH__\OT1/cmr/m/n/10 , [
 ]\OT1/cmtt/m/n/10 __ARCH_...__\OT1/cmr/m/n/10 , []\OT1/cmtt/m/n/10 __REGISTER..
@@ -549,63 +549,227 @@ n/10 __OS_...__\OT1/cmr/m/n/10 , []\OT1/cmtt/m/n/10 __ARCH__\OT1/cmr/m/n/10 , [
  []
 
 
-Overfull \hbox (1.49698pt too wide) in paragraph at lines 366--366
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 410--410
 []\OT1/cmtt/m/n/10 nop const mov mov_disp ld st add sub mul and or xor pusharg 
 poparg[] 
  []
 
-[10] [11] [12] [13] [14] [15] [16]
-Overfull \hbox (17.24684pt too wide) in paragraph at lines 675--675
+[11] [12] [13]
+Overfull \hbox (35.49828pt too wide) in paragraph at lines 581--582
+\OT1/cmr/m/n/10 Expressions may be bound by []\OT1/cmtt/m/n/10 BoundaryBeginExp
+ression \OT1/cmr/m/n/10 and []\OT1/cmtt/m/n/10 BoundaryEndExpression
+ []
+
+[14] [15]
+Overfull \hbox (8.25012pt too wide) in paragraph at lines 650--651
+[]\OT1/cmr/m/n/10 Expressions with no body (or where body) must be fol-lowed wi
+th an []\OT1/cmtt/m/n/10 EndOfLine
+ []
+
+[16]
+Overfull \hbox (221.99506pt too wide) in paragraph at lines 677--677
+[]\OT1/cmtt/m/n/10 cast BoundaryBeginComplex ... BoundaryEndComplex BoundaryBeg
+inExpression ... BoundaryEndExpression EndOfLine[] 
+ []
+
+
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 703--703
+[]\OT1/cmtt/m/n/10 return BoundaryBeginExpression ... BoundaryEndExpression End
+OfLine[] 
+ []
+
+[17]
+Overfull \hbox (137.99579pt too wide) in paragraph at lines 729--729
+[]\OT1/cmtt/m/n/10 if BoundaryBeginExpression ... BoundaryEndExpression Boundar
+yBeginScope ... BoundaryEndScope[] 
+ []
+
+
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 747--747
 []\OT1/cmtt/m/n/10 // this code will also run because it is outside the if-stat
 ement and[] 
  []
 
-[17] [18] [19] [20] [21] [22]
-Overfull \hbox (31.94427pt too wide) in paragraph at lines 986--987
+
+Overfull \hbox (148.4957pt too wide) in paragraph at lines 752--752
+[]\OT1/cmtt/m/n/10 elif BoundaryBeginExpression ... BoundaryEndExpression Bound
+aryBeginScope ... BoundaryEndScope[] 
+ []
+
+[18]
+Overfull \hbox (153.74565pt too wide) in paragraph at lines 805--805
+[]\OT1/cmtt/m/n/10 while BoundaryBeginExpression ... BoundaryEndExpression Boun
+daryBeginScope ... BoundaryEndScope[] 
+ []
+
+[19]
+Overfull \hbox (374.24373pt too wide) in paragraph at lines 827--827
+[]\OT1/cmtt/m/n/10 for BoundaryBeginExpression ... ArgumentSeparator ... Argume
+ntSeparator ... BoundaryEndExpression BoundaryBeginScope ... BoundaryEndScope[]
+ 
+ []
+
+
+Overfull \hbox (258.74474pt too wide) in paragraph at lines 849--849
+[]\OT1/cmtt/m/n/10 for BoundaryBeginExpression ... ArgumentSeparator ... Bounda
+ryEndExpression BoundaryBeginScope ... BoundaryEndScope[] 
+ []
+
+
+LaTeX Warning: Reference `sec:complexVariableDeclarations' on page 20 undefined
+ on input line 856.
+
+
+LaTeX Warning: Reference `sec:complexVariableDeclarations' on page 20 undefined
+ on input line 860.
+
+[20]
+Overfull \hbox (6.74693pt too wide) in paragraph at lines 928--928
+[]\OT1/cmtt/m/n/10 ... ... BoundaryBeginExpression ... BoundaryEndExpression En
+dOfLine[] 
+ []
+
+
+Overfull \hbox (164.24556pt too wide) in paragraph at lines 928--928
+[]\OT1/cmtt/m/n/10 ... ... BoundaryBeginExpression ... BoundaryEndExpression Bo
+undaryBeginScope ... BoundaryEndScope[] 
+ []
+
+[21]
+Overfull \hbox (85.49625pt too wide) in paragraph at lines 928--928
+[]\OT1/cmtt/m/n/10 ... OperatorAccess ... BoundaryBeginExpression ... BoundaryE
+ndExpression EndOfLine[] 
+ []
+
+
+Overfull \hbox (242.99487pt too wide) in paragraph at lines 928--928
+[]\OT1/cmtt/m/n/10 ... OperatorAccess ... BoundaryBeginExpression ... BoundaryE
+ndExpression BoundaryBeginScope ... BoundaryEndScope[] 
+ []
+
+[22]
+Overfull \hbox (164.24556pt too wide) in paragraph at lines 978--978
+[]\OT1/cmtt/m/n/10 ... BoundaryBeginComplex ... BoundaryEndComplex BoundaryBegi
+nExpression ... BoundaryEndExpression[] 
+ []
+
+
+Overfull \hbox (32.9967pt too wide) in paragraph at lines 978--978
+[]\OT1/cmtt/m/n/10 ... OperatorAccess ... BoundaryBeginExpression ... BoundaryE
+ndExpression[] 
+ []
+
+
+Overfull \hbox (263.99469pt too wide) in paragraph at lines 978--978
+[]\OT1/cmtt/m/n/10 ... OperatorAccess ... BoundaryBeginComplex ... BoundaryEndC
+omplex BoundaryBeginExpression ... BoundaryEndExpression[] 
+ []
+
+[23]
+Overfull \hbox (174.74547pt too wide) in paragraph at lines 1028--1028
+[]\OT1/cmtt/m/n/10 class ... BoundaryBeginExpression ... BoundaryEndExpression 
+BoundaryBeginScope ... BoundaryEndScope[] 
+ []
+
+
+LaTeX Warning: Reference `sec:complexVariableDeclarations' on page 24 undefined
+ on input line 1036.
+
+[24]
+Overfull \hbox (195.74529pt too wide) in paragraph at lines 1115--1115
+[]\OT1/cmtt/m/n/10 ... deref BoundaryBeginComplex ... BoundaryEndComplex Bounda
+ryBeginExpression ... BoundaryEndExpression[] 
+ []
+
+[25]
+Overfull \hbox (31.94427pt too wide) in paragraph at lines 1134--1135
 []\OT1/cmr/m/n/10 If you at-tempt to deref-er-ence a null ref-er-ence or mem-or
 y lo-ca-tion, a []\OT1/cmtt/m/n/10 null_exception
  []
 
-[23] [24] [25] [26] [27] [28] [29] [30]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1328.
- [31]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1328.
+
+Overfull \hbox (174.74547pt too wide) in paragraph at lines 1142--1142
+[]\OT1/cmtt/m/n/10 catch BoundaryBeginExpression ... ... BoundaryEndExpression 
+BoundaryBeginScope ... BoundaryEndScope[] 
+ []
+
+
+Overfull \hbox (1.49698pt too wide) in paragraph at lines 1182--1182
+[]\OT1/cmtt/m/n/10 import BoundaryBeginExpression ... BoundaryEndExpression End
+OfLine[] 
+ []
+
+[26]
+Overfull \hbox (32.9967pt too wide) in paragraph at lines 1182--1182
+[]\OT1/cmtt/m/n/10 import_multi BoundaryBeginExpression ... BoundaryEndExpressi
+on EndOfLine[] 
+ []
+
+
+Overfull \hbox (269.24464pt too wide) in paragraph at lines 1201--1201
+[]\OT1/cmtt/m/n/10 compatibility BoundaryBeginComplex "c" BoundaryEndComplex Bo
+undaryBeginExpression ... BoundaryEndExpression EndOfLine[] 
+ []
+
+
+Overfull \hbox (384.74364pt too wide) in paragraph at lines 1201--1201
+[]\OT1/cmtt/m/n/10 compatibility BoundaryBeginComplex "c" BoundaryEndComplex Bo
+undaryBeginExpression ... ArgumentSeparator ... BoundaryEndExpression EndOfLine
+[] 
+ []
+
+[27] [28] [29] [30] [31] [32] [33]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1510.
+ [34]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1510.
  (./spec.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1328.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1328.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1510.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1510.
 
-Package rerunfilecheck Info: File `spec.out' has not changed.
-(rerunfilecheck)             Checksum: 9E0331BAD331032BABC8164309B3AE48;3723.
 
+
+Package rerunfilecheck Warning: File `spec.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `spec.out':
+(rerunfilecheck)             Before: 5E1DE0488863DE8E4E96EA13888D1B2D;3874
+(rerunfilecheck)             After:  82870D661A948D110567AABCE5349F22;4007.
 
 LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1328.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1510.
  ) 
 Here is how much of TeX's memory you used:
- 5737 strings out of 493488
- 80509 string characters out of 3146892
- 168074 words of memory out of 3000000
- 8908 multiletter control sequences out of 15000+200000
+ 5752 strings out of 493488
+ 80752 string characters out of 3146893
+ 172074 words of memory out of 3000000
+ 8914 multiletter control sequences out of 15000+200000
  11869 words of font info for 48 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  30i,9n,28p,987b,444s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-dist/fonts/type1/public/ccicons/ccicons.pfb></usr/share/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
-2.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/sha
-re/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
-t10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on spec.pdf (31 pages, 205307 bytes).
+pdfTeX warning (dest): name{subsubsection.4.3.2} has been referenced but does
+ not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.4.3.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+</usr/share/texmf-dist/fonts/type1/public/ccicons/ccicons.pfb></usr/share/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.
+pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt1
+0.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on spec.pdf (34 pages, 212710 bytes).
 PDF statistics:
- 546 PDF objects out of 1000 (max. 8388607)
- 497 compressed objects within 5 object streams
- 92 named destinations out of 1000 (max. 500000)
- 465 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 576 PDF objects out of 1000 (max. 8388607)
+ 523 compressed objects within 6 object streams
+ 101 named destinations out of 1000 (max. 500000)
+ 481 words of extra memory for PDF output out of 10000 (max. 10000000)
 
