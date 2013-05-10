@@ -1,0 +1,13 @@
+import("std.n");
+
+// a
+
+variadic int main() // b
+{
+/* hi
+*/
+	string tmp = "aa bb cc dd ee ff"x;
+	int a = 2-5;
+	return (-.25 + 'a');
+}
+

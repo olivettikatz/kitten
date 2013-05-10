@@ -1,0 +1,143 @@
+\hypertarget{classnightowl_1_1BuilderInstructionPage}{\section{nightowl\-:\-:Builder\-Instruction\-Page Class Reference}
+\label{classnightowl_1_1BuilderInstructionPage}\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}}
+}
+
+
+{\ttfamily \#include $<$builder.\-h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef vector\\*
+$<$ \hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} $>$\\*
+\-::\hyperlink{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}{iterator} \hyperlink{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}{iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage_a3fc7253cd5482f72a275594506c110fa}{Builder\-Instruction\-Page} ()
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage_af56dba9e048f2ac38fbb3d6c12d9445b}{Builder\-Instruction\-Page} (\hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} i)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}{iterator} \hyperlink{classnightowl_1_1BuilderInstructionPage_a57bd706420b11fe605ecd3e51e6843dc}{function} (string n)
+\item 
+vector$<$ \hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} $>$ \hyperlink{classnightowl_1_1BuilderInstructionPage_a85bf96b712bc7b82df83e73d147e32af}{get\-Function\-Segment} (string n)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} \& \hyperlink{classnightowl_1_1BuilderInstructionPage_addadca2a88f90cfbda0c4bd2b1abc9a5}{operator$<$$<$} (\hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} i)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} \& \hyperlink{classnightowl_1_1BuilderInstructionPage_adaf1a527ed9f14b813cf7bea9c8cc86b}{operator$<$$<$} (\hyperlink{classnightowl_1_1BuilderInstructionPage}{Builder\-Instruction\-Page} p)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} \& \hyperlink{classnightowl_1_1BuilderInstructionPage_a4279538d87969f6850abaaa84705933a}{operator\mbox{[}$\,$\mbox{]}} (unsigned int idx)
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}{iterator} \hyperlink{classnightowl_1_1BuilderInstructionPage_ab2d3252eea857d83729bd3dfdc3a02c9}{begin} ()
+\item 
+\hyperlink{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}{iterator} \hyperlink{classnightowl_1_1BuilderInstructionPage_a4ac80fa619d0ca906b80ce99f69d0183}{end} ()
+\item 
+size\-\_\-t \hyperlink{classnightowl_1_1BuilderInstructionPage_aaa634c0ab6da43c258e4dc564875aeef}{size} ()
+\item 
+unsigned char \hyperlink{classnightowl_1_1BuilderInstructionPage_a87669b3843a27972d370bcfa44006f85}{get\-Last\-Reg} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Pages of instructions of bytecode (N\-O\-T machine code). You can emit pages of instructions in place of the standard emit function. You can use these for optimizations and function inlining. 
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!iterator@{iterator}}
+\index{iterator@{iterator}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef vector$<${\bf Builder\-Instruction}$>$\-::{\bf iterator} {\bf nightowl\-::\-Builder\-Instruction\-Page\-::iterator}}}\label{classnightowl_1_1BuilderInstructionPage_a58693e169efec9daf99b36da52049099}
+To iterate over the contents. If you have an iterator i, $\ast$i will give you a \hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction}. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classnightowl_1_1BuilderInstructionPage_a3fc7253cd5482f72a275594506c110fa}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!Builder\-Instruction\-Page@{Builder\-Instruction\-Page}}
+\index{Builder\-Instruction\-Page@{Builder\-Instruction\-Page}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{Builder\-Instruction\-Page}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-Page\-::\-Builder\-Instruction\-Page (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstructionPage_a3fc7253cd5482f72a275594506c110fa}
+Initialize a blank page. \hypertarget{classnightowl_1_1BuilderInstructionPage_af56dba9e048f2ac38fbb3d6c12d9445b}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!Builder\-Instruction\-Page@{Builder\-Instruction\-Page}}
+\index{Builder\-Instruction\-Page@{Builder\-Instruction\-Page}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{Builder\-Instruction\-Page}]{\setlength{\rightskip}{0pt plus 5cm}nightowl\-::\-Builder\-Instruction\-Page\-::\-Builder\-Instruction\-Page (
+\begin{DoxyParamCaption}
+\item[{{\bf Builder\-Instruction}}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classnightowl_1_1BuilderInstructionPage_af56dba9e048f2ac38fbb3d6c12d9445b}
+Initialize a page containing one instruction\-: i. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classnightowl_1_1BuilderInstructionPage_ab2d3252eea857d83729bd3dfdc3a02c9}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!begin@{begin}}
+\index{begin@{begin}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page\-::iterator} nightowl\-::\-Builder\-Instruction\-Page\-::begin (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_ab2d3252eea857d83729bd3dfdc3a02c9}
+Gets an iterator to the beginning of the page vector. \hypertarget{classnightowl_1_1BuilderInstructionPage_a4ac80fa619d0ca906b80ce99f69d0183}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!end@{end}}
+\index{end@{end}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page\-::iterator} nightowl\-::\-Builder\-Instruction\-Page\-::end (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_a4ac80fa619d0ca906b80ce99f69d0183}
+Gets an iterator to the end of the page vector. \hypertarget{classnightowl_1_1BuilderInstructionPage_a57bd706420b11fe605ecd3e51e6843dc}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!function@{function}}
+\index{function@{function}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{function}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page\-::iterator} nightowl\-::\-Builder\-Instruction\-Page\-::function (
+\begin{DoxyParamCaption}
+\item[{string}]{n}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_a57bd706420b11fe605ecd3e51e6843dc}
+Get the iterator marking the beginning instruction of a function n. \begin{DoxyReturn}{Returns}
+Will return \hyperlink{classnightowl_1_1BuilderInstructionPage_a4ac80fa619d0ca906b80ce99f69d0183}{end()} if n is not a declared function. 
+\end{DoxyReturn}
+\hypertarget{classnightowl_1_1BuilderInstructionPage_a85bf96b712bc7b82df83e73d147e32af}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!get\-Function\-Segment@{get\-Function\-Segment}}
+\index{get\-Function\-Segment@{get\-Function\-Segment}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{get\-Function\-Segment}]{\setlength{\rightskip}{0pt plus 5cm}vector$<$ {\bf Builder\-Instruction} $>$ nightowl\-::\-Builder\-Instruction\-Page\-::get\-Function\-Segment (
+\begin{DoxyParamCaption}
+\item[{string}]{n}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_a85bf96b712bc7b82df83e73d147e32af}
+Get a \hyperlink{classnightowl_1_1BuilderInstruction}{Builder\-Instruction} vector containing O\-N\-L\-Y instructions pertaining to the function n. Used for function inlining. \begin{DoxyReturn}{Returns}
+Will return a blank vector if n is not a declared function. 
+\end{DoxyReturn}
+\hypertarget{classnightowl_1_1BuilderInstructionPage_a87669b3843a27972d370bcfa44006f85}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!get\-Last\-Reg@{get\-Last\-Reg}}
+\index{get\-Last\-Reg@{get\-Last\-Reg}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{get\-Last\-Reg}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char nightowl\-::\-Builder\-Instruction\-Page\-::get\-Last\-Reg (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_a87669b3843a27972d370bcfa44006f85}
+Gets the last register used in the bytecode. \hypertarget{classnightowl_1_1BuilderInstructionPage_addadca2a88f90cfbda0c4bd2b1abc9a5}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page} \& nightowl\-::\-Builder\-Instruction\-Page\-::operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{{\bf Builder\-Instruction}}]{i}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_addadca2a88f90cfbda0c4bd2b1abc9a5}
+Append an instruction. \hypertarget{classnightowl_1_1BuilderInstructionPage_adaf1a527ed9f14b813cf7bea9c8cc86b}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction\-Page} \& nightowl\-::\-Builder\-Instruction\-Page\-::operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{{\bf Builder\-Instruction\-Page}}]{p}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_adaf1a527ed9f14b813cf7bea9c8cc86b}
+Append a page of instructions. \hypertarget{classnightowl_1_1BuilderInstructionPage_a4279538d87969f6850abaaa84705933a}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!operator\mbox{[}$\,$\mbox{]}@{operator[]}}
+\index{operator\mbox{[}$\,$\mbox{]}@{operator[]}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{operator[]}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Builder\-Instruction}\& nightowl\-::\-Builder\-Instruction\-Page\-::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{idx}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_a4279538d87969f6850abaaa84705933a}
+Get the instruction at an index. Used for relocation reemition in \hyperlink{classnightowl_1_1Builder}{Builder}. \hypertarget{classnightowl_1_1BuilderInstructionPage_aaa634c0ab6da43c258e4dc564875aeef}{\index{nightowl\-::\-Builder\-Instruction\-Page@{nightowl\-::\-Builder\-Instruction\-Page}!size@{size}}
+\index{size@{size}!nightowl::BuilderInstructionPage@{nightowl\-::\-Builder\-Instruction\-Page}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t nightowl\-::\-Builder\-Instruction\-Page\-::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classnightowl_1_1BuilderInstructionPage_aaa634c0ab6da43c258e4dc564875aeef}
+Gets the size of the page vector. 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{builder_8h}{builder.\-h}\item 
+builder.\-cpp\end{DoxyCompactItemize}

@@ -1,0 +1,90 @@
+\hypertarget{builder_8h}{\section{builder.\-h File Reference}
+\label{builder_8h}\index{builder.\-h@{builder.\-h}}
+}
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include $<$vector$>$}\\*
+{\ttfamily \#include $<$map$>$}\\*
+{\ttfamily \#include $<$math.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}kernel/vector.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}kernel/generator.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}kernel/arch/arch.\-h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classnightowl_1_1BuilderInstruction}{nightowl\-::\-Builder\-Instruction}
+\item 
+class \hyperlink{classnightowl_1_1BuilderInstructionPage}{nightowl\-::\-Builder\-Instruction\-Page}
+\item 
+class \hyperlink{classnightowl_1_1Builder}{nightowl\-::\-Builder}
+\item 
+struct \hyperlink{structnightowl_1_1Builder_1_1error}{nightowl\-::\-Builder\-::error}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacenightowl_a2fed051f564c0c69b8388565f6737b55}{typedef void($\ast$ {\bfseries nightowl\-::emitter} )(\hyperlink{structo__jit}{o\-\_\-jit} $\ast$, unsigned char, unsigned char, int)}\label{namespacenightowl_a2fed051f564c0c69b8388565f6737b55}
+
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries opcode} \{ \\*
+{\bfseries \-\_\-nop}, 
+{\bfseries \-\_\-const}, 
+{\bfseries \-\_\-mov}, 
+{\bfseries \-\_\-mov\-\_\-disp}, 
+\\*
+{\bfseries \-\_\-ld}, 
+{\bfseries \-\_\-st}, 
+{\bfseries \-\_\-add}, 
+{\bfseries \-\_\-sub}, 
+\\*
+{\bfseries \-\_\-mul}, 
+{\bfseries \-\_\-and}, 
+{\bfseries \-\_\-or}, 
+{\bfseries \-\_\-xor}, 
+\\*
+{\bfseries \-\_\-pusharg}, 
+{\bfseries \-\_\-poparg}, 
+{\bfseries \-\_\-leave}, 
+{\bfseries \-\_\-ret}, 
+\\*
+{\bfseries \-\_\-int}, 
+{\bfseries \-\_\-cmp}, 
+{\bfseries \-\_\-breq}, 
+{\bfseries \-\_\-brne}, 
+\\*
+{\bfseries \-\_\-brlt}, 
+{\bfseries \-\_\-brle}, 
+{\bfseries \-\_\-brgt}, 
+{\bfseries \-\_\-brge}, 
+\\*
+{\bfseries \-\_\-jmp}, 
+{\bfseries \-\_\-call}, 
+{\bfseries \-\_\-fld}, 
+{\bfseries \-\_\-fst}, 
+\\*
+{\bfseries \-\_\-fadd}, 
+{\bfseries \-\_\-fsub}, 
+{\bfseries \-\_\-fmul}, 
+{\bfseries \-\_\-fdiv}, 
+\\*
+{\bfseries \-\_\-fcmp}, 
+{\bfseries \-\_\-fchs}, 
+{\bfseries \-\_\-fst\-\_\-rot}, 
+{\bfseries \-\_\-fnop}, 
+\\*
+{\bfseries \-\_\-ftan}, 
+{\bfseries \-\_\-fatan}, 
+{\bfseries \-\_\-fsin}, 
+{\bfseries \-\_\-fcos}, 
+\\*
+{\bfseries \-\_\-fsincos}, 
+{\bfseries \-\_\-fsqrt}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+C++ library to access the ($^\wedge$v$^\wedge$) kernel and add some optimization features. 

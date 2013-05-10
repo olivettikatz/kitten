@@ -1,0 +1,138 @@
+\hypertarget{generator_8h}{\section{kernel/generator.h File Reference}
+\label{generator_8h}\index{kernel/generator.\-h@{kernel/generator.\-h}}
+}
+{\ttfamily \#include $<$stdio.\-h$>$}\\*
+{\ttfamily \#include $<$string.\-h$>$}\\*
+{\ttfamily \#include $<$malloc.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}vector.\-h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structo__jit}{o\-\_\-jit}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{generator_8h_abf81598eb564ca2284b579e60c8b5db5}{\#define {\bfseries O\-\_\-\-I\-N\-S\-T}(n)~void o\-\_\-emit\-\_\-\#\#n(\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j, unsigned char r0, unsigned char r1, int a)}\label{generator_8h_abf81598eb564ca2284b579e60c8b5db5}
+
+\item 
+\hypertarget{generator_8h_a76d8eb5bdbe5f6ed8b65b39042d8cf75}{\#define {\bfseries O\-\_\-\-E\-M\-I\-T}(j, n, r0, r1, a)~o\-\_\-emit\-\_\-\#\#n(j, (unsigned char)r0, (unsigned char)r1, (int)a)}\label{generator_8h_a76d8eb5bdbe5f6ed8b65b39042d8cf75}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structo__jit}{o\-\_\-jit} \hyperlink{generator_8h_ae8a4c20df64ebe0d19f343aafc7b1612}{o\-\_\-jit\-\_\-init} ()
+\item 
+void \hyperlink{generator_8h_ae8503dc91638b1cff171b971183e5155}{o\-\_\-jit\-\_\-release} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j)
+\item 
+unsigned int \hyperlink{generator_8h_a6416c586f8b581641119e581a7ff5f22}{o\-\_\-jit\-\_\-get\-\_\-size} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j)
+\item 
+unsigned int \hyperlink{generator_8h_af07ef16d8e9d91c195e457a36af289d4}{o\-\_\-jit\-\_\-get\-\_\-used} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j)
+\item 
+int \hyperlink{generator_8h_ad191290ca8dd91b132d5f6be663a87d3}{o\-\_\-jit\-\_\-emit8} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j, unsigned char b)
+\item 
+int \hyperlink{generator_8h_a5c89076c7b0bae05beb8bd6a697afd86}{o\-\_\-jit\-\_\-emit32} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j, int i)
+\item 
+int \hyperlink{generator_8h_a621bf25d40ad1a937ad9d6280c179ec2}{o\-\_\-jit\-\_\-emit8r} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j, unsigned char b, unsigned char r)
+\item 
+int \hyperlink{generator_8h_afa9d5e1f9f0746253879216352c19a18}{o\-\_\-jit\-\_\-emit8mr} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j, unsigned char b, unsigned char a0, unsigned char a1)
+\item 
+unsigned int \hyperlink{generator_8h_a660716e57e5de1de730119e162ad810a}{o\-\_\-jit\-\_\-label} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j)
+\item 
+void \hyperlink{generator_8h_a1f1aae92fe9a969e90a2cd52bc45dea9}{o\-\_\-jit\-\_\-insert} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j, unsigned int l)
+\item 
+void $\ast$ \hyperlink{generator_8h_ae0bebe9f87d2993268dd6e497e1f17d5}{o\-\_\-jit\-\_\-fp} (\hyperlink{structo__jit}{o\-\_\-jit} $\ast$j)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Generating machine code instructions into vectors. 
+
+\subsection{Function Documentation}
+\hypertarget{generator_8h_a5c89076c7b0bae05beb8bd6a697afd86}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-emit32@{o\-\_\-jit\-\_\-emit32}}
+\index{o\-\_\-jit\-\_\-emit32@{o\-\_\-jit\-\_\-emit32}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-emit32}]{\setlength{\rightskip}{0pt plus 5cm}int o\-\_\-jit\-\_\-emit32 (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_a5c89076c7b0bae05beb8bd6a697afd86}
+Emits a 32-\/bit value. \hypertarget{generator_8h_ad191290ca8dd91b132d5f6be663a87d3}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-emit8@{o\-\_\-jit\-\_\-emit8}}
+\index{o\-\_\-jit\-\_\-emit8@{o\-\_\-jit\-\_\-emit8}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-emit8}]{\setlength{\rightskip}{0pt plus 5cm}int o\-\_\-jit\-\_\-emit8 (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j, }
+\item[{unsigned char}]{b}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_ad191290ca8dd91b132d5f6be663a87d3}
+Emits an 8-\/bit opcode. \hypertarget{generator_8h_afa9d5e1f9f0746253879216352c19a18}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-emit8mr@{o\-\_\-jit\-\_\-emit8mr}}
+\index{o\-\_\-jit\-\_\-emit8mr@{o\-\_\-jit\-\_\-emit8mr}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-emit8mr}]{\setlength{\rightskip}{0pt plus 5cm}int o\-\_\-jit\-\_\-emit8mr (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j, }
+\item[{unsigned char}]{b, }
+\item[{unsigned char}]{a0, }
+\item[{unsigned char}]{a1}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_afa9d5e1f9f0746253879216352c19a18}
+Emits an 8-\/bit opcode with O\-Red with two registers (used heavily in x86). \hypertarget{generator_8h_a621bf25d40ad1a937ad9d6280c179ec2}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-emit8r@{o\-\_\-jit\-\_\-emit8r}}
+\index{o\-\_\-jit\-\_\-emit8r@{o\-\_\-jit\-\_\-emit8r}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-emit8r}]{\setlength{\rightskip}{0pt plus 5cm}int o\-\_\-jit\-\_\-emit8r (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j, }
+\item[{unsigned char}]{b, }
+\item[{unsigned char}]{r}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_a621bf25d40ad1a937ad9d6280c179ec2}
+Emits an 8-\/bit opcode with a register I\-D added to it. \hypertarget{generator_8h_ae0bebe9f87d2993268dd6e497e1f17d5}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-fp@{o\-\_\-jit\-\_\-fp}}
+\index{o\-\_\-jit\-\_\-fp@{o\-\_\-jit\-\_\-fp}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-fp}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ o\-\_\-jit\-\_\-fp (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_ae0bebe9f87d2993268dd6e497e1f17d5}
+Gets a function pointer to the machine code emitted so far. \hypertarget{generator_8h_a6416c586f8b581641119e581a7ff5f22}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-get\-\_\-size@{o\-\_\-jit\-\_\-get\-\_\-size}}
+\index{o\-\_\-jit\-\_\-get\-\_\-size@{o\-\_\-jit\-\_\-get\-\_\-size}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-get\-\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int o\-\_\-jit\-\_\-get\-\_\-size (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_a6416c586f8b581641119e581a7ff5f22}
+Gets the size of the machine code in memory. \hypertarget{generator_8h_af07ef16d8e9d91c195e457a36af289d4}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-get\-\_\-used@{o\-\_\-jit\-\_\-get\-\_\-used}}
+\index{o\-\_\-jit\-\_\-get\-\_\-used@{o\-\_\-jit\-\_\-get\-\_\-used}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-get\-\_\-used}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int o\-\_\-jit\-\_\-get\-\_\-used (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_af07ef16d8e9d91c195e457a36af289d4}
+Gets the number of used bytes within the machine code. \hypertarget{generator_8h_ae8a4c20df64ebe0d19f343aafc7b1612}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-init@{o\-\_\-jit\-\_\-init}}
+\index{o\-\_\-jit\-\_\-init@{o\-\_\-jit\-\_\-init}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf o\-\_\-jit} o\-\_\-jit\-\_\-init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_ae8a4c20df64ebe0d19f343aafc7b1612}
+Initialize a new J\-I\-T compiler. \hypertarget{generator_8h_a1f1aae92fe9a969e90a2cd52bc45dea9}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-insert@{o\-\_\-jit\-\_\-insert}}
+\index{o\-\_\-jit\-\_\-insert@{o\-\_\-jit\-\_\-insert}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-insert}]{\setlength{\rightskip}{0pt plus 5cm}void o\-\_\-jit\-\_\-insert (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j, }
+\item[{unsigned int}]{l}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_a1f1aae92fe9a969e90a2cd52bc45dea9}
+Sets the insert point of the J\-I\-T compiler. \hypertarget{generator_8h_a660716e57e5de1de730119e162ad810a}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-label@{o\-\_\-jit\-\_\-label}}
+\index{o\-\_\-jit\-\_\-label@{o\-\_\-jit\-\_\-label}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-label}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int o\-\_\-jit\-\_\-label (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_a660716e57e5de1de730119e162ad810a}
+Emits a label (gets the current code pointer position). \hypertarget{generator_8h_ae8503dc91638b1cff171b971183e5155}{\index{generator.\-h@{generator.\-h}!o\-\_\-jit\-\_\-release@{o\-\_\-jit\-\_\-release}}
+\index{o\-\_\-jit\-\_\-release@{o\-\_\-jit\-\_\-release}!generator.h@{generator.\-h}}
+\subsubsection[{o\-\_\-jit\-\_\-release}]{\setlength{\rightskip}{0pt plus 5cm}void o\-\_\-jit\-\_\-release (
+\begin{DoxyParamCaption}
+\item[{{\bf o\-\_\-jit} $\ast$}]{j}
+\end{DoxyParamCaption}
+)}}\label{generator_8h_ae8503dc91638b1cff171b971183e5155}
+Release the memory in a J\-I\-T compiler and wipe the contents. 
