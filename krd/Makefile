@@ -1,24 +1,27 @@
-CC=gcc
-CFLAGS=-g -O0 --std=c99
-LIBS=-lm
+#CC=gcc
+#CFLAGS=-g -O0 --std=c99
+#LIBS=-lm
 
-AR=ar
-ARFLAGS=rcs
+#AR=ar
+#ARFLAGS=rcs
 
-RM=rm
-RMFLAGS=-f
+#RM=rm
+#RMFLAGS=-f
 
-CFLAGS_X11=$(shell pkg-config --cflags x11 xft imlib2)
-LIBS_X11=$(shell pkg-config --libs x11 xft imlib2)
+#CFLAGS_X11=$(shell pkg-config --cflags x11 xft imlib2)
+#LIBS_X11=$(shell pkg-config --libs x11 xft imlib2)
 
-CFLAGS_OPENGL=$(shell pkg-config --cflags gl freetype2)
-LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL
+#CFLAGS_OPENGL=$(shell pkg-config --cflags gl freetype2)
+#LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL
+
+include ../build/config.mk
 
 OBJ=kernel/backend.o
 TEST=test/test_kernel.bin
 
 BACKEND_X11="enable"
 BACKEND_OPENGL="enable"
+LIBS=
 
 ifeq ($(BACKEND_X11),"enable")
 	CFLAGS+=$(CFLAGS_X11)
@@ -36,14 +39,8 @@ else
 	CFLAGS+=-DKRD_DISABLE_OPENGL
 endif
 
-%.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-%.bin : %.o
-	$(CC) $(CFLAGS) $< $(OBJ) -o $@ $(LIBS)
-
 build : $(OBJ)
-	$(AR) $(ARFLAGS) libkrd.a $(OBJ)
+	$(AR) $(ARFLAGS) ../build/libkrd.a $(OBJ)
 
 test : $(TEST)
 
