@@ -1,6 +1,6 @@
 #include "pattern.h"
 
-namespace taurus
+namespace ktp
 {
 	Pattern &Pattern::setAlgorithm(Pattern::algorithmType a)
 	{

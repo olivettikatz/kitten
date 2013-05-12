@@ -1,27 +1,10 @@
-#CC=gcc
-#CFLAGS=-g -O0 --std=c99
-#LIBS=-lm
-
-#AR=ar
-#ARFLAGS=rcs
-
-#RM=rm
-#RMFLAGS=-f
-
-#CFLAGS_X11=$(shell pkg-config --cflags x11 xft imlib2)
-#LIBS_X11=$(shell pkg-config --libs x11 xft imlib2)
-
-#CFLAGS_OPENGL=$(shell pkg-config --cflags gl freetype2)
-#LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL
-
 include ../build/config.mk
 
-OBJ=kernel/backend.o
-TEST=test/test_kernel.bin
+OBJ+=kernel/backend.o
+TEST+=test/test_kernel.bin
 
 BACKEND_X11="enable"
 BACKEND_OPENGL="enable"
-LIBS=
 
 ifeq ($(BACKEND_X11),"enable")
 	CFLAGS+=$(CFLAGS_X11)
@@ -40,10 +23,10 @@ else
 endif
 
 build : $(OBJ)
-	$(AR) $(ARFLAGS) ../build/libkrd.a $(OBJ)
+	@echo " link libkrd.a"
+	@$(AR) $(ARFLAGS) libkrd.a $(OBJ)
 
 test : $(TEST)
 
 clean :
-	$(RM) $(RMFLAGS) $(OBJ) libkrd.a
-	for i in $(TEST); do $(RM) $(RMFLAGS) $$i $$(dirname $$i)/$$(basename $$i .bin).o; done
+	@$(RM) $(RMFLAGS) $(OBJ) $(TEST) libkrd.a

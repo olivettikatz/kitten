@@ -6,7 +6,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#include <tse.h>
+#include <tse/tse.h>
 
 char *strtok_r(char *str, const char *delim, char **saveptr);
 char *strdup(const char *s);

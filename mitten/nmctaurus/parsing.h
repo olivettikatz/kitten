@@ -2,12 +2,12 @@
 #define __NMC_PARSING_H
 
 #include <iostream>
-#include "taurus/taurus.h"
+#include <ktp/ktp.h>
 
 namespace nmc
 {
 	using namespace std;
-	using namespace taurus;
+	using namespace ktp;
 
 	Tokenizer createTokenizer();
 	Parser createParser(Tokenizer &t);

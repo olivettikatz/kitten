@@ -1,15 +1,21 @@
 # PROGARMS
 CC=gcc
-CFLAGS=-ggdb -O0 --std=gnu99
+CFLAGS=-ggdb -O0 --std=gnu99 -I../build -L../build
 
 CXX=g++
-CXXFLAGS=-ggdb -O0 -std=c++11
+CXXFLAGS=-ggdb -O0 -std=c++11 -I../build -L../build
 
 AR=ar
 ARFLAGS=rcs
 
 RM=rm
-RMFLAGS=-f --
+RMFLAGS=-rf --
+
+CP=cp
+CPFLAGS=-rf --
+
+MKDIR=mkdir
+MKDIRFLAGS=-p
 
 # LIBRARY FLAGS
 CFLAGS_MATH=
@@ -23,16 +29,22 @@ LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL
 
 # AUTOMATIC TARGETS
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo " building $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 %.bin : %.c
-	$(CC) $(CFLAGS) $< $(OBJ) -o $@
+	@echo " building $<"
+	@$(CC) $(CFLAGS) $< $(OBJ) -o $@
+	@echo " linking $@"
 
 %.o : %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo " building $<"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 %.bin : %.cpp
-	$(CXX) $(CXXFLAGS) $< $(OBJ) -o $@
+	@echo " building $<"
+	@$(CXX) $(CXXFLAGS) $< $(OBJ) -o $@
+	@echo " linking $@"
 
 # CONFIGURATION
 PWD=$(shell pwd)

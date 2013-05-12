@@ -1,2 +1,10 @@
+include ../build/config.mk
+
+LIBS+=-ltse
+
 build :
-	gcc -g -O0 --std=c99 moph.c -o moph -L../tse -I../tse -ltse
+	@echo " link moph"
+	@$(CC) $(CFLAGS) moph.c -o moph $(LIBS)
+
+clean :
+	@$(RM) $(RMFLAGS) moph
