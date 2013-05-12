@@ -1,4 +1,4 @@
-include ../build/config.mk
+include config.mk
 
 OBJ+=kernel/backend.o
 TEST+=test/test_kernel.bin
@@ -23,10 +23,9 @@ else
 endif
 
 build : $(OBJ)
-	@echo " link libkrd.a"
-	@$(AR) $(ARFLAGS) libkrd.a $(OBJ)
+	$(AR) $(ARFLAGS) libkrd.a $(OBJ)
 
 test : $(TEST)
 
 clean :
-	@$(RM) $(RMFLAGS) $(OBJ) $(TEST) libkrd.a
+	$(RM) $(RMFLAGS) $(OBJ) $(TEST) libkrd.a

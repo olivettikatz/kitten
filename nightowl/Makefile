@@ -1,4 +1,4 @@
-include ../build/config.mk
+include config.mk
 
 SRC=$(PWD)
 KERNEL=$(PWD)/kernel
@@ -11,12 +11,10 @@ OBJ+=$(ARCH_OBJ) $(KERNEL_OBJ) $(KERNEL_ARCH_OBJ) $(SRC)/builder.o
 build : $(OBJ) $(KERNEL)/libnightowl_kernel.so $(SRC)/libnightowl.a
 
 $(KERNEL)/libnightowl_kernel.so : $(KERNEL_OBJ)
-	@echo " link libnightowl_kernel.so"
-	@$(CC) $(CFLAGS) -shared -Wl,-soname,libnightowl_kernel.so $^ -o $@
+	$(CC) $(CFLAGS) -shared -Wl,-soname,libnightowl_kernel.so $^ -o $@
 
 $(SRC)/libnightowl.a : $(OBJ)
-	@echo " link libnightowl.a"
-	@$(AR) $(ARFLAGS) $@ $^
+	$(AR) $(ARFLAGS) $@ $^
 
 clean : 
-	@$(RM) $(RMFLAGS) $(OBJ) $(KERNEL)/libnightowl_kernel.so $(SRC)/libnightowl.a
+	$(RM) $(RMFLAGS) $(OBJ) $(KERNEL)/libnightowl_kernel.so $(SRC)/libnightowl.a

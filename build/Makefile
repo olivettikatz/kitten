@@ -4,61 +4,55 @@ MAKE=make
 MAKEFLAGS=--no-print-directory
 
 build : 
-	@echo "building krd..."
+	$(INSTALL) $(INSTALLFLAGS) config.mk ../krd
 	@$(MAKE) $(MAKEFLAGS) -C ../krd build
-	@echo "installing krd within build..."
-	@$(CP) $(CPFLAGS) ../krd/libkrd.a .
-	@$(MKDIR) $(MKDIRFLAGS) krd/kernel
-	@$(CP) $(CPFLAGS) ../krd/kernel/backend.h krd/kernel/backend.h
+	$(INSTALL) $(INSTALLFLAGS) ../krd/libkrd.a .
+	$(MKDIR) $(MKDIRFLAGS) krd/kernel
+	$(INSTALL) $(INSTALLFLAGS) ../krd/kernel/backend.h krd/kernel/backend.h
 
-	@echo "building tse..."
+	$(INSTALL) $(INSTALLFLAGS) config.mk ../tse
 	@$(MAKE) $(MAKEFLAGS) -C ../tse build
-	@echo "installing tse within build..."
-	@$(CP) $(CPFLAGS) ../tse/libtse.a .
-	@$(MKDIR) $(MKDIRFLAGS) tse/core
-	@$(MKDIR) $(MKDIRFLAGS) tse/os/linux
-	@$(CP) $(CPFLAGS) ../tse/tse.h tse
-	@$(CP) $(CPFLAGS) ../tse/core/async.h tse/core
-	@$(CP) $(CPFLAGS) ../tse/core/region.h tse/core
-	@$(CP) $(CPFLAGS) ../tse/core/stream.h tse/core
-	@$(CP) $(CPFLAGS) ../tse/os/os.h tse/os
-	@$(CP) $(CPFLAGS) ../tse/os/linux/linux.h tse/os/linux
+	$(INSTALL) $(INSTALLFLAGS) ../tse/libtse.a .
+	$(MKDIR) $(MKDIRFLAGS) tse/core
+	$(MKDIR) $(MKDIRFLAGS) tse/os/linux
+	$(INSTALL) $(INSTALLFLAGS) ../tse/tse.h tse
+	$(INSTALL) $(INSTALLFLAGS) ../tse/core/async.h tse/core
+	$(INSTALL) $(INSTALLFLAGS) ../tse/core/region.h tse/core
+	$(INSTALL) $(INSTALLFLAGS) ../tse/core/stream.h tse/core
+	$(INSTALL) $(INSTALLFLAGS) ../tse/os/os.h tse/os
+	$(INSTALL) $(INSTALLFLAGS) ../tse/os/linux/linux.h tse/os/linux
 
-	@echo "building ktp..."
+	$(INSTALL) $(INSTALLFLAGS) config.mk ../ktp
 	@$(MAKE) $(MAKEFLAGS) -C ../ktp build
-	@echo "installing ktp within build..."
-	@$(CP) $(CPFLAGS) ../ktp/libktp.a .
-	@$(MKDIR) $(MKDIRFLAGS) ktp/lexical
-	@$(MKDIR) $(MKDIRFLAGS) ktp/semantic
-	@$(CP) $(CPFLAGS) ../ktp/ktp.h ktp
-	@$(CP) $(CPFLAGS) ../ktp/lexical/pattern.h ktp/lexical
-	@$(CP) $(CPFLAGS) ../ktp/lexical/tokenizer.h ktp/lexical
-	@$(CP) $(CPFLAGS) ../ktp/semantic/ast.h ktp/semantic
-	@$(CP) $(CPFLAGS) ../ktp/semantic/error.h ktp/semantic
-	@$(CP) $(CPFLAGS) ../ktp/semantic/parser.h ktp/semantic
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/libktp.a .
+	$(MKDIR) $(MKDIRFLAGS) ktp/lexical
+	$(MKDIR) $(MKDIRFLAGS) ktp/semantic
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/ktp.h ktp
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/lexical/pattern.h ktp/lexical
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/lexical/tokenizer.h ktp/lexical
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/semantic/ast.h ktp/semantic
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/semantic/error.h ktp/semantic
+	$(INSTALL) $(INSTALLFLAGS) ../ktp/semantic/parser.h ktp/semantic
 
-	@echo "building nmctaurus..."
+	$(INSTALL) $(INSTALLFLAGS) config.mk ../mitten/nmctaurus
 	@$(MAKE) $(MAKEFLAGS) -C ../mitten/nmctaurus build
 	
-	@echo "building moph..."
+	$(INSTALL) $(INSTALLFLAGS) config.mk ../moph
 	@$(MAKE) $(MAKEFLAGS) -C ../moph
-	@echo "installing moph within build..."
-	@$(CP) $(CPFLAGS) ../moph/moph .
+	$(INSTALL) $(INSTALLFLAGS) ../moph/moph .
 
-	@echo "building nightowl..."
+	$(INSTALL) $(INSTALLFLAGS) config.mk ../nightowl
 	@$(MAKE) $(MAKEFLAGS) -C ../nightowl
-	@echo "installing nightowl within build..."
-	@$(CP) $(CPFLAGS) ../nightowl/libnightowl.a .
-	@$(CP) $(CPFLAGS) ../nightowl/kernel/libnightowl_kernel.so .
-	@$(MKDIR) $(MKDIRFLAGS) nightowl/kernel/arch
-	@$(CP) $(CPFLAGS) ../nightowl/builder.h nightowl
-	@$(CP) $(CPFLAGS) ../nightowl/kernel/generator.h nightowl/kernel
-	@$(CP) $(CPFLAGS) ../nightowl/kernel/vector.h nightowl/kernel
-	@$(CP) $(CPFLAGS) ../nightowl/kernel/arch/arch.h nightowl/kernel/arch
+	$(INSTALL) $(INSTALLFLAGS) ../nightowl/libnightowl.a .
+	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/libnightowl_kernel.so .
+	$(MKDIR) $(MKDIRFLAGS) nightowl/kernel/arch
+	$(INSTALL) $(INSTALLFLAGS) ../nightowl/builder.h nightowl
+	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/generator.h nightowl/kernel
+	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/vector.h nightowl/kernel
+	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/arch/arch.h nightowl/kernel/arch
 
 clean :
-	@echo "cleaning build..."
-	@$(RM) $(RMFLAGS) -r krd ktp libkrd.a libktp.a libnightowl.a libnightowl_kernel.so libtse.a moph nightowl tse
+	$(RM) $(RMFLAGS) -r krd ktp libkrd.a libktp.a libnightowl.a libnightowl_kernel.so libtse.a moph nightowl tse
 	@$(MAKE) $(MAKEFLAGS) -C ../krd clean
 	@$(MAKE) $(MAKEFLAGS) -C ../ktp clean
 	@$(MAKE) $(MAKEFLAGS) -C ../mitten/nmctaurus clean

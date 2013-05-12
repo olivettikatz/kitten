@@ -1,4 +1,4 @@
-include ../../build/config.mk
+include config.mk
 
 CFLAGS+=-I../../build -L../../build
 CXXFLAGS+=-I../../build -L../../build
@@ -12,4 +12,4 @@ build : $(OBJ)
 test : $(TEST)
 
 clean :
-	@$(RM) $(RMFLAGS) $(OBJ) $(TEST)
+	$(RM) $(RMFLAGS) $(OBJ) $(TEST)
