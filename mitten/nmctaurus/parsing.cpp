@@ -15,6 +15,7 @@ namespace nmc
 		t.whitespace(t() == "\r");
 		t.whitespace(t() == "\n");
 		t.categorizer("Where", t() == "where");
+		t.categorizer("InternalAssemblySymbol", t() == "asm");
 		t.token("BoundaryBeginExpression", t() == "(");
 		t.token("BoundaryEndExpression", t() == ")");
 		t.token("BoundaryBeginComplex", t() == "[");
@@ -64,7 +65,6 @@ namespace nmc
 		t.token("ValueInt", t() += "0123456789-");
 		t.token("ValueFloat", t() += "0123456789-.");
 		t.token("Symbol", t() += lettersLower+lettersUpper+digits+"_");
-		t.token("InternalAssemblySymbol", t() == "asm");
 		t.combine(t() == "-", t() == ".");
 		t.combine(t() == "-.", t() += "-.0123456789");
 		t.combine(t() == "-", t() += "-.0123456789");
