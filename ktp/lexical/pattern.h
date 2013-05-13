@@ -66,7 +66,7 @@ namespace ktp
 
 		unsigned int getLengthRequest();
 
-		bool match(string s);
+		unsigned int match(string s);
 
 		string display();
 	};

@@ -7,10 +7,13 @@ namespace nmc
 		Tokenizer t = Tokenizer();
 		t.noDelim(t() == "\"", t() == "\"");
 		t.noDelim(t() == "'", t() == "'");
-		t.skip(t() == "//", t() == "\n");
-		t.skip(t() == "#", t() == "\n");
+		t.skip(t() == "//", t() == "\n" || t() == "\r");
+		t.skip(t() == "#", t() == "\n" || t() == "\r");
 		t.skip(t() == "/*", t() == "*/");
-		t.whitespace(t() += " \t\n\r");
+		t.whitespace(t() == " ");
+		t.whitespace(t() == "\t");
+		t.whitespace(t() == "\r");
+		t.whitespace(t() == "\n");
 		t.categorizer("Where", t() == "where");
 		t.token("BoundaryBeginExpression", t() == "(");
 		t.token("BoundaryEndExpression", t() == ")");
@@ -61,6 +64,7 @@ namespace nmc
 		t.token("ValueInt", t() += "0123456789-");
 		t.token("ValueFloat", t() += "0123456789-.");
 		t.token("Symbol", t() += lettersLower+lettersUpper+digits+"_");
+		t.token("InternalAssemblySymbol", t() == "asm");
 		t.combine(t() == "-", t() == ".");
 		t.combine(t() == "-.", t() += "-.0123456789");
 		t.combine(t() == "-", t() += "-.0123456789");
@@ -81,7 +85,7 @@ namespace nmc
 		p.add("InternalAssemblyLines", (p("InternalAssemblyLine0") || p("InternalAssemblyLine1") || p("InternalAssemblyLine2") || p("InternalAssemblyLine2") || p("InternalAssemblyLine3")) << p["EndOfLine"]);
 		p.many("InternalAssemblyLines");
 
-		p.add("InternalAssemblyExpression", p["BoundaryBeginScope"] << p["internalAssemblyLines"] << p["BoundaryEndScope"]);
+		p.add("InternalAssemblyExpression", p["InternalAssemblySymbol"] << p["BoundaryBeginScope"] << p["internalAssemblyLines"] << p["BoundaryEndScope"]);
 
 		p.add("TypeQualifiers", p["Symbol"]);
 		p.many("TypeQualifiers");

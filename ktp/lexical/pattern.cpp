@@ -105,19 +105,23 @@ namespace ktp
 	unsigned int Pattern::getLengthRequest()
 	{
 		if (algorithm == isEqualTo || algorithm == startsWith || algorithm == endsWith)
+		{
 			return argument.size();
+		}
 		else
+		{
 			return 0;
+		}
 	}
 
-	bool Pattern::match(string s)
+	unsigned int Pattern::match(string s)
 	{
 		bool rtn = false;
 
 		if (algorithm == isEqualTo)
-			rtn = (argument.compare(0, argument.size(), s) == 0);
+			rtn = (argument.compare(s.substr(0, argument.size())) == 0);
 		else if (algorithm == isNotEqualTo)
-			rtn = (argument.compare(0, argument.size(), s) != 0);
+			rtn = (argument.compare(s.substr(0, argument.size())) != 0);
 		else if (algorithm == onlyContains)
 		{
 			rtn = true;
@@ -161,7 +165,14 @@ namespace ktp
 				rtn = (rtn || i->second.match(s) == false);
 		}
 
-		return rtn;
+		if (rtn && getLengthRequest() > 0)
+			return getLengthRequest();
+		else if (rtn && getLengthRequest() == 0)
+			return 1;
+		else if (rtn == false)
+			return 0;
+		else
+			return 0;
 	}
 
 	string Pattern::display()

@@ -114,6 +114,8 @@ namespace ktp
 
 		if (toks[off].getType().compare(content[n].getExpectation()) != 0 && content[n].getExpectation().compare(""))
 		{
+			cout << "expectation " << n << " failed.\n";
+			cout << "\tchecking alternates...\n";
 			for (vector<string>::iterator i = content[n].getAlternates().begin(); i != content[n].getAlternates().end(); i++)
 			{
 				unsigned int oldoff = off;
@@ -121,6 +123,7 @@ namespace ktp
 				rtn = parse(*i, toks, off, ebuftmp);
 				if (rtn.good())
 				{
+					cout << "\tfound alternate: " << *i << "!\n";
 					ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
 					break;
 				}
@@ -132,11 +135,14 @@ namespace ktp
 
 			if (rtn.good() == false)
 			{
+				cout << "\texpectation un-matchable, erroring.\n";
 				ebuf.push_back(Error(toks[off], content[n].getExpectation(), n));
+				return AST();
 			}
 		}
 		else if (content[n].getKeep())
 		{
+			cout << "expectation " << n << " matched and kept!\n";
 			rtn = AST(n, toks[off]);
 		}
 
@@ -144,11 +150,13 @@ namespace ktp
 
 		for (vector<string>::iterator i = content[n].getSequence().begin(); i != content[n].getSequence().end(); i++)
 		{
+			cout << "\tadding " << *i << " to sequence...\n";
 			rtn.add(parse(*i, toks, off, ebuf));
 		}
 
 		if (content[n].getMany())
 		{
+			cout << "\texpecting many repetitions...\n";
 			AST tmp = AST();
 			tmp.add(rtn);
 

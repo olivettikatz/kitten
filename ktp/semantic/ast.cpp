@@ -37,5 +37,15 @@ namespace ktp
 	{
 		return children[idx];
 	}
+
+	string AST::display()
+	{
+		stringstream ss;
+		ss << "(" << eid << ":" << content.get();
+		for (vector<AST>::iterator i = children.begin(); i != children.end(); i++)
+			ss << " " << i->display();
+		ss << ")";
+		return ss.str();
+	}
 }
 

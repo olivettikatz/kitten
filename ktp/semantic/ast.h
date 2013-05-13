@@ -2,6 +2,7 @@
 #define __KTP_SEMANTIC_AST_H
 
 #include "../lexical/tokenizer.h"
+#include <sstream>
 
 namespace ktp
 {
@@ -24,6 +25,7 @@ namespace ktp
 		Token getContent();
 		unsigned int getChildrenSize();
 		AST getChild(unsigned int idx);
+		string display();
 	};
 }
 
