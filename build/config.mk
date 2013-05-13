@@ -18,7 +18,7 @@ MKDIR=mkdir
 MKDIRFLAGS=-p
 
 MAKE=make
-MAKEFLAGS=--no-print-directory
+MAKEFLAGS=
 
 INSTALL=install
 INSTALLFLAGS=
@@ -31,22 +31,23 @@ CFLAGS_OPENGL=$(shell pkg-config --cflags gl freetype2)
 # LIBRARY INCLUDES
 LIBS_MATH=-lm
 LIBS_X11=$(shell pkg-config --libs x11 xft imlib2)
-LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL
+LIBS_OPENGL=$(shell pkg-config --libs gl freetype2) -lGLU -lglut -lSOIL -lm
 
 # AUTOMATIC TARGETS
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 %.bin : %.c
-	$(CC) $(CFLAGS) $< $(OBJ) -o $@
+	$(CC) $(CFLAGS) $< $(OBJ) -o $@ $(LIBS)
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 %.bin : %.cpp
-	$(CXX) $(CXXFLAGS) $< $(OBJ) -o $@
+	$(CXX) $(CXXFLAGS) $< $(OBJ) -o $@ $(LIBS)
 
 # CONFIGURATION
 PWD=$(shell pwd)
 OBJ=
 TEST=
+LIBS=

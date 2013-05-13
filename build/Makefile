@@ -51,6 +51,11 @@ build :
 	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/vector.h nightowl/kernel
 	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/arch/arch.h nightowl/kernel/arch
 
+test : 
+	@$(MAKE) $(MAKEFLAGS) -C ../krd test
+	@$(MAKE) $(MAKEFLAGS) -C ../mitten/nmctaurus test
+	@$(MAKE) $(MAKEFLAGS) -C ../tse test
+
 clean :
 	$(RM) $(RMFLAGS) -r krd ktp libkrd.a libktp.a libnightowl.a libnightowl_kernel.so libtse.a moph nightowl tse
 	@$(MAKE) $(MAKEFLAGS) -C ../krd clean

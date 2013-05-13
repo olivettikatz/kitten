@@ -20,13 +20,13 @@ namespace ktp
 		vector<string> alternates;
 
 	public:
-		Expectation() : expectation(0), _keep(false), _many(false) {}
+		Expectation() : _keep(false), _many(false) {}
 		Expectation(string e) : expectation(e), _keep(false), _many(false) {}
-		Expectation identify(string i);
-		Expectation operator || (Expectation e);
-		Expectation operator << (Expectation e);
-		Expectation keep();
-		Expectation many();
+		Expectation &identify(string i);
+		Expectation &operator || (Expectation e);
+		Expectation &operator << (Expectation e);
+		Expectation &keep();
+		Expectation &many();
 
 		string getID();
 		string getExpectation();

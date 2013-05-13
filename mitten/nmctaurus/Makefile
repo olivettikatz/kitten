@@ -2,7 +2,7 @@ include config.mk
 
 CFLAGS+=-I../../build -L../../build
 CXXFLAGS+=-I../../build -L../../build
-LIBS+=-ltaurus
+LIBS+=-lktp
 
 OBJ+=parsing.o
 TEST+=test_parsing.bin
