@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace ktp
 {
@@ -38,9 +39,6 @@ namespace ktp
 		string argument;
 		callback alternateCallback;
 
-		vector<Pattern> andPatterns;
-		vector<Pattern> orPatterns;
-
 		vector<pair<attachmentType, Pattern> > attachments;
 
 	public:
@@ -66,10 +64,11 @@ namespace ktp
 
 		bool compare(Pattern other);
 
-
 		unsigned int getLengthRequest();
 
 		bool match(string s);
+
+		string display();
 	};
 
 	extern string digits;

@@ -92,20 +92,6 @@ namespace ktp
 		if (alternateCallback != other.alternateCallback)
 			return false;
 
-		if (andPatterns.size() != other.andPatterns.size())
-			return false;
-
-		for (int i = 0; i < andPatterns.size(); i++)
-			if (andPatterns[i].compare(other.andPatterns[i]) == false)
-				return false;
-		
-		if (orPatterns.size() != other.orPatterns.size())
-			return false;
-
-		for (int i = 0; i < orPatterns.size(); i++)
-			if (!orPatterns[i].compare(other.orPatterns[i]))
-				return false;
-
 		if (attachments.size() != other.attachments.size())
 			return false;
 
@@ -129,9 +115,9 @@ namespace ktp
 		bool rtn = false;
 
 		if (algorithm == isEqualTo)
-			rtn = (argument.compare(s) == 0);
+			rtn = (argument.compare(0, argument.size(), s) == 0);
 		else if (algorithm == isNotEqualTo)
-			rtn = (argument.compare(s) != 0);
+			rtn = (argument.compare(0, argument.size(), s) != 0);
 		else if (algorithm == onlyContains)
 		{
 			rtn = true;
@@ -176,6 +162,40 @@ namespace ktp
 		}
 
 		return rtn;
+	}
+
+	string Pattern::display()
+	{
+		stringstream ss;
+		if (algorithm == isEqualTo)
+			ss << "(== '" << argument << "'";
+		else if (algorithm == isNotEqualTo)
+			ss << "(!= '" << argument << "'";
+		else if (algorithm == onlyContains)
+			ss << "(+= '" << argument << "'";
+		else if (algorithm == doesNotContain)
+			ss << "(-= '" << argument << "'";
+		else if (algorithm == startsWith)
+			ss << "(< '" << argument << "'";
+		else if (algorithm == endsWith)
+			ss << "(> '" << argument << "'";
+		else if (algorithm == alternate)
+			ss << "(alt " << alternateCallback;
+
+		for (vector<pair<attachmentType, Pattern> >::iterator i = attachments.begin(); i != attachments.end(); i++)
+		{
+			if (i->first == attachAnd)
+				ss << " && " << i->second.display();
+			else if (i->first == attachOr)
+				ss << " || " << i->second.display();
+			else if (i->first == attachAndNot)
+				ss << " !&& " << i->second.display();
+			else if (i->first == attachOrNot)
+				ss << " !&& " << i->second.display();
+		}
+
+		ss << ")";
+		return ss.str();
 	}
 	
 	string digits = "0123456789";

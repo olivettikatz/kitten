@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <streambuf>
 #include "pattern.h"
 
 namespace ktp
@@ -20,9 +22,9 @@ namespace ktp
 		string file;
 
 	public:
-		Token() : line(0), column(0), type(0) {}
-		Token(string s) : content(s), line(0), column(0), type(0) {}
-		Token(string s, unsigned int l, unsigned int c) : content(s), line(l), column(c), type(0) {}
+		Token() : line(0), column(0) {}
+		Token(string s) : content(s), line(0), column(0) {}
+		Token(string s, unsigned int l, unsigned int c) : content(s), line(l), column(c) {}
 		Token(string s, unsigned int l, unsigned int c, string t) : content(s), line(l), column(c), type(t) {}
 		Token(string s, unsigned int l, unsigned int c, string t, string f) : content(s), line(l), column(c), type(t), file(f) {}
 		Token &setContent(string s);
@@ -75,6 +77,7 @@ namespace ktp
 		Tokenizer &combine(Pattern pa, Pattern pb);
 
 		vector<Token> tokenize(string s);
+		vector<Token> tokenizeFile(string path);
 	};
 }
 

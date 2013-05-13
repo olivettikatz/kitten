@@ -109,13 +109,16 @@ namespace ktp
 	{
 		for (vector<Pattern>::iterator i = v.begin(); i != v.end(); i++)
 		{
+			cout << "\t\tchecking pattern " << i->display() << "...\n";
 			unsigned int n = i->match(s);
 			if (n > 0)
 			{
+				cout << "\t\t\tsuccess!\n";
 				return n;
 			}
 		}
 
+		cout << "\t\tfailure to find pattern.\n";
 		return 0;
 	}
 
@@ -139,7 +142,7 @@ namespace ktp
 			}
 		}
 
-		return 0;
+		return "";
 	}
 
 	Pattern Tokenizer::operator () ()
@@ -225,12 +228,17 @@ namespace ktp
 			unsigned int toksize = 0;
 			unsigned int toktype = 0;
 
+			cout << "'" << s[i] << "'\n";
+
+			cout << "\tchecking for noDelim segments...\n";
 			for (vector<pair<Pattern, Pattern> >::iterator j = _noDelim.begin(); j != _noDelim.end(); j++)
 			{
 				if (toksize = j->first.match(s.substr(i)))
 				{
+					cout << "\tfound noDelim start (length: " << toksize << ")\n";
 					if (i-last > 0)
 					{
+						cout << "\tmaking token '" << s.substr(last, i-last) << "'\n";
 						Token tmp = Token(s.substr(last, i-last), line, column);
 						tmp.setType(categorize(tmp));
 						rtn.push_back(tmp);
@@ -242,6 +250,7 @@ namespace ktp
 					{
 						if (toksize = j->second.match(s.substr(i)))
 						{
+							cout << "\tmaking token '" << s.substr(last-i, i-last+toksize) << "'\n";
 							Token tmp = Token(s.substr(last-i, i-last+toksize), line, column);
 							tmp.setType(categorize(tmp));
 							rtn.push_back(tmp);
@@ -254,12 +263,15 @@ namespace ktp
 				}
 			}
 			
+			cout << "\tchecking for skip segments...\n";
 			for (vector<pair<Pattern, Pattern> >::iterator j = _skip.begin(); j != _skip.end(); j++)
 			{
 				if (toksize = j->first.match(s.substr(i)))
 				{
+					cout << "\tfound skip start (length: " << toksize << ")\n";
 					if (i-last > 0)
 					{
+						cout << "\tmaking token '" << s.substr(last, i-last) << "'\n";
 						Token tmp = Token(s.substr(last, i-last), line, column);
 						tmp.setType(categorize(tmp));
 						rtn.push_back(tmp);
@@ -282,12 +294,15 @@ namespace ktp
 
 			if (toksize = isDeliminator(s.substr(i)))
 			{
+				cout << "\tdeliminator (length: " << toksize << ")\n";
 				if (i-last > 0)
 				{
+					cout << "\tmaking token '" << s.substr(last, i-last) << "'\n";
 					Token tmp = Token(s.substr(last, i-last), line, column);
 					tmp.setType(categorize(tmp));
 					rtn.push_back(tmp);
 				}
+				cout << "\tmaking token '" << s.substr(i, toksize) << "'\n";
 				Token tmp = Token(s.substr(i, toksize), line, column);
 				tmp.setType(categorize(tmp));
 				rtn.push_back(tmp);
@@ -296,8 +311,10 @@ namespace ktp
 			}
 			else if (toksize = isWhitespace(s.substr(i)))
 			{
+				cout << "\twhitespace (length: " << toksize << ")\n";
 				if (i-last > 0)
 				{
+					cout << "\tmaking token '" << s.substr(last, i-last) << "'\n";
 					Token tmp = Token(s.substr(last, i-last), line, column);
 					tmp.setType(categorize(tmp));
 					rtn.push_back(tmp);
@@ -330,5 +347,12 @@ namespace ktp
 		}
 
 		return rtn;
+	}
+
+	vector<Token> Tokenizer::tokenizeFile(string path)
+	{
+		ifstream f(path.c_str());
+		string s((istreambuf_iterator<char>(f)), istreambuf_iterator<char>());
+		return tokenize(s);
 	}
 }
