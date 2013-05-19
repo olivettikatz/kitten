@@ -1,66 +1,68 @@
 include config.mk
 
+SRC=..
+BUILD=$(SRC)/build
+LIB=$(SRC)/lib
+
 MAKE=make
-MAKEFLAGS=--no-print-directory
+MAKEFLAGS=
 
 build : 
-	$(INSTALL) $(INSTALLFLAGS) config.mk ../krd
-	@$(MAKE) $(MAKEFLAGS) -C ../krd build
-	$(INSTALL) $(INSTALLFLAGS) ../krd/libkrd.a .
-	$(MKDIR) $(MKDIRFLAGS) krd/kernel
-	$(INSTALL) $(INSTALLFLAGS) ../krd/kernel/backend.h krd/kernel/backend.h
+	$(INSTALL) $(INSTALLFLAGS) config.mk $(LIB)
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/rendering build
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/rendering/librendering.a .
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/rendering/kernel
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/rendering/kernel/backend.h $(BUILD)/rendering/kernel/backend.h
 
-	$(INSTALL) $(INSTALLFLAGS) config.mk ../tse
-	@$(MAKE) $(MAKEFLAGS) -C ../tse build
-	$(INSTALL) $(INSTALLFLAGS) ../tse/libtse.a .
-	$(MKDIR) $(MKDIRFLAGS) tse/core
-	$(MKDIR) $(MKDIRFLAGS) tse/os/linux
-	$(INSTALL) $(INSTALLFLAGS) ../tse/tse.h tse
-	$(INSTALL) $(INSTALLFLAGS) ../tse/core/async.h tse/core
-	$(INSTALL) $(INSTALLFLAGS) ../tse/core/region.h tse/core
-	$(INSTALL) $(INSTALLFLAGS) ../tse/core/stream.h tse/core
-	$(INSTALL) $(INSTALLFLAGS) ../tse/os/os.h tse/os
-	$(INSTALL) $(INSTALLFLAGS) ../tse/os/linux/linux.h tse/os/linux
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/tse build
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/libtse.a $(BUILD)
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/tse/core
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/tse/os/linux
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/tse.h $(BUILD)/tse
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/core/async.h $(BUILD)/tse/core
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/core/region.h $(BUILD)/tse/core
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/core/stream.h $(BUILD)/tse/core
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/os/os.h $(BUILD)/tse/os
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/tse/os/linux/linux.h $(BUILD)/tse/os/linux
 
-	$(INSTALL) $(INSTALLFLAGS) config.mk ../ktp
-	@$(MAKE) $(MAKEFLAGS) -C ../ktp build
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/libktp.a .
-	$(MKDIR) $(MKDIRFLAGS) ktp/lexical
-	$(MKDIR) $(MKDIRFLAGS) ktp/semantic
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/ktp.h ktp
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/lexical/pattern.h ktp/lexical
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/lexical/tokenizer.h ktp/lexical
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/semantic/ast.h ktp/semantic
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/semantic/error.h ktp/semantic
-	$(INSTALL) $(INSTALLFLAGS) ../ktp/semantic/parser.h ktp/semantic
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/parsing build
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/libparsing.a $(BUILD)
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/parsing/lexical
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/parsing/semantic
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/parsing.h $(BUILD)/parsing
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/lexical/pattern.h $(BUILD)/parsing/lexical
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/lexical/tokenizer.h $(BUILD)/parsing/lexical
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/semantic/ast.h $(BUILD)/parsing/semantic
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/semantic/error.h $(BUILD)/parsing/semantic
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/semantic/parser.h $(BUILD)/parsing/semantic
 
-	$(INSTALL) $(INSTALLFLAGS) config.mk ../mitten/nmctaurus
-	@$(MAKE) $(MAKEFLAGS) -C ../mitten/nmctaurus build
+	$(INSTALL) $(INSTALLFLAGS) config.mk $(SRC)/mitten/nmctaurus
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/mitten/nmctaurus build
 	
-	$(INSTALL) $(INSTALLFLAGS) config.mk ../moph
-	@$(MAKE) $(MAKEFLAGS) -C ../moph
-	$(INSTALL) $(INSTALLFLAGS) ../moph/moph .
+	$(INSTALL) $(INSTALLFLAGS) config.mk $(SRC)/moph
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/moph
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/moph/moph $(BUILD)
 
-	$(INSTALL) $(INSTALLFLAGS) config.mk ../nightowl
-	@$(MAKE) $(MAKEFLAGS) -C ../nightowl
-	$(INSTALL) $(INSTALLFLAGS) ../nightowl/libnightowl.a .
-	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/libnightowl_kernel.so .
-	$(MKDIR) $(MKDIRFLAGS) nightowl/kernel/arch
-	$(INSTALL) $(INSTALLFLAGS) ../nightowl/builder.h nightowl
-	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/generator.h nightowl/kernel
-	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/vector.h nightowl/kernel
-	$(INSTALL) $(INSTALLFLAGS) ../nightowl/kernel/arch/arch.h nightowl/kernel/arch
+	$(INSTALL) $(INSTALLFLAGS) config.mk $(SRC)/nightowl
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/nightowl
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/libnightowl.a $(BUILD)
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/kernel/libnightowl_kernel.so $(BUILD)
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/nightowl/kernel/arch
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/builder.h $(BUILD)/nightowl
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/kernel/generator.h $(BUILD)/nightowl/kernel
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/kernel/vector.h $(BUILD)/nightowl/kernel
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/kernel/arch/arch.h $(BUILD)/nightowl/kernel/arch
 
-test : 
-	@$(MAKE) $(MAKEFLAGS) -C ../krd test
-	@$(MAKE) $(MAKEFLAGS) -C ../mitten/nmctaurus test
-	@$(MAKE) $(MAKEFLAGS) -C ../tse test
+test : build
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/rendering test
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/tse test
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/mitten/nmctaurus test
 
 clean :
-	$(RM) $(RMFLAGS) -r krd ktp libkrd.a libktp.a libnightowl.a libnightowl_kernel.so libtse.a moph nightowl tse
-	@$(MAKE) $(MAKEFLAGS) -C ../krd clean
-	@$(MAKE) $(MAKEFLAGS) -C ../ktp clean
-	@$(MAKE) $(MAKEFLAGS) -C ../mitten/nmctaurus clean
-	@$(MAKE) $(MAKEFLAGS) -C ../moph clean
-	@$(MAKE) $(MAKEFLAGS) -C ../nightowl clean
-	@$(MAKE) $(MAKEFLAGS) -C ../tse clean
+	$(RM) $(RMFLAGS) -r $(BUILD)/rendering $(BUILD)/parsing $(BUILD)/librendering.a $(BUILD)/libparsing.a $(BUILD)/libnightowl.a $(BUILD)/libnightowl_kernel.so $(BUILD)/libtse.a $(BUILD)/moph $(BUILD)/nightowl $(BUILD)/tse
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/rendering clean
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/parsing clean
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/mitten/nmctaurus clean
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/moph clean
+	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/nightowl clean
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/tse clean

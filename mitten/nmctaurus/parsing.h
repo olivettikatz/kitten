@@ -2,12 +2,12 @@
 #define __NMC_PARSING_H
 
 #include <iostream>
-#include <ktp/ktp.h>
+#include <parsing/parsing.h>
 
 namespace nmc
 {
 	using namespace std;
-	using namespace ktp;
+	using namespace parsing;
 
 	Tokenizer createTokenizer();
 	Parser createParser(Tokenizer &t);
