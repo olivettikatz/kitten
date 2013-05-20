@@ -82,7 +82,7 @@ namespace nmc
 		p.add("InternalAssemblyLine1", p("Symbol").keep() << (p["Symbol"].keep() || p["ValueInt"].keep()));
 		p.add("InternalAssemblyLine2", p["Symbol"].keep() << p["Symbol"].keep() << (p["Symbol"].keep() || p["ValueInt"].keep()));
 		p.add("InternalAssemblyLine3", p["Symbol"].keep() << p["Symbol"].keep() << p["Symbol"].keep() << (p["Symbol"].keep() || p["ValueInt"].keep()));
-		p.add("InternalAssemblyLines", (p("InternalAssemblyLine0") || p("InternalAssemblyLine1") || p("InternalAssemblyLine2") || p("InternalAssemblyLine2") || p("InternalAssemblyLine3")) << p["EndOfLine"]);
+		p.add("InternalAssemblyLines", (p("InternalAssemblyLine0") || p("InternalAssemblyLine1") || p("InternalAssemblyLine2") || p("InternalAssemblyLine3")) << p["EndOfLine"]);
 		p.many("InternalAssemblyLines");
 
 		p.add("InternalAssemblyExpression", p["InternalAssemblySymbol"] << p["BoundaryBeginScope"] << p["internalAssemblyLines"] << p["BoundaryEndScope"]);

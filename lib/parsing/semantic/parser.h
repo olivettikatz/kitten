@@ -34,6 +34,8 @@ namespace parsing
 		bool getMany();
 		vector<string> getSequence();
 		vector<string> getAlternates();
+
+		string display();
 	};
 
 	class Parser

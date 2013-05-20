@@ -62,9 +62,34 @@ namespace parsing
 		return alternates;
 	}
 
+	string Expectation::display()
+	{
+		stringstream ss;
+		ss << "'" << id << "' => '" << expectation << "'";
+		if (_keep)
+			ss << " keep";
+		if (_many)
+			ss << " many";
+		if (!sequence.empty())
+		{
+			ss << "\n\t";
+			for (vector<string>::iterator i = sequence.begin(); i != sequence.end(); i++)
+				ss << " << '" << *i << "'";
+		}
+		if (!alternates.empty())
+		{
+			ss << "\n\t";
+			for (vector<string>::iterator i = alternates.begin(); i != alternates.end(); i++)
+				ss << " || '" << *i << "'";
+		}
+
+		return ss.str();
+	}
+
 	Expectation Parser::operator [] (string e)
 	{
-		return Expectation(e).identify(e);
+		content[e] = Expectation(e).identify(e);
+		return content[e];
 	}
 
 	Expectation Parser::operator () ()
@@ -97,6 +122,7 @@ namespace parsing
 	Parser Parser::add(string n, Expectation e)
 	{
 		content[n] = e.identify(n);
+		cout << content[n].display() << "\n";
 		return *this;
 	}
 
@@ -115,9 +141,9 @@ namespace parsing
 		cout << "\n";
 		AST rtn = AST();
 
-		if (toks[off].getType().compare(content[n].getExpectation()) != 0 && content[n].getExpectation().compare("") != 0)
+		if (toks[off].getType().compare(content[n].getExpectation()) != 0 || content[n].getExpectation().compare("") == 0)
 		{
-			cout << "expectation " << n << " failed.\n";
+			cout << "expectation " << n << " failed ('" << toks[off].get() << "' type '" << toks[off].getType() << "' != '" << content[n].getExpectation() << "')\n";
 			cout << "\tchecking alternates...\n";
 			for (vector<string>::iterator i = content[n].getAlternates().begin(); i != content[n].getAlternates().end(); i++)
 			{
@@ -150,7 +176,7 @@ namespace parsing
 		}
 		else
 		{
-			cout << "\texpectation " << n << " matched\n";
+			cout << "\texpectation " << n << " matched ('" << toks[off].get() << "' type '" << toks[off].getType() << "' == '" << content[n].getExpectation() << "')\n";
 		}
 
 		off++;
