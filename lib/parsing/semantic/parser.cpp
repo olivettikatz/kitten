@@ -10,7 +10,22 @@ namespace parsing
 
 	Expectation &Expectation::operator || (Expectation e)
 	{
-		alternates.insert(alternates.begin(), e.id);
+		vector<pair<unsigned int, string> >::iterator i;
+		for (i = alternates.begin(); i != alternates.end(); i++)
+		{
+			if (i->first <= e.sequence.size())
+			{
+				if (i != alternates.begin())
+					i--;
+				break;
+			}
+		}
+
+		pair<unsigned int, string> tmp;
+		tmp.first = e.sequence.size();
+		tmp.second = e.id;
+		alternates.insert(i, tmp);
+
 		return *this;
 	}
 
@@ -59,7 +74,10 @@ namespace parsing
 
 	vector<string> Expectation::getAlternates()
 	{
-		return alternates;
+		vector<string> tmp;
+		for (vector<pair<unsigned int, string> >::iterator i = alternates.begin(); i != alternates.end(); i++)
+			tmp.push_back(i->second);
+		return tmp;
 	}
 
 	string Expectation::display()
@@ -79,17 +97,11 @@ namespace parsing
 		if (!alternates.empty())
 		{
 			ss << "\n\t";
-			for (vector<string>::iterator i = alternates.begin(); i != alternates.end(); i++)
-				ss << " || '" << *i << "'";
+			for (vector<pair<unsigned int, string> >::iterator i = alternates.begin(); i != alternates.end(); i++)
+				ss << " || '" << i->second << "'";
 		}
 
 		return ss.str();
-	}
-
-	Expectation Parser::operator [] (string e)
-	{
-		content[e] = Expectation(e).identify(e);
-		return content[e];
 	}
 
 	Expectation Parser::operator () ()
@@ -110,20 +122,24 @@ namespace parsing
 		if (content.find(n) != content.end())
 			return content[n];
 		else
-			return Expectation(n).identify(n);
+		{
+			content[n] = Expectation(n).identify(n);
+			cout << content[n].display() << "\n";
+			return content[n];
+		}
 	}
 
-	Parser Parser::add(Expectation e)
+	Expectation &Parser::preadd(string n)
 	{
-		content[e.getID()] = e;
-		return *this;
+		content[n] = Expectation().identify(n);
+		return content[n];
 	}
 
-	Parser Parser::add(string n, Expectation e)
+	Expectation &Parser::add(string n, Expectation e)
 	{
 		content[n] = e.identify(n);
 		cout << content[n].display() << "\n";
-		return *this;
+		return content[n];
 	}
 
 	Parser Parser::many(string n)
@@ -141,12 +157,13 @@ namespace parsing
 		cout << "\n";
 		AST rtn = AST();
 
-		if (toks[off].getType().compare(content[n].getExpectation()) != 0 || content[n].getExpectation().compare("") == 0)
+		if (toks[off].getType().compare(content[n].getExpectation()) != 0 && content[n].getExpectation().compare("") != 0)
 		{
 			cout << "expectation " << n << " failed ('" << toks[off].get() << "' type '" << toks[off].getType() << "' != '" << content[n].getExpectation() << "')\n";
 			cout << "\tchecking alternates...\n";
 			for (vector<string>::iterator i = content[n].getAlternates().begin(); i != content[n].getAlternates().end(); i++)
 			{
+				cout << "\t\tchecking '" << *i << "'...\n";
 				unsigned int oldoff = off;
 				vector<Error> ebuftmp;
 				rtn = parse(*i, toks, off, ebuftmp);

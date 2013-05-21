@@ -17,7 +17,7 @@ namespace parsing
 		bool _keep;
 		bool _many;
 		vector<string> sequence;
-		vector<string> alternates;
+		vector<pair<unsigned int, string> > alternates;
 
 	public:
 		Expectation() : _keep(false), _many(false) {}
@@ -45,12 +45,11 @@ namespace parsing
 
 	public:
 		Parser() {}
-		Expectation operator [] (string e);
 		Expectation operator () ();
 		Expectation operator () (string n, string e);
 		Expectation operator () (string n);
-		Parser add(Expectation e);
-		Parser add(string n, Expectation e);
+		Expectation &preadd(string n);
+		Expectation &add(string n, Expectation e);
 		Parser many(string n);
 		AST parse(string n, vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
 	};

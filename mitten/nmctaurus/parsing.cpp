@@ -79,19 +79,21 @@ namespace nmc
 	{
 		Parser p = Parser();
 		p.add("InternalAssemblyLine0", p("Symbol").keep());
-		p.add("InternalAssemblyLine1", p("Symbol").keep() << (p["Symbol"].keep() || p["ValueInt"].keep()));
-		p.add("InternalAssemblyLine2", p["Symbol"].keep() << p["Symbol"].keep() << (p["Symbol"].keep() || p["ValueInt"].keep()));
-		p.add("InternalAssemblyLine3", p["Symbol"].keep() << p["Symbol"].keep() << p["Symbol"].keep() << (p["Symbol"].keep() || p["ValueInt"].keep()));
-		p.add("InternalAssemblyLines", (p("InternalAssemblyLine0") || p("InternalAssemblyLine1") || p("InternalAssemblyLine2") || p("InternalAssemblyLine3")) << p["EndOfLine"]);
+		p.add("SymbolOrValueInt", p("Symbol").keep() || p("ValueInt").keep());
+		p.add("InternalAssemblyLine1", p("Symbol").keep() << p("SymbolOrValueInt"));
+		p.add("InternalAssemblyLine2", p("Symbol").keep() << p("Symbol").keep() << p("SymbolOrValueInt"));
+		p.add("InternalAssemblyLine3", p("Symbol").keep() << p("Symbol").keep() << p("Symbol").keep() << p("SymbolOrValueInt"));
+		p.add("AnyInternalAssemblyLine", p() || p("InternalAssemblyLine0") || p("InternalAssemblyLine1") || p("InternalAssemblyLine2") || p("InternalAssemblyLine3"));
+		p.add("InternalAssemblyLines", p() << p("AnyInternalAssemblyLine") << p("EndOfLine"));
 		p.many("InternalAssemblyLines");
 
-		p.add("InternalAssemblyExpression", p["InternalAssemblySymbol"] << p["BoundaryBeginScope"] << p["internalAssemblyLines"] << p["BoundaryEndScope"]);
+		p.add("InternalAssemblyExpression", p("InternalAssemblySymbol") << p("BoundaryBeginScope") << p("InternalAssemblyLines") << p("BoundaryEndScope"));
 
-		p.add("TypeQualifiers", p["Symbol"]);
+		p.add("TypeQualifiers", p("Symbol"));
 		p.many("TypeQualifiers");
-		p.add("TypeExpression", p("TypeQualifiers") << p["BoundaryBeginExpression"] << p("TypeExpression") << p["BoundaryEndExpression"]);
+		p.add("TypeExpression", p() << p("TypeQualifiers") << p("BoundaryBeginExpression") << p("TypeExpression") << p("BoundaryEndExpression"));
 
-		p.add("Any", p());
+		p.preadd("Any");
 
 		p.add("ComplexValueElements", p("Any") << p("ArgumentSeparator"));
 		p.many("ComplexValueElements");
@@ -104,7 +106,7 @@ namespace nmc
 		p.add("OperationUnaryLeft", p("OperatorUnaryLeft") << p("Any"));
 		p.add("OperationUnaryRight", p("Any") << p("OperatorUnaryLeft"));
 		p.add("OperationBinary", p("Any") << p("OperatorBinary") << p("Any"));
-		p.add("Operation", (p("OperationUnaryLeft") || p("OperationUnaryRight") || p("OperationBinary")) || (p("BoundaryBeginExpression") << p("Operation") << p("BoundaryEndExpression")));
+		p.add("Operation", p.add("AnyUnboundedOperation", p("OperationUnaryLeft") || p("OperationUnaryRight") || p("OperationBinary")) || p.add("AnyBoundedOperation", p("BoundaryBeginExpression") << p("Operation") << p("BoundaryEndExpression")));
 
 		p.add("ArgumentVectorElements", p("Any") << p("ArgumentSeparator"));
 		p.many("ArgumentVectorElements");
@@ -117,21 +119,21 @@ namespace nmc
 		p.add("ExpressionSymbolComplex", p("Symbol") << p("ComplexValue"));
 		p.add("ExpressionSymbolArgument", p("Symbol") << p("ArgumentVector"));
 		p.add("ExpressionSymbolBody", p("Symbol") << p("Body"));
-		p.add("ExpressionSymbolBodyWhere", p("Symbol") << p("Body") << p["Where"] << p("Body"));
+		p.add("ExpressionSymbolBodyWhere", p("Symbol") << p("Body") << p("Where") << p("Body"));
 		p.add("ExpressionSymbolComplexArgument", p("Symbol") << p("ComplexValue") << p("ArgumentVector"));
 		p.add("ExpressionSymbolArgumentBody", p("Symbol") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionSymbolArgumentBodyWhere", p("Symbol") << p("ArgumentVector") << p("Body") << p["Where"] << p("Body"));
+		p.add("ExpressionSymbolArgumentBodyWhere", p("Symbol") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
 		p.add("ExpressionSymbolComplexArgumentBody", p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionSymbolComplexArgumentBodyWhere", p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body") << p["Where"] << p("Body"));
+		p.add("ExpressionSymbolComplexArgumentBodyWhere", p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
 		p.add("ExpressionTypeSymbolComplex", p("TypeExpression") << p("Symbol") << p("ComplexValue"));
 		p.add("ExpressionTypeSymbolArgument", p("TypeExpression") << p("Symbol") << p("ArgumentVector"));
 		p.add("ExpressionTypeSymbolBody", p("TypeExpression") << p("Symbol") << p("Body"));
-		p.add("ExpressionTypeSymbolBodyWhere", p("TypeExpression") << p("Symbol") << p("Body") << p["Where"] << p("Body"));
+		p.add("ExpressionTypeSymbolBodyWhere", p("TypeExpression") << p("Symbol") << p("Body") << p("Where") << p("Body"));
 		p.add("ExpressionTypeSymbolComplexArgument", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector"));
 		p.add("ExpressionTypeSymbolArgumentBody", p("TypeExpression") << p("Symbol") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionTypeSymbolArgumentBodyWhere", p("TypeExpression") << p("Symbol") << p("ArgumentVector") << p("Body") << p["Where"] << p("Body"));
+		p.add("ExpressionTypeSymbolArgumentBodyWhere", p("TypeExpression") << p("Symbol") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
 		p.add("ExpressionTypeSymbolComplexArgumentBody", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionTypeSymbolComplexArgumentBodyWhere", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body") << p["Where"] << p("Body"));
+		p.add("ExpressionTypeSymbolComplexArgumentBodyWhere", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
 		p.add("Expression", p("ExpressionSymbolComplex") || p("ExpressionSymbolArgument") || p("ExpressionSymbolBody") || p("ExpressionSymbolBodyWhere") || p("ExpressionSymbolComplexArgument") || p("ExpressionSymbolArgumentBody") || p("ExpressionSymbolArgumentBodyWhere") || p("ExpressionSymbolComplexArgumentBody") || p("ExpressionSymbolComplexArgumentBodyWhere") || p("ExpressionTypeSymbolComplex") || p("ExpressionTypeSymbolArgument") || p("ExpressionTypeSymbolBody") || p("ExpressionTypeSymbolBody") || p("ExpressionTypeSymbolComplexArgument") || p("ExpressionTypeSymbolArgumentBody") || p("ExpressionTypeSymbolArgumentBody") || p("ExpressionTypeSymbolComplexArgumentBody") || p("ExpressionTypeSymbolComplexArgumentBody"));
 
 		p.add("Any", p("InternalAssemblyExpression") || p("TypeExpression") || p("ComplexValue") || p("Operation") || p("Expression"));
