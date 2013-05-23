@@ -157,69 +157,70 @@ namespace parsing
 		cout << "\n";
 		AST rtn = AST();
 
-		if (toks[off].getType().compare(content[n].getExpectation()) != 0 && content[n].getExpectation().compare("") != 0)
+		vector<Error> ebuftmp;
+
+		if (toks[off].getType().compare(content[n].getExpectation()) != 0)
 		{
-			cout << "expectation " << n << " failed ('" << toks[off].get() << "' type '" << toks[off].getType() << "' != '" << content[n].getExpectation() << "')\n";
-			cout << "\tchecking alternates...\n";
-			for (vector<string>::iterator i = content[n].getAlternates().begin(); i != content[n].getAlternates().end(); i++)
+			cout << "\texpectation " << n << " failed ('" << toks[off].get() << "' type '" << toks[off].getType() << "' != '" << content[n].getExpectation() << "')\n";
+			ebuftmp.push_back(Error(toks[off], content[n].getExpectation(), n));
+		}
+		else
+		{
+			if (content[n].getKeep())
 			{
-				cout << "\t\tchecking '" << *i << "'...\n";
+				rtn = AST(n, toks[off]);
+			}
+		}
+
+		if (content[n].getExpectation().compare("") != 0)
+		{
+			off++;
+		}
+
+		for (unsigned int i = 0; i < content[n].getSequence().size(); i++)
+		{
+			rtn.add(parse(content[n].getSequence()[i], toks, off, ebuftmp));
+		}
+
+		if (ebuftmp.empty() == false)
+		{
+			for (unsigned int i = 0; i < content[n].getAlternates().size(); i++)
+			{
+				cout << "\tchecking alternate '" << content[n].getAlternates()[i] << "'...\n";
 				unsigned int oldoff = off;
-				vector<Error> ebuftmp;
-				rtn = parse(*i, toks, off, ebuftmp);
+				ebuftmp.clear();
+				rtn = parse(content[n].getAlternates()[i], toks, off, ebuftmp);
 				if (rtn.good())
 				{
-					cout << "\tfound alternate: " << *i << "!\n";
-					ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
+					cout << "\tfound alternate: '" << content[n].getAlternates()[i] << "'!\n";
 					break;
-				}
-				else
-				{
-					off = oldoff;
 				}
 			}
 
 			if (rtn.good() == false)
 			{
-				cout << "\texpectation un-matchable, erroring.\n";
-				ebuf.push_back(Error(toks[off], content[n].getExpectation(), n));
+				cout << "\texpectation '" << n << "' unmatchable...\n";
+				ebuftmp.push_back(Error(toks[off], content[n].getExpectation(), n));
 				return AST();
 			}
 		}
-		else if (content[n].getKeep())
-		{
-			cout << "\texpectation " << n << " matched and kept!\n";
-			rtn = AST(n, toks[off]);
-		}
-		else
-		{
-			cout << "\texpectation " << n << " matched ('" << toks[off].get() << "' type '" << toks[off].getType() << "' == '" << content[n].getExpectation() << "')\n";
-		}
 
-		off++;
-
-		for (unsigned int i = 0; i < content[n].getSequence().size(); i++)
-		{
-			cout << "\tadding '" << content[n].getSequence()[i] << "' to '" << n << "'s sequence...\n";
-			rtn.add(parse(content[n].getSequence()[i], toks, off, ebuf));
-		}
+		ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
 
 		if (content[n].getMany())
 		{
-			cout << "\texpecting many repetitions...\n";
 			AST tmp = AST();
-			tmp.add(rtn);
 
-			while(rtn.good() == false)
+			while(rtn.good())
 			{
-				vector<Error> ebuftmp;
+				cout << "\texpecting another '" << n << "'...\n";
+				tmp.add(rtn);
+				ebuftmp.clear();
 				rtn = parse(n, toks, off, ebuftmp);
-				if (rtn.good())
-					break;
-				else
+				if (rtn.empty() && ebuftmp.empty() == false)
 				{
 					ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
-					tmp.add(rtn);
+					break;
 				}
 			}
 
