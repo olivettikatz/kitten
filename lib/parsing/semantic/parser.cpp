@@ -2,6 +2,56 @@
 
 namespace parsing
 {
+	One &One::keep()
+	{
+		_keep = true;
+		return *this;
+	}
+
+	unsigned int One::minLength()
+	{
+		if (expecting.empty())
+			return 0;
+		else
+			return 1;
+	}
+
+	AST One::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf)
+	{
+		if (toks[off].getType().compare(expecting) == 0)
+		{
+			off++;
+			if (_keep)
+				return AST(expecting, toks[off]);
+			else
+				return AST();
+		}
+		else
+		{
+			ebuf.push_back(Error(toks[off], expecting, expecting));
+			return AST();
+		}
+	}
+
+	Sequence &Sequence::append(Expectation &e)
+	{
+		sequence.push_back(&e);
+		return *this;
+	}
+
+	unsigned int &Sequence::minLength()
+	{
+		unsigned int rtn = 0;
+		for (vector<shared_ptr<Expectation> >::iterator i = sequence.begin(); i != sequence.end(); i++)
+			rtn += (*i)->minLength();
+		return rtn;
+	}
+
+	AST Sequence::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf)
+	{
+		for (vector<shared_ptr<Expectation>
+	}
+
 	Expectation &Expectation::identify(string i)
 	{
 		id = i;

@@ -11,6 +11,64 @@ namespace parsing
 
 	class Expectation
 	{
+	public:
+		unsigned int minLength();
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+	};
+
+	class One : public Expectation
+	{
+	private:
+		string expecting;
+		bool _keep;
+
+	public:
+		One() : _keep(false) {}
+		One(string e) : _keep(false), expecting(e) {}
+		One(string e, bool k) : _keep(k), expecting(e) {}
+		One &keep();
+		unsigned int minLength();
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+	};
+
+	class Sequence : public Expectation
+	{
+	private:
+		vector<shared_ptr<Expectation> > sequence;
+
+	public:
+		Sequence() {}
+		Sequence &append(Expectation &e);
+		unsigned int minLength();
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+	};
+
+	class Parallel : public Expectation
+	{
+	private:
+		vector<shared_ptr<Expectation> > parallels;
+
+	public:
+		Parallel() {}
+		Parallel &append(Expectation &e);
+		unsigned int minLength();
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+	};
+
+	class Many : public Expectation
+	{
+	private:
+		shared_ptr<Expectation> one;
+
+	public:
+		Many() : one(NULL) {}
+		Many(Expectation &e);
+		unsigned int minLength();
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+	};
+
+	class Expectation
+	{
 	private:
 		string id;
 		string expectation;
