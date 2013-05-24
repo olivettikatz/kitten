@@ -11,9 +11,23 @@ namespace parsing
 
 	class Expectation
 	{
+	protected:
+		string _class;
+		string _name;
+		bool _debug;
+
 	public:
-		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+		void name(string n);
+		void nameClass(string c);
+		string getName();
+		string getClass();
+		virtual void debug();
+		void debugTokens(vector<Token> toks, unsigned int off);
+		void debugAST(AST rtn, unsigned int stackc);
+		bool debugging();
+		string pad(unsigned int stackc);
+		virtual unsigned int minLength();
+		virtual AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
 	};
 
 	class One : public Expectation
@@ -23,93 +37,83 @@ namespace parsing
 		bool _keep;
 
 	public:
-		One() : _keep(false) {}
-		One(string e) : _keep(false), expecting(e) {}
-		One(string e, bool k) : _keep(k), expecting(e) {}
+		One() : _keep(false) {nameClass("One");}
+		One(string e) : _keep(false), expecting(e) {nameClass("One");name(e);}
+		One(string e, bool k) : _keep(k), expecting(e) {nameClass("One");name(e);}
 		One &keep();
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+	};
+
+	class OneDB
+	{
+	private:
+		map<string, One> content;
+
+	public:
+		OneDB() {}
+		One &one(string n);
+		One &keep(string n);
+		One &operator [] (string n);
 	};
 
 	class Sequence : public Expectation
 	{
 	private:
-		vector<shared_ptr<Expectation> > sequence;
+		int size;
+		vector<Expectation *> sequence;
 
 	public:
-		Sequence() {}
+		Sequence() : size(-1) {nameClass("Sequence");}
+		Sequence(string n) : name(n), size(-1) {nameClass("Sequence");name(n);}
+		void debug();
+		void assumeSize(unsigned int s);
 		Sequence &append(Expectation &e);
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
 	};
 
 	class Parallel : public Expectation
 	{
 	private:
-		vector<shared_ptr<Expectation> > parallels;
+		int size;
+		vector<Expectation *> parallels;
 
 	public:
-		Parallel() {}
+		Parallel() : size(-1) {}
+		void debug();
+		void assumeSize(unsigned int s);
 		Parallel &append(Expectation &e);
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
 	};
 
 	class Many : public Expectation
 	{
 	private:
-		shared_ptr<Expectation> one;
+		string name;
+		Expectation *one;
 
 	public:
 		Many() : one(NULL) {}
-		Many(Expectation &e);
+		Many(string n) : name(n), one(NULL) {}
+		Many(string n, Expectation &e);
+		void debug();
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
 	};
 
-	class Expectation
+	class Maybe : public Expectation
 	{
 	private:
-		string id;
-		string expectation;
-		bool _keep;
-		bool _many;
-		vector<string> sequence;
-		vector<pair<unsigned int, string> > alternates;
+		Expectation *expecting;
 
 	public:
-		Expectation() : _keep(false), _many(false) {}
-		Expectation(string e) : expectation(e), _keep(false), _many(false) {}
-		Expectation &identify(string i);
-		Expectation &operator || (Expectation e);
-		Expectation &operator << (Expectation e);
-		Expectation &keep();
-		Expectation &many();
-
-		string getID();
-		string getExpectation();
-		bool getKeep();
-		bool getMany();
-		vector<string> getSequence();
-		vector<string> getAlternates();
-
-		string display();
-	};
-
-	class Parser
-	{
-	private:
-		map<string, Expectation> content;
-
-	public:
-		Parser() {}
-		Expectation operator () ();
-		Expectation operator () (string n, string e);
-		Expectation operator () (string n);
-		Expectation &preadd(string n);
-		Expectation &add(string n, Expectation e);
-		Parser many(string n);
-		AST parse(string n, vector<Token> toks, unsigned int &off, vector<Error> &ebuf);
+		Maybe() {}
+		Maybe(Expectation &e);
+		void debug();
+		unsigned int minLength();
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
 	};
 }
 

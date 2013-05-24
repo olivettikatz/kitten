@@ -75,72 +75,197 @@ namespace nmc
 		return t;
 	}
 
-	Parser createParser(Tokenizer &t)
+	void Parser::createParser()
 	{
-		Parser p = Parser();
-		p.add("InternalAssemblyLine0", p("Symbol").keep());
-		p.add("SymbolOrValueInt", p("Symbol").keep() || p("ValueInt").keep());
-		p.add("InternalAssemblyLine1", p("Symbol").keep() << p("SymbolOrValueInt"));
-		p.add("InternalAssemblyLine2", p("Symbol").keep() << p("Symbol").keep() << p("SymbolOrValueInt"));
-		p.add("InternalAssemblyLine3", p("Symbol").keep() << p("Symbol").keep() << p("Symbol").keep() << p("SymbolOrValueInt"));
-		p.add("AnyInternalAssemblyLine", p() || p("InternalAssemblyLine0") || p("InternalAssemblyLine1") || p("InternalAssemblyLine2") || p("InternalAssemblyLine3"));
-		p.add("InternalAssemblyLines", p() << p("AnyInternalAssemblyLine") << p("EndOfLine"));
-		p.many("InternalAssemblyLines");
+		odb = OneDB();
 
-		p.add("InternalAssemblyExpression", p("InternalAssemblySymbol") << p("BoundaryBeginScope") << p("InternalAssemblyLines") << p("BoundaryEndScope"));
+		symbolOrValueInt = Parallel();
+		symbolOrValueInt.append(odb.keep("Symbol"));
+		symbolOrValueInt.append(odb.keep("ValueInt"));
 
-		p.add("TypeQualifiers", p("Symbol"));
-		p.many("TypeQualifiers");
-		p.add("TypeExpression", p() << p("TypeQualifiers") << p("BoundaryBeginExpression") << p("TypeExpression") << p("BoundaryEndExpression"));
+		internalAssemblyArgs = Many("InternalAssemblyArgs", symbolOrValueInt);
 
-		p.preadd("Any");
+		oneInternalAssemblyLine = Sequence("OneInternalAssemblyLine");
+		oneInternalAssemblyLine.append(odb["Symbol"]);
+		oneInternalAssemblyLine.append(internalAssemblyArgs);
+		oneInternalAssemblyLine.append(odb.one("EndOfLine"));
 
-		p.add("ComplexValueElements", p("Any") << p("ArgumentSeparator"));
-		p.many("ComplexValueElements");
-		p.add("ComplexValue", p("BoundaryBeginComplex") << p("ComplexValueElements") << p("BoundaryEndComplex"));
+		internalAssemblyLines = Many("InternalAssemblyLines", oneInternalAssemblyLine);
 
-		p.add("OperatorUnaryLeft", p("OperatorNegateBitwise") || p("OperatorNegateLogical"));
-		p.add("OperatorUnaryRight", p("OperatorIncrement") || p("OperatorDecrement"));
-		p.add("OperatorBinary", p("OperatorAssign") || p("OperatorAccess") || p("OperatorAdd") || p("OperatorSubtract") || p("OperatorMultiply") || p("OperatorDivide") || p("OperatorModulate") || p("OperatorAndBitwise") || p("OperatorAndLogical") || p("OperatorOrBitwise") || p("OperatorOrLogical") || p("OperatorXOrBitwise") || p("OperatorBitShiftLeft") || p("OperatorBitShiftRight") || p("OperatorLessThan") || p("OperatorLessThanOrEqualTo") || p("OperatorGreaterThen") || p("OperatorGreaterThanOrEqualTo") || p("OperatorEqualTo") || p("OperatorNotEqualTo") || p("OperatorAddAssign") || p("OperatorSubtractAssign") || p("OperatorMultiplyAssign") || p("OperatorDivideAssign") || p("OperatorModulateAssign") || p("OperatorAndBitwiseAssign") || p("OperatorOrBitwiseAssign") || p("OperatorXOrBitwiseAssign") || p("OperatorNegateAssign") || p("OperatorBitShiftLeftAssign") || p("OperatorBitShiftRightAssign"));
+		internalAssemblyExpression = Sequence("InternalAssemblyExpression");
+		internalAssemblyExpression.append(odb.one("InternalAssemblySymbol"));
+		internalAssemblyExpression.append(odb.one("BoundaryBeginScope"));
+		internalAssemblyExpression.append(internalAssemblyLines);
+		internalAssemblyExpression.append(odb.one("BoundaryEndScope"));
 
-		p.add("OperationUnaryLeft", p("OperatorUnaryLeft") << p("Any"));
-		p.add("OperationUnaryRight", p("Any") << p("OperatorUnaryLeft"));
-		p.add("OperationBinary", p("Any") << p("OperatorBinary") << p("Any"));
-		p.add("Operation", p.add("AnyUnboundedOperation", p("OperationUnaryLeft") || p("OperationUnaryRight") || p("OperationBinary")) || p.add("AnyBoundedOperation", p("BoundaryBeginExpression") << p("Operation") << p("BoundaryEndExpression")));
+		typeQualifiers = Many("TypeQualifiers", odb["Symbol"]);
 
-		p.add("ArgumentVectorElements", p("Any") << p("ArgumentSeparator"));
-		p.many("ArgumentVectorElements");
-		p.add("ArgumentVector", p("ArgumentVectorElements"));
-	
-		p.add("Lines", p("Any") << p("EndOfLine"));
-		p.many("Lines");
-		p.add("Body", p("BoundaryBeginScope") << p("Lines") << p("BoundaryEndScope"));
+		typeExpression = Sequence("TypeExpression");
+		typeExpression.assumeSize(0);
+		typeExpression.append(typeQualifiers);
+		typeExpression.append(odb.one("BoundaryBeginExpression"));
+		typeExpression.append(typeExpression);
+		typeExpression.append(odb.one("BoundaryEndExpression"));
 
-		p.add("ExpressionSymbolComplex", p("Symbol") << p("ComplexValue"));
-		p.add("ExpressionSymbolArgument", p("Symbol") << p("ArgumentVector"));
-		p.add("ExpressionSymbolBody", p("Symbol") << p("Body"));
-		p.add("ExpressionSymbolBodyWhere", p("Symbol") << p("Body") << p("Where") << p("Body"));
-		p.add("ExpressionSymbolComplexArgument", p("Symbol") << p("ComplexValue") << p("ArgumentVector"));
-		p.add("ExpressionSymbolArgumentBody", p("Symbol") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionSymbolArgumentBodyWhere", p("Symbol") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
-		p.add("ExpressionSymbolComplexArgumentBody", p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionSymbolComplexArgumentBodyWhere", p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
-		p.add("ExpressionTypeSymbolComplex", p("TypeExpression") << p("Symbol") << p("ComplexValue"));
-		p.add("ExpressionTypeSymbolArgument", p("TypeExpression") << p("Symbol") << p("ArgumentVector"));
-		p.add("ExpressionTypeSymbolBody", p("TypeExpression") << p("Symbol") << p("Body"));
-		p.add("ExpressionTypeSymbolBodyWhere", p("TypeExpression") << p("Symbol") << p("Body") << p("Where") << p("Body"));
-		p.add("ExpressionTypeSymbolComplexArgument", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector"));
-		p.add("ExpressionTypeSymbolArgumentBody", p("TypeExpression") << p("Symbol") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionTypeSymbolArgumentBodyWhere", p("TypeExpression") << p("Symbol") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
-		p.add("ExpressionTypeSymbolComplexArgumentBody", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body"));
-		p.add("ExpressionTypeSymbolComplexArgumentBodyWhere", p("TypeExpression") << p("Symbol") << p("ComplexValue") << p("ArgumentVector") << p("Body") << p("Where") << p("Body"));
-		p.add("Expression", p("ExpressionSymbolComplex") || p("ExpressionSymbolArgument") || p("ExpressionSymbolBody") || p("ExpressionSymbolBodyWhere") || p("ExpressionSymbolComplexArgument") || p("ExpressionSymbolArgumentBody") || p("ExpressionSymbolArgumentBodyWhere") || p("ExpressionSymbolComplexArgumentBody") || p("ExpressionSymbolComplexArgumentBodyWhere") || p("ExpressionTypeSymbolComplex") || p("ExpressionTypeSymbolArgument") || p("ExpressionTypeSymbolBody") || p("ExpressionTypeSymbolBody") || p("ExpressionTypeSymbolComplexArgument") || p("ExpressionTypeSymbolArgumentBody") || p("ExpressionTypeSymbolArgumentBody") || p("ExpressionTypeSymbolComplexArgumentBody") || p("ExpressionTypeSymbolComplexArgumentBody"));
+		any = Parallel();
+		any.assumeSize(0);
 
-		p.add("Any", p("InternalAssemblyExpression") || p("TypeExpression") || p("ComplexValue") || p("Operation") || p("Expression"));
+		oneComplexValueElement = Sequence("ComplexValueElements");
+		oneComplexValueElement.append(any);
+		oneComplexValueElement.append(odb.one("ArgumentSeparator"));
 
-		p.add("*", p("Expression"));
-		p.many("*");
+		complexValueElements = Many("ComplexValueElements", oneComplexValueElement);
 
-		return p;
+		complexValue = Sequence("ComplexValue");
+		complexValue.append(odb.one("BoundaryBeginComplex"));
+		complexValue.append(complexValueElements);
+		complexValue.append(oneComplexValueElement);
+		complexValue.append(odb.one("BoundaryEndComplex"));
+
+		operatorUnaryLeft = Parallel();
+		operatorUnaryLeft.append(odb.keep("OperatorNegateBitwise"));
+		operatorUnaryLeft.append(odb.keep("OperatorNegateLogical"));
+
+		operatorUnaryRight = Parallel();
+		operatorUnaryRight.append(odb.keep("OperatorIncrement"));
+		operatorUnaryRight.append(odb.keep("OperatorDecrement"));
+
+		operatorBinary = Parallel();
+		operatorBinary.append(odb.keep("OperatorAssign"));
+		operatorBinary.append(odb.keep("OperatorAccess"));
+		operatorBinary.append(odb.keep("OperatorAdd"));
+		operatorBinary.append(odb.keep("OperatorSubtract"));
+		operatorBinary.append(odb.keep("OperatorMultiply"));
+		operatorBinary.append(odb.keep("OperatorDivide"));
+		operatorBinary.append(odb.keep("OperatorModulate"));
+		operatorBinary.append(odb.keep("OperatorAndBitwise"));
+		operatorBinary.append(odb.keep("OperatorAndLogical"));
+		operatorBinary.append(odb.keep("OperatorOrBitwise"));
+		operatorBinary.append(odb.keep("OperatorOrLogical"));
+		operatorBinary.append(odb.keep("OperatorXOrBitwise"));
+		operatorBinary.append(odb.keep("OperatorBitShiftLeft"));
+		operatorBinary.append(odb.keep("OperatorBitShiftRight"));
+		operatorBinary.append(odb.keep("OperatorLessThan"));
+		operatorBinary.append(odb.keep("OperatorLessThanOrEqualTo"));
+		operatorBinary.append(odb.keep("OperatorGreaterThan"));
+		operatorBinary.append(odb.keep("OperatorGreaterThanOrEqualTo"));
+		operatorBinary.append(odb.keep("OperatorEqualTo"));
+		operatorBinary.append(odb.keep("OperatorNotEqualTo"));
+		operatorBinary.append(odb.keep("OperatorAddAssign"));
+		operatorBinary.append(odb.keep("OperatorSubtractAssign"));
+		operatorBinary.append(odb.keep("OperatorMultiplyAssign"));
+		operatorBinary.append(odb.keep("OperatorDivideAssign"));
+		operatorBinary.append(odb.keep("OperatorModulateAssign"));
+		operatorBinary.append(odb.keep("OperatorAndBitwiseAssign"));
+		operatorBinary.append(odb.keep("OperatorOrBitwiseAssign"));
+		operatorBinary.append(odb.keep("OperatorXOrBitwiseAssign"));
+		operatorBinary.append(odb.keep("OperatorNegateAssign"));
+		operatorBinary.append(odb.keep("OperatorBitShiftLeftAssign"));
+		operatorBinary.append(odb.keep("OperatorBitShiftRightAssign"));
+
+		operationUnaryLeft = Sequence("OperationUnaryLeft");
+		operationUnaryLeft.append(operatorUnaryLeft);
+		operationUnaryLeft.append(any);
+
+		operationUnaryRight = Sequence("OperationUnaryRight");
+		operationUnaryRight.append(any);
+		operationUnaryRight.append(operatorUnaryRight);
+
+		operationBinary = Sequence("OperationBinary");
+		operationBinary.append(any);
+		operationBinary.append(operatorBinary);
+		operationBinary.append(any);
+
+		anyUnboundedOperation = Parallel();
+		anyUnboundedOperation.append(operationUnaryLeft);
+		anyUnboundedOperation.append(operationUnaryRight);
+		anyUnboundedOperation.append(operationBinary);
+
+		operation = Parallel();
+		operation.assumeSize(2);
+		operation.append(anyUnboundedOperation);
+
+		anyBoundedOperation = Sequence("AnyBoundedOperation");
+		anyBoundedOperation.append(odb["BoundaryBeginExpression"]);
+		anyBoundedOperation.append(operation);
+		anyBoundedOperation.append(odb["BoundaryEndExpression"]);
+
+		operation.append(anyBoundedOperation);
+
+		oneArgumentVectorElement = Sequence("OneArgumentVectorElement");
+		oneArgumentVectorElement.append(any);
+		oneArgumentVectorElement.append(odb["ArgumentSeparator"]);
+
+		argumentVectorElements = Many("ArgumentVectorElements", oneArgumentVectorElement);
+
+		argumentVectorNonNull = Sequence("ArgumentVectorNonNull");
+		argumentVectorNonNull.append(argumentVectorElements);
+		argumentVectorNonNull.append(any);
+
+		argumentVectorNull = Sequence("ArgumentVectorNull");
+
+		argumentVectorContents = Parallel();
+		argumentVectorContents.append(argumentVectorNonNull);
+		argumentVectorContents.append(argumentVectorNull);
+
+		argumentVector = Sequence("ArgumentVector");
+		argumentVector.append(odb["BoundaryBeginScope"]);
+		argumentVector.append(argumentVectorContents);
+		argumentVector.append(odb["BoundaryBeginScope"]);
+
+		oneLine = Sequence("OneLine");
+		oneLine.append(any);
+		oneLine.append(odb["EndOfLine"]);
+
+		lines = Many("Lines", oneLine);
+
+		body = Sequence("Body");
+		body.append(odb.one("BoundaryBeginScope"));
+		body.append(lines);
+		body.append(odb.one("BoundaryEndScope"));
+
+		maybeType = Maybe(typeExpression);
+		maybeComplex = Maybe(complexValue);
+		maybeArgument = Maybe(argumentVector);
+		maybeBody = Maybe(body);
+
+		where = Sequence("Where");
+		where.append(odb.keep("Where"));
+		where.append(body);
+
+		maybeWhere = Maybe(where);
+
+		expression = Sequence("Expression");
+		expression.append(maybeType);
+		expression.append(odb["Symbol"]);
+		expression.append(maybeComplex);
+		expression.append(maybeArgument);
+		expression.append(maybeBody);
+		expression.append(maybeWhere);
+
+		any.append(internalAssemblyExpression);
+		any.append(typeExpression);
+		any.append(complexValue);
+		any.append(operation);
+		any.append(expression);
+
+		page = Many("Page", any);
+		page.debug();
+	}
+
+	AST Parser::parse(vector<Token> toks)
+	{
+		unsigned int off = 0;
+		return page.parse(toks, off, ebuf, 0);
+	}
+
+	vector<Error> Parser::getErrors()
+	{
+		return ebuf;
+	}
+
+	void Parser::clearErrors()
+	{
+		ebuf.clear();
 	}
 }

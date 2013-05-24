@@ -2,6 +2,71 @@
 
 namespace parsing
 {
+	void Expectation::name(string n)
+	{
+		_name = n;
+	}
+
+	void Expectation::nameClass(string c)
+	{
+		_class = c;
+	}
+
+	string Expectation::getName()
+	{
+		return _name;
+	}
+
+	string Expectation::getClass()
+	{
+		return _class;
+	}
+
+	void Expectation::debug()
+	{
+		_debug = true;
+	}
+
+	void Expectation::debugTokens(vector<Token> toks, unsigned int off)
+	{
+		if (_debug)
+		{
+			cout << "Parsing:";
+			for (unsigned int i = off; i < off+10 && i < toks.size(); i++)
+				cout << " '" << toks[i].get() << "'";
+			cout << "\n";
+		}
+	}
+
+	void Expectation::debugAST(AST rtn, unsigned int stackc)
+	{
+		if (_debug)
+			cout << pad(stackc) << "Returning: " << rtn.display() << "\n";
+	}
+
+	bool Expectation::debugging()
+	{
+		return _debug;
+	}
+
+	string Expectation::pad(unsigned int stackc)
+	{
+		string rtn;
+		for (unsigned int i = 0; i < stackc; i++)
+			rtn += " ";
+		return rtn;
+	}
+
+	unsigned int Expectation::minLength()
+	{
+		return 0;
+	}
+
+	AST Expectation::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	{
+		return AST();
+	}
+
 	One &One::keep()
 	{
 		_keep = true;
@@ -16,21 +81,67 @@ namespace parsing
 			return 1;
 	}
 
-	AST One::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf)
+	AST One::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
 	{
+		cout << pad(stackc) << "One '" << expecting << "' ";
+		debugTokens(toks, off);
+
 		if (toks[off].getType().compare(expecting) == 0)
 		{
 			off++;
 			if (_keep)
+			{
+				if (debugging())
+					cout << pad(stackc) << "Expectation of One '" << expecting << "' met, keeping...\n";
+				debugAST(AST(expecting, toks[off]), stackc);
 				return AST(expecting, toks[off]);
+			}
 			else
+			{
+				if (debugging())
+					cout << pad(stackc) << "Expectation of One '" << expecting << "' met.\n";
+				debugAST(AST(), stackc);
 				return AST();
+			}
 		}
 		else
 		{
+			if (debugging())
+				cout << pad(stackc) << "Expectation of One '" << expecting << "' NOT met, erroring...\n";
 			ebuf.push_back(Error(toks[off], expecting, expecting));
+			debugAST(AST(), stackc);
 			return AST();
 		}
+	}
+
+	One &OneDB::one(string n)
+	{
+		content[n] = One(n);
+		return content[n];
+	}
+
+	One &OneDB::keep(string n)
+	{
+		content[n] = One(n).keep();
+		return content[n];
+	}
+
+	One &OneDB::operator [] (string n)
+	{
+		return content[n];
+	}
+
+	void Sequence::debug()
+	{
+		_debug = true;
+		for (vector<Expectation *>::iterator i = sequence.begin(); i != sequence.end(); i++)
+			if ((*i)->debugging() == false)
+				(*i)->debug();
+	}
+
+	void Sequence::assumeSize(unsigned int s)
+	{
+		size = (signed int)s;
 	}
 
 	Sequence &Sequence::append(Expectation &e)
@@ -39,245 +150,208 @@ namespace parsing
 		return *this;
 	}
 
-	unsigned int &Sequence::minLength()
+	unsigned int Sequence::minLength()
 	{
+		if (size >= 0)
+			return (unsigned int)size;
+
 		unsigned int rtn = 0;
-		for (vector<shared_ptr<Expectation> >::iterator i = sequence.begin(); i != sequence.end(); i++)
+		for (vector<Expectation *>::iterator i = sequence.begin(); i != sequence.end(); i++)
 			rtn += (*i)->minLength();
 		return rtn;
 	}
 
-	AST Sequence::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf)
+	AST Sequence::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
 	{
-		for (vector<shared_ptr<Expectation>
-	}
+		cout << pad(stackc) << "Sequence '" << name << "' ";
+		debugTokens(toks, off);
 
-	Expectation &Expectation::identify(string i)
-	{
-		id = i;
-		return *this;
-	}
-
-	Expectation &Expectation::operator || (Expectation e)
-	{
-		vector<pair<unsigned int, string> >::iterator i;
-		for (i = alternates.begin(); i != alternates.end(); i++)
+		AST rtn = AST(name, toks[off]);
+		for (vector<Expectation *>::iterator i = sequence.begin(); i != sequence.end(); i++)
 		{
-			if (i->first <= e.sequence.size())
+			AST tmp = (*i)->parse(toks, off, ebuf, stackc+1);
+			if (tmp.good() == false)
 			{
-				if (i != alternates.begin())
+				if (debugging())
+					cout << pad(stackc) << "Expectation of Sequence '" << name << "' NOT met, erroring...\n";
+				ebuf.push_back(Error(toks[off], name, name));
+				debugAST(AST(), stackc);
+				return AST();
+			}
+			else
+			{
+				if (debugging())
+					cout << pad(stackc) << "Expectation of Sequence '" << name << "' met.\n";
+			}
+		}
+
+		debugAST(rtn, stackc);
+		return rtn;
+	}
+
+	void Parallel::debug()
+	{
+		_debug = true;
+		for (vector<Expectation *>::iterator i = parallels.begin(); i != parallels.end(); i++)
+			if ((*i)->debugging() == false)
+				(*i)->debug();
+	}
+
+	void Parallel::assumeSize(unsigned int s)
+	{
+		size = (signed int)s;
+	}
+
+	Parallel &Parallel::append(Expectation &e)
+	{
+		vector<Expectation *>::iterator i = parallels.begin();
+		for (; i != parallels.end(); i++)
+		{
+			if ((*i)->minLength() <= e.minLength())
+			{
+				if (i != parallels.begin())
 					i--;
 				break;
 			}
 		}
 
-		pair<unsigned int, string> tmp;
-		tmp.first = e.sequence.size();
-		tmp.second = e.id;
-		alternates.insert(i, tmp);
-
+		parallels.insert(i, &e);
 		return *this;
 	}
 
-	Expectation &Expectation::operator << (Expectation e)
+	unsigned int Parallel::minLength()
 	{
-		sequence.push_back(e.id);
-		return *this;
+		if (size >= 0)
+			return (unsigned int)size;
+
+		unsigned int lowest = (unsigned int)-1;
+		for (vector<Expectation *>::iterator i = parallels.begin(); i != parallels.end(); i++)
+			if ((*i)->minLength() < lowest)
+				lowest = (*i)->minLength();
+		if (parallels.empty())
+			lowest = 0;
+		return lowest;
 	}
 
-	Expectation &Expectation::keep()
+	AST Parallel::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
 	{
-		_keep = true;
-		return *this;
-	}
-
-	Expectation &Expectation::many()
-	{
-		_many = true;
-		return *this;
-	}
-
-	string Expectation::getID()
-	{
-		return id;
-	}
-
-	string Expectation::getExpectation()
-	{
-		return expectation;
-	}
-
-	bool Expectation::getKeep()
-	{
-		return _keep;
-	}
-
-	bool Expectation::getMany()
-	{
-		return _many;
-	}
-
-	vector<string> Expectation::getSequence()
-	{
-		return sequence;
-	}
-
-	vector<string> Expectation::getAlternates()
-	{
-		vector<string> tmp;
-		for (vector<pair<unsigned int, string> >::iterator i = alternates.begin(); i != alternates.end(); i++)
-			tmp.push_back(i->second);
-		return tmp;
-	}
-
-	string Expectation::display()
-	{
-		stringstream ss;
-		ss << "'" << id << "' => '" << expectation << "'";
-		if (_keep)
-			ss << " keep";
-		if (_many)
-			ss << " many";
-		if (!sequence.empty())
-		{
-			ss << "\n\t";
-			for (vector<string>::iterator i = sequence.begin(); i != sequence.end(); i++)
-				ss << " << '" << *i << "'";
-		}
-		if (!alternates.empty())
-		{
-			ss << "\n\t";
-			for (vector<pair<unsigned int, string> >::iterator i = alternates.begin(); i != alternates.end(); i++)
-				ss << " || '" << i->second << "'";
-		}
-
-		return ss.str();
-	}
-
-	Expectation Parser::operator () ()
-	{
-		return Expectation();
-	}
-
-	Expectation Parser::operator () (string n, string e)
-	{
-		Expectation rtn = Expectation(e);
-		rtn.identify(n);
-		content[n] = rtn;
-		return rtn;
-	}
-
-	Expectation Parser::operator () (string n)
-	{
-		if (content.find(n) != content.end())
-			return content[n];
-		else
-		{
-			content[n] = Expectation(n).identify(n);
-			cout << content[n].display() << "\n";
-			return content[n];
-		}
-	}
-
-	Expectation &Parser::preadd(string n)
-	{
-		content[n] = Expectation().identify(n);
-		return content[n];
-	}
-
-	Expectation &Parser::add(string n, Expectation e)
-	{
-		content[n] = e.identify(n);
-		cout << content[n].display() << "\n";
-		return content[n];
-	}
-
-	Parser Parser::many(string n)
-	{
-		if (content.find(n) != content.end())
-			content[n].many();
-		return *this;
-	}
-
-	AST Parser::parse(string n, vector<Token> toks, unsigned int &off, vector<Error> &ebuf)
-	{
-		cout << "parsing (with '" << n << "'):";
-		for (unsigned int i = off; i < toks.size(); i++)
-			cout << " '" << toks[i].get() << "'";
-		cout << "\n";
-		AST rtn = AST();
+		cout << pad(stackc) << "Parallel ";
+		debugTokens(toks, off);
 
 		vector<Error> ebuftmp;
-
-		if (toks[off].getType().compare(content[n].getExpectation()) != 0)
+		for (vector<Expectation *>::iterator i = parallels.begin(); i != parallels.end(); i++)
 		{
-			cout << "\texpectation " << n << " failed ('" << toks[off].get() << "' type '" << toks[off].getType() << "' != '" << content[n].getExpectation() << "')\n";
-			ebuftmp.push_back(Error(toks[off], content[n].getExpectation(), n));
+			unsigned int offtmp = off;
+
+			AST tmp = (*i)->parse(toks, offtmp, ebuftmp, stackc+1);
+			if (tmp.good())
+			{
+				if (debugging())
+					cout << pad(stackc) << "Expectation of Parallel met.\n";
+				off = offtmp;
+				debugAST(tmp, stackc);
+				return tmp;
+			}
+		}
+
+		if (debugging())
+			cout << pad(stackc) << "Expectation of Parallel NOT met, erroring...\n";
+		ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
+		debugAST(AST(), stackc);
+		return AST();
+	}
+
+	Many::Many(string n, Expectation &e)
+	{
+		name = n;
+		one = &e;
+	}
+
+	void Many::debug()
+	{
+		_debug = true;
+		if (one->debugging() == false)
+			one->debug();
+	}
+
+	unsigned int Many::minLength()
+	{
+		if (one != NULL)
+			return one->minLength();
+		else
+			return 0;
+	}
+
+	AST Many::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	{
+		cout << pad(stackc) << "Many '" << name << "' ";
+		debugTokens(toks, off);
+
+		AST rtn = AST(name, toks[off]);
+		while(1)
+		{
+			unsigned int offtmp = off;
+			vector<Error> ebuftmp;
+			AST tmp = one->parse(toks, offtmp, ebuftmp, stackc+1);
+			if (ebuftmp.empty())
+			{
+				if (debugging())
+					cout << pad(stackc) << "Expectation of Many '" << name << "' met, continuing...\n";
+				rtn.add(tmp);
+				off = offtmp;
+			}
+			else
+			{
+				if (debugging())
+					cout << pad(stackc) << "Expectation of Many '" << name << "' NOT met, halting...\n";
+				break;
+			}
+		}
+
+		debugAST(rtn, stackc);
+		return rtn;
+	}
+
+	Maybe::Maybe(Expectation &e)
+	{
+		expecting = &e;
+	}
+
+	void Maybe::debug()
+	{
+		_debug = true;
+		if (expecting->debugging() == false)
+			expecting->debug();
+	}
+
+	unsigned int Maybe::minLength()
+	{
+		return 0;
+	}
+
+	AST Maybe::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	{
+		cout << pad(stackc) << "Maybe ";
+		debugTokens(toks, off);
+
+		unsigned offtmp = off;
+		vector<Error> ebuftmp;
+		AST tmp = expecting->parse(toks, offtmp, ebuftmp, stackc+1);
+		if (tmp.good())
+		{
+			if (debugging())
+				cout << pad(stackc) << "Expectating of Maybe met.\n";
+			off = offtmp;
+			ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
+			debugAST(tmp, stackc);
+			return tmp;
 		}
 		else
 		{
-			if (content[n].getKeep())
-			{
-				rtn = AST(n, toks[off]);
-			}
+			if (debugging())
+				cout << pad(stackc) << "Expectation of Maybe NOT met.\n";
+			debugAST(AST(), stackc);
+			return AST();
 		}
-
-		if (content[n].getExpectation().compare("") != 0)
-		{
-			off++;
-		}
-
-		for (unsigned int i = 0; i < content[n].getSequence().size(); i++)
-		{
-			rtn.add(parse(content[n].getSequence()[i], toks, off, ebuftmp));
-		}
-
-		if (ebuftmp.empty() == false)
-		{
-			for (unsigned int i = 0; i < content[n].getAlternates().size(); i++)
-			{
-				cout << "\tchecking alternate '" << content[n].getAlternates()[i] << "'...\n";
-				unsigned int oldoff = off;
-				ebuftmp.clear();
-				rtn = parse(content[n].getAlternates()[i], toks, off, ebuftmp);
-				if (rtn.good())
-				{
-					cout << "\tfound alternate: '" << content[n].getAlternates()[i] << "'!\n";
-					break;
-				}
-			}
-
-			if (rtn.good() == false)
-			{
-				cout << "\texpectation '" << n << "' unmatchable...\n";
-				ebuftmp.push_back(Error(toks[off], content[n].getExpectation(), n));
-				return AST();
-			}
-		}
-
-		ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
-
-		if (content[n].getMany())
-		{
-			AST tmp = AST();
-
-			while(rtn.good())
-			{
-				cout << "\texpecting another '" << n << "'...\n";
-				tmp.add(rtn);
-				ebuftmp.clear();
-				rtn = parse(n, toks, off, ebuftmp);
-				if (rtn.empty() && ebuftmp.empty() == false)
-				{
-					ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
-					break;
-				}
-			}
-
-			return tmp;
-		}
-
-		return rtn;
 	}
 }
-
