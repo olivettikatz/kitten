@@ -22,12 +22,12 @@ namespace parsing
 		string getName();
 		string getClass();
 		virtual void debug();
-		void debugTokens(vector<Token> toks, unsigned int off);
-		void debugAST(AST rtn, unsigned int stackc);
+		void debugInput(vector<Token> toks, unsigned int off, unsigned int stackc);
+		void debugOutput(AST rtn, unsigned int stackc);
 		bool debugging();
 		string pad(unsigned int stackc);
 		virtual unsigned int minLength();
-		virtual AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+		virtual AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
 
 	class One : public Expectation
@@ -42,7 +42,7 @@ namespace parsing
 		One(string e, bool k) : _keep(k), expecting(e) {nameClass("One");name(e);}
 		One &keep();
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
 
 	class OneDB
@@ -65,12 +65,12 @@ namespace parsing
 
 	public:
 		Sequence() : size(-1) {nameClass("Sequence");}
-		Sequence(string n) : name(n), size(-1) {nameClass("Sequence");name(n);}
+		Sequence(string n) : size(-1) {nameClass("Sequence");name(n);}
 		void debug();
 		void assumeSize(unsigned int s);
 		Sequence &append(Expectation &e);
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
 
 	class Parallel : public Expectation
@@ -80,27 +80,27 @@ namespace parsing
 		vector<Expectation *> parallels;
 
 	public:
-		Parallel() : size(-1) {}
+		Parallel() : size(-1) {nameClass("Parallel");}
+		Parallel(string n) : size(-1) {name(n);nameClass("Parallel");}
 		void debug();
 		void assumeSize(unsigned int s);
 		Parallel &append(Expectation &e);
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
 
 	class Many : public Expectation
 	{
 	private:
-		string name;
 		Expectation *one;
 
 	public:
-		Many() : one(NULL) {}
-		Many(string n) : name(n), one(NULL) {}
-		Many(string n, Expectation &e);
+		Many() : one(NULL) {nameClass("Many");}
+		Many(string n) : one(NULL) {name(n);nameClass("Many");}
+		Many(string n, Expectation &e) : one(&e) {name(n);nameClass("Many");}
 		void debug();
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
 
 	class Maybe : public Expectation
@@ -109,11 +109,11 @@ namespace parsing
 		Expectation *expecting;
 
 	public:
-		Maybe() {}
-		Maybe(Expectation &e);
+		Maybe() {nameClass("Maybe");}
+		Maybe(string n, Expectation &e) : expecting(&e) {name(n);nameClass("Maybe");}
 		void debug();
 		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc);
+		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
 }
 

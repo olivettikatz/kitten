@@ -27,21 +27,21 @@ namespace parsing
 		_debug = true;
 	}
 
-	void Expectation::debugTokens(vector<Token> toks, unsigned int off)
+	void Expectation::debugInput(vector<Token> toks, unsigned int off, unsigned int stackc)
 	{
 		if (_debug)
 		{
-			cout << "Parsing:";
+			cout << pad(stackc) << "Parsing (" << _class << " '" << _name << "'):";
 			for (unsigned int i = off; i < off+10 && i < toks.size(); i++)
-				cout << " '" << toks[i].get() << "'";
+				cout << " '\033[0;32m" << toks[i].get() << "\033[0;0m'";
 			cout << "\n";
 		}
 	}
 
-	void Expectation::debugAST(AST rtn, unsigned int stackc)
+	void Expectation::debugOutput(AST rtn, unsigned int stackc)
 	{
 		if (_debug)
-			cout << pad(stackc) << "Returning: " << rtn.display() << "\n";
+			cout << pad(stackc) << "Returning (" << _class << " '" << _name << "'): \033[0;33m" << rtn.display() << "\033[0;0m\n";
 	}
 
 	bool Expectation::debugging()
@@ -62,7 +62,7 @@ namespace parsing
 		return 0;
 	}
 
-	AST Expectation::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	AST Expectation::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
 	{
 		return AST();
 	}
@@ -81,35 +81,45 @@ namespace parsing
 			return 1;
 	}
 
-	AST One::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	AST One::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
 	{
-		cout << pad(stackc) << "One '" << expecting << "' ";
-		debugTokens(toks, off);
+		debugInput(toks, off, stack.size());
+		stack.push_back(this);
 
 		if (toks[off].getType().compare(expecting) == 0)
 		{
 			off++;
+			if (off >= toks.size())
+			{
+				if (debugging())
+					cout << pad(stack.size()) << "Expectation of One '" << expecting << "' overflowed token vector, erroring...\n";
+
+				ebuf.push_back(Error(toks[off-1], expecting, expecting));
+				debugOutput(AST(), stack.size());
+				return AST();
+			}
+
 			if (_keep)
 			{
 				if (debugging())
-					cout << pad(stackc) << "Expectation of One '" << expecting << "' met, keeping...\n";
-				debugAST(AST(expecting, toks[off]), stackc);
+					cout << pad(stack.size()) << "Expectation of One '" << expecting << "' met, keeping...\n";
+				debugOutput(AST(expecting, toks[off]), stack.size());
 				return AST(expecting, toks[off]);
 			}
 			else
 			{
 				if (debugging())
-					cout << pad(stackc) << "Expectation of One '" << expecting << "' met.\n";
-				debugAST(AST(), stackc);
+					cout << pad(stack.size()) << "Expectation of One '" << expecting << "' met.\n";
+				debugOutput(AST(), stack.size());
 				return AST();
 			}
 		}
 		else
 		{
 			if (debugging())
-				cout << pad(stackc) << "Expectation of One '" << expecting << "' NOT met, erroring...\n";
+				cout << pad(stack.size()) << "Expectation of One '" << expecting << "' NOT met, erroring...\n";
 			ebuf.push_back(Error(toks[off], expecting, expecting));
-			debugAST(AST(), stackc);
+			debugOutput(AST(), stack.size());
 			return AST();
 		}
 	}
@@ -161,31 +171,34 @@ namespace parsing
 		return rtn;
 	}
 
-	AST Sequence::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	AST Sequence::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
 	{
-		cout << pad(stackc) << "Sequence '" << name << "' ";
-		debugTokens(toks, off);
+		debugInput(toks, off, stack.size());
 
-		AST rtn = AST(name, toks[off]);
+		AST rtn = AST(getName(), toks[off]);
 		for (vector<Expectation *>::iterator i = sequence.begin(); i != sequence.end(); i++)
 		{
-			AST tmp = (*i)->parse(toks, off, ebuf, stackc+1);
-			if (tmp.good() == false)
+			stack.push_back(this);
+			vector<Error> ebuftmp;
+			AST tmp = (*i)->parse(toks, off, ebuftmp, stack);
+			if (ebuftmp.empty() == false)
 			{
+				ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
 				if (debugging())
-					cout << pad(stackc) << "Expectation of Sequence '" << name << "' NOT met, erroring...\n";
-				ebuf.push_back(Error(toks[off], name, name));
-				debugAST(AST(), stackc);
+					cout << pad(stack.size()) << "Expectation of Sequence '" << getName() << "' NOT met (because of '" << (*i)->getName() << "'), erroring...\n";
+				if (off < toks.size())
+					ebuf.push_back(Error(toks[off], getName(), getName()));
+				debugOutput(AST(), stack.size());
 				return AST();
 			}
 			else
 			{
 				if (debugging())
-					cout << pad(stackc) << "Expectation of Sequence '" << name << "' met.\n";
+					cout << pad(stack.size()) << "Expectation of Sequence '" << getName() << "' met.\n";
 			}
 		}
 
-		debugAST(rtn, stackc);
+		debugOutput(rtn, stack.size());
 		return rtn;
 	}
 
@@ -233,38 +246,49 @@ namespace parsing
 		return lowest;
 	}
 
-	AST Parallel::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	AST Parallel::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
 	{
-		cout << pad(stackc) << "Parallel ";
-		debugTokens(toks, off);
+		debugInput(toks, off, stack.size());
 
 		vector<Error> ebuftmp;
-		for (vector<Expectation *>::iterator i = parallels.begin(); i != parallels.end(); i++)
+
+		unsigned int lastParallel = 0;
+		for (unsigned int i = stack.size()-1; i > 0; i--)
 		{
+			if (stack[i] == this)
+			{
+				lastParallel = i;
+				break;
+			}
+		}
+		
+		if (lastParallel < stack.size())
+			lastParallel++;
+
+		for (unsigned int i = 0; i < parallels.size(); i++)
+		{
+			if (parallels[i] == stack[lastParallel])
+				continue;
+
 			unsigned int offtmp = off;
 
-			AST tmp = (*i)->parse(toks, offtmp, ebuftmp, stackc+1);
+			stack.push_back(this);
+			AST tmp = parallels[i]->parse(toks, offtmp, ebuftmp, stack);
 			if (tmp.good())
 			{
 				if (debugging())
-					cout << pad(stackc) << "Expectation of Parallel met.\n";
+					cout << pad(stack.size()) << "Expectation of Parallel met.\n";
 				off = offtmp;
-				debugAST(tmp, stackc);
+				debugOutput(tmp, stack.size());
 				return tmp;
 			}
 		}
 
 		if (debugging())
-			cout << pad(stackc) << "Expectation of Parallel NOT met, erroring...\n";
+			cout << pad(stack.size()) << "Expectation of Parallel NOT met, erroring...\n";
 		ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
-		debugAST(AST(), stackc);
+		debugOutput(AST(), stack.size());
 		return AST();
-	}
-
-	Many::Many(string n, Expectation &e)
-	{
-		name = n;
-		one = &e;
 	}
 
 	void Many::debug()
@@ -282,39 +306,34 @@ namespace parsing
 			return 0;
 	}
 
-	AST Many::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	AST Many::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
 	{
-		cout << pad(stackc) << "Many '" << name << "' ";
-		debugTokens(toks, off);
+		debugInput(toks, off, stack.size());
 
-		AST rtn = AST(name, toks[off]);
+		AST rtn = AST(getName(), toks[off]);
 		while(1)
 		{
 			unsigned int offtmp = off;
 			vector<Error> ebuftmp;
-			AST tmp = one->parse(toks, offtmp, ebuftmp, stackc+1);
+			stack.push_back(this);
+			AST tmp = one->parse(toks, offtmp, ebuftmp, stack);
 			if (ebuftmp.empty())
 			{
 				if (debugging())
-					cout << pad(stackc) << "Expectation of Many '" << name << "' met, continuing...\n";
+					cout << pad(stack.size()) << "Expectation of Many '" << getName() << "' met, continuing...\n";
 				rtn.add(tmp);
 				off = offtmp;
 			}
 			else
 			{
 				if (debugging())
-					cout << pad(stackc) << "Expectation of Many '" << name << "' NOT met, halting...\n";
+					cout << pad(stack.size()) << "Expectation of Many '" << getName() << "' NOT met, halting...\n";
 				break;
 			}
 		}
 
-		debugAST(rtn, stackc);
+		debugOutput(rtn, stack.size());
 		return rtn;
-	}
-
-	Maybe::Maybe(Expectation &e)
-	{
-		expecting = &e;
 	}
 
 	void Maybe::debug()
@@ -329,28 +348,28 @@ namespace parsing
 		return 0;
 	}
 
-	AST Maybe::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, unsigned int stackc)
+	AST Maybe::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
 	{
-		cout << pad(stackc) << "Maybe ";
-		debugTokens(toks, off);
+		debugInput(toks, off, stack.size());
 
 		unsigned offtmp = off;
 		vector<Error> ebuftmp;
-		AST tmp = expecting->parse(toks, offtmp, ebuftmp, stackc+1);
+		stack.push_back(this);
+		AST tmp = expecting->parse(toks, offtmp, ebuftmp, stack);
 		if (tmp.good())
 		{
 			if (debugging())
-				cout << pad(stackc) << "Expectating of Maybe met.\n";
+				cout << pad(stack.size()) << "Expectating of Maybe met.\n";
 			off = offtmp;
 			ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
-			debugAST(tmp, stackc);
+			debugOutput(tmp, stack.size());
 			return tmp;
 		}
 		else
 		{
 			if (debugging())
-				cout << pad(stackc) << "Expectation of Maybe NOT met.\n";
-			debugAST(AST(), stackc);
+				cout << pad(stack.size()) << "Expectation of Maybe NOT met.\n";
+			debugOutput(AST(), stack.size());
 			return AST();
 		}
 	}

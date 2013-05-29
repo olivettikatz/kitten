@@ -79,7 +79,7 @@ namespace nmc
 	{
 		odb = OneDB();
 
-		symbolOrValueInt = Parallel();
+		symbolOrValueInt = Parallel("SymbolOrValueInt");
 		symbolOrValueInt.append(odb.keep("Symbol"));
 		symbolOrValueInt.append(odb.keep("ValueInt"));
 
@@ -107,7 +107,7 @@ namespace nmc
 		typeExpression.append(typeExpression);
 		typeExpression.append(odb.one("BoundaryEndExpression"));
 
-		any = Parallel();
+		any = Parallel("Any");
 		any.assumeSize(0);
 
 		oneComplexValueElement = Sequence("ComplexValueElements");
@@ -122,15 +122,15 @@ namespace nmc
 		complexValue.append(oneComplexValueElement);
 		complexValue.append(odb.one("BoundaryEndComplex"));
 
-		operatorUnaryLeft = Parallel();
+		operatorUnaryLeft = Parallel("OperatorUnaryLeft");
 		operatorUnaryLeft.append(odb.keep("OperatorNegateBitwise"));
 		operatorUnaryLeft.append(odb.keep("OperatorNegateLogical"));
 
-		operatorUnaryRight = Parallel();
+		operatorUnaryRight = Parallel("OperatorUnaryRight");
 		operatorUnaryRight.append(odb.keep("OperatorIncrement"));
 		operatorUnaryRight.append(odb.keep("OperatorDecrement"));
 
-		operatorBinary = Parallel();
+		operatorBinary = Parallel("OperatorBinary");
 		operatorBinary.append(odb.keep("OperatorAssign"));
 		operatorBinary.append(odb.keep("OperatorAccess"));
 		operatorBinary.append(odb.keep("OperatorAdd"));
@@ -176,12 +176,12 @@ namespace nmc
 		operationBinary.append(operatorBinary);
 		operationBinary.append(any);
 
-		anyUnboundedOperation = Parallel();
+		anyUnboundedOperation = Parallel("AnyUnboundedOperation");
 		anyUnboundedOperation.append(operationUnaryLeft);
 		anyUnboundedOperation.append(operationUnaryRight);
 		anyUnboundedOperation.append(operationBinary);
 
-		operation = Parallel();
+		operation = Parallel("Operation");
 		operation.assumeSize(2);
 		operation.append(anyUnboundedOperation);
 
@@ -204,7 +204,7 @@ namespace nmc
 
 		argumentVectorNull = Sequence("ArgumentVectorNull");
 
-		argumentVectorContents = Parallel();
+		argumentVectorContents = Parallel("ArgumentVectorContents");
 		argumentVectorContents.append(argumentVectorNonNull);
 		argumentVectorContents.append(argumentVectorNull);
 
@@ -224,16 +224,16 @@ namespace nmc
 		body.append(lines);
 		body.append(odb.one("BoundaryEndScope"));
 
-		maybeType = Maybe(typeExpression);
-		maybeComplex = Maybe(complexValue);
-		maybeArgument = Maybe(argumentVector);
-		maybeBody = Maybe(body);
+		maybeType = Maybe("MaybeType", typeExpression);
+		maybeComplex = Maybe("MaybeComplex", complexValue);
+		maybeArgument = Maybe("MaybeArgument", argumentVector);
+		maybeBody = Maybe("MaybeBody", body);
 
 		where = Sequence("Where");
 		where.append(odb.keep("Where"));
 		where.append(body);
 
-		maybeWhere = Maybe(where);
+		maybeWhere = Maybe("MaybeWhere", where);
 
 		expression = Sequence("Expression");
 		expression.append(maybeType);
@@ -256,7 +256,8 @@ namespace nmc
 	AST Parser::parse(vector<Token> toks)
 	{
 		unsigned int off = 0;
-		return page.parse(toks, off, ebuf, 0);
+		vector<Expectation *> stack;
+		return page.parse(toks, off, ebuf, stack);
 	}
 
 	vector<Error> Parser::getErrors()
