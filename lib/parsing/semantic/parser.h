@@ -102,19 +102,6 @@ namespace parsing
 		unsigned int minLength();
 		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
 	};
-
-	class Maybe : public Expectation
-	{
-	private:
-		Expectation *expecting;
-
-	public:
-		Maybe() {nameClass("Maybe");}
-		Maybe(string n, Expectation &e) : expecting(&e) {name(n);nameClass("Maybe");}
-		void debug();
-		unsigned int minLength();
-		AST parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack);
-	};
 }
 
 #endif

@@ -58,6 +58,7 @@ namespace nmc
 		t.token("OperatorNegateBitwiseAssign", t() == "~=");
 		t.token("OperatorBitShiftLeftAssign", t() == "<<=");
 		t.token("OperatorBitShiftRightAssign", t() == ">>=");
+		t.token("TypeExpressionPrefix", t() == "@");
 		t.token("EndOfLine", t() == ";");
 		t.token("ValueBool", t() == "true" || t() == "True" || t() == "TRUE" || t() == "false" || t() == "False" || t() == "FALSE");
 		t.token("ValueChar", t() < "'" && t() > "'");
@@ -100,12 +101,23 @@ namespace nmc
 
 		typeQualifiers = Many("TypeQualifiers", odb["Symbol"]);
 
-		typeExpression = Sequence("TypeExpression");
-		typeExpression.assumeSize(0);
-		typeExpression.append(typeQualifiers);
-		typeExpression.append(odb.one("BoundaryBeginExpression"));
-		typeExpression.append(typeExpression);
-		typeExpression.append(odb.one("BoundaryEndExpression"));
+		typeExpression = Parallel("TypeExpression");
+		typeExpression.assumeSize(1);
+
+		typeExpressionArguments = Sequence("TypeExpressionArguments");
+		typeExpressionArguments.assumeSize(5);
+		typeExpressionArguments.append(odb.one("TypeExpressionPrefix"));
+		typeExpressionArguments.append(typeQualifiers);
+		typeExpressionArguments.append(odb.one("BoundaryBeginExpression"));
+		typeExpressionArguments.append(typeExpression);
+		typeExpressionArguments.append(odb.one("BoundaryEndExpression"));
+
+		typeExpressionNoArguments = Sequence("TypeExpressionNoArguments");
+		typeExpressionNoArguments.assumeSize(1);
+		typeExpressionNoArguments.append(typeQualifiers);
+
+		typeExpression.append(typeExpressionArguments);
+		typeExpression.append(typeExpressionNoArguments);
 
 		any = Parallel("Any");
 		any.assumeSize(0);
@@ -224,24 +236,130 @@ namespace nmc
 		body.append(lines);
 		body.append(odb.one("BoundaryEndScope"));
 
-		maybeType = Maybe("MaybeType", typeExpression);
-		maybeComplex = Maybe("MaybeComplex", complexValue);
-		maybeArgument = Maybe("MaybeArgument", argumentVector);
-		maybeBody = Maybe("MaybeBody", body);
-
 		where = Sequence("Where");
 		where.append(odb.keep("Where"));
 		where.append(body);
 
-		maybeWhere = Maybe("MaybeWhere", where);
+		expressionSymbolComplex = Sequence("ExpessionSymbolComplex");
+		expressionSymbolComplex.append(odb["Symbol"]);
+		expressionSymbolComplex.append(complexValue);
 
-		expression = Sequence("Expression");
-		expression.append(maybeType);
-		expression.append(odb["Symbol"]);
-		expression.append(maybeComplex);
-		expression.append(maybeArgument);
-		expression.append(maybeBody);
-		expression.append(maybeWhere);
+		expressionSymbolArgument = Sequence("ExpessionSymbolArgument");
+		expressionSymbolArgument.append(odb["Symbol"]);
+		expressionSymbolArgument.append(argumentVector);
+
+		expressionSymbolBody = Sequence("ExpessionSymbolBody");
+		expressionSymbolBody.append(odb["Symbol"]);
+		expressionSymbolBody.append(body);
+
+		expressionSymbolBodyWhere = Sequence("ExpessionSymbolBodyWhere");
+		expressionSymbolBodyWhere.append(odb["Symbol"]);
+		expressionSymbolBodyWhere.append(body);
+		expressionSymbolBodyWhere.append(where);
+
+		expressionSymbolComplexArgument = Sequence("ExpessionSymbolComplexArgument");
+		expressionSymbolComplexArgument.append(odb["Symbol"]);
+		expressionSymbolComplexArgument.append(complexValue);
+		expressionSymbolComplexArgument.append(argumentVector);
+
+		expressionSymbolArgumentBody = Sequence("ExpessionSymbolArgumentBody");
+		expressionSymbolArgumentBody.append(odb["Symbol"]);
+		expressionSymbolArgumentBody.append(argumentVector);
+		expressionSymbolArgumentBody.append(body);
+
+		expressionSymbolArgumentBodyWhere = Sequence("ExpessionSymbolArgumentBodyWhere");
+		expressionSymbolArgumentBodyWhere.append(odb["Symbol"]);
+		expressionSymbolArgumentBodyWhere.append(argumentVector);
+		expressionSymbolArgumentBodyWhere.append(body);
+		expressionSymbolArgumentBodyWhere.append(where);
+
+		expressionSymbolComplexArgumentBody = Sequence("ExpessionSymbolComplexArgumentBody");
+		expressionSymbolComplexArgumentBody.append(odb["Symbol"]);
+		expressionSymbolComplexArgumentBody.append(complexValue);
+		expressionSymbolComplexArgumentBody.append(argumentVector);
+		expressionSymbolComplexArgumentBody.append(body);
+
+		expressionSymbolComplexArgumentBodyWhere = Sequence("ExpessionSymbolComplexArgumentBodyWhere");
+		expressionSymbolComplexArgumentBodyWhere.append(odb["Symbol"]);
+		expressionSymbolComplexArgumentBodyWhere.append(complexValue);
+		expressionSymbolComplexArgumentBodyWhere.append(argumentVector);
+		expressionSymbolComplexArgumentBodyWhere.append(body);
+		expressionSymbolComplexArgumentBodyWhere.append(where);
+
+		expressionTypeSymbolComplex = Sequence("ExpessionTypeSymbolComplex");
+		expressionTypeSymbolComplex.append(typeExpression);
+		expressionTypeSymbolComplex.append(odb["Symbol"]);
+		expressionTypeSymbolComplex.append(complexValue);
+
+		expressionTypeSymbolArgument = Sequence("ExpessionTypeSymbolArgument");
+		expressionTypeSymbolArgument.append(typeExpression);
+		expressionTypeSymbolArgument.append(odb["Symbol"]);
+		expressionTypeSymbolArgument.append(argumentVector);
+
+		expressionTypeSymbolBody = Sequence("ExpessionTypeSymbolBody");
+		expressionTypeSymbolBody.append(typeExpression);
+		expressionTypeSymbolBody.append(odb["Symbol"]);
+		expressionTypeSymbolBody.append(body);
+
+		expressionTypeSymbolBodyWhere = Sequence("ExpessionTypeSymbolBodyWhere");
+		expressionTypeSymbolBodyWhere.append(typeExpression);
+		expressionTypeSymbolBodyWhere.append(odb["Symbol"]);
+		expressionTypeSymbolBodyWhere.append(body);
+		expressionTypeSymbolBodyWhere.append(where);
+
+		expressionTypeSymbolComplexArgument = Sequence("ExpessionTypeSymbolComplexArgument");
+		expressionTypeSymbolComplexArgument.append(typeExpression);
+		expressionTypeSymbolComplexArgument.append(odb["Symbol"]);
+		expressionTypeSymbolComplexArgument.append(complexValue);
+		expressionTypeSymbolComplexArgument.append(argumentVector);
+
+		expressionTypeSymbolArgumentBody = Sequence("ExpessionTypeSymbolArgumentBody");
+		expressionTypeSymbolArgumentBody.append(typeExpression);
+		expressionTypeSymbolArgumentBody.append(odb["Symbol"]);
+		expressionTypeSymbolArgumentBody.append(argumentVector);
+		expressionTypeSymbolArgumentBody.append(body);
+
+		expressionTypeSymbolArgumentBodyWhere = Sequence("ExpessionTypeSymbolArgumentBodyWhere");
+		expressionTypeSymbolArgumentBodyWhere.append(typeExpression);
+		expressionTypeSymbolArgumentBodyWhere.append(odb["Symbol"]);
+		expressionTypeSymbolArgumentBodyWhere.append(argumentVector);
+		expressionTypeSymbolArgumentBodyWhere.append(body);
+		expressionTypeSymbolArgumentBodyWhere.append(where);
+
+		expressionTypeSymbolComplexArgumentBody = Sequence("ExpessionTypeSymbolComplexArgumentBody");
+		expressionTypeSymbolComplexArgumentBody.append(typeExpression);
+		expressionTypeSymbolComplexArgumentBody.append(odb["Symbol"]);
+		expressionTypeSymbolComplexArgumentBody.append(complexValue);
+		expressionTypeSymbolComplexArgumentBody.append(argumentVector);
+		expressionTypeSymbolComplexArgumentBody.append(body);
+
+		expressionTypeSymbolComplexArgumentBodyWhere = Sequence("ExpessionTypeSymbolComplexArgumentBodyWhere");
+		expressionTypeSymbolComplexArgumentBodyWhere.append(typeExpression);
+		expressionTypeSymbolComplexArgumentBodyWhere.append(odb["Symbol"]);
+		expressionTypeSymbolComplexArgumentBodyWhere.append(complexValue);
+		expressionTypeSymbolComplexArgumentBodyWhere.append(argumentVector);
+		expressionTypeSymbolComplexArgumentBodyWhere.append(body);
+		expressionTypeSymbolComplexArgumentBodyWhere.append(where);
+
+		expression = Parallel("Expression");
+		expression.append(expressionSymbolComplex);
+		expression.append(expressionSymbolArgument);
+		expression.append(expressionSymbolBody);
+		expression.append(expressionSymbolBodyWhere);
+		expression.append(expressionSymbolComplexArgument);
+		expression.append(expressionSymbolArgumentBody);
+		expression.append(expressionSymbolArgumentBodyWhere);
+		expression.append(expressionSymbolComplexArgumentBody);
+		expression.append(expressionSymbolComplexArgumentBodyWhere);
+		expression.append(expressionTypeSymbolComplex);
+		expression.append(expressionTypeSymbolArgument);
+		expression.append(expressionTypeSymbolBody);
+		expression.append(expressionTypeSymbolBodyWhere);
+		expression.append(expressionTypeSymbolComplexArgument);
+		expression.append(expressionTypeSymbolArgumentBody);
+		expression.append(expressionTypeSymbolArgumentBodyWhere);
+		expression.append(expressionTypeSymbolComplexArgumentBody);
+		expression.append(expressionTypeSymbolComplexArgumentBodyWhere);
 
 		any.append(internalAssemblyExpression);
 		any.append(typeExpression);

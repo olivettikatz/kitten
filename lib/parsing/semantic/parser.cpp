@@ -376,42 +376,4 @@ namespace parsing
 		debugOutput(rtn, stack.size());
 		return rtn;
 	}
-
-	void Maybe::debug()
-	{
-		_debug = true;
-		if (expecting->debugging() == false)
-			expecting->debug();
-	}
-
-	unsigned int Maybe::minLength()
-	{
-		return 0;
-	}
-
-	AST Maybe::parse(vector<Token> toks, unsigned int &off, vector<Error> &ebuf, vector<Expectation *> stack)
-	{
-		debugInput(toks, off, stack.size());
-
-		unsigned offtmp = off;
-		vector<Error> ebuftmp;
-		stack.push_back(this);
-		AST tmp = expecting->parse(toks, offtmp, ebuftmp, stack);
-		if (tmp.good())
-		{
-			if (debugging())
-				cout << pad(stack.size()) << "Expectating of Maybe met.\n";
-			off = offtmp;
-			ebuf.insert(ebuf.end(), ebuftmp.begin(), ebuftmp.end());
-			debugOutput(tmp, stack.size());
-			return tmp;
-		}
-		else
-		{
-			if (debugging())
-				cout << pad(stack.size()) << "Expectation of Maybe NOT met.\n";
-			debugOutput(AST(), stack.size());
-			return AST();
-		}
-	}
 }
