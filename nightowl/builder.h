@@ -18,6 +18,9 @@ extern "C"
 	#include "kernel/arch/arch.h"
 }
 
+#define O_PURE false
+#define O_DIRTY true
+
 namespace nightowl
 {
 	using namespace std;

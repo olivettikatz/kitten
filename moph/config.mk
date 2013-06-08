@@ -51,3 +51,7 @@ PWD=$(shell pwd)
 OBJ=
 TEST=
 LIBS=
+
+# INSTALLATION PATHS
+PATH_INCLUDE=/usr/include/kitten
+PATH_LIB=/usr/lib/kitten
