@@ -35,6 +35,16 @@ build :
 	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/semantic/ast.h $(BUILD)/parsing/semantic
 	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/semantic/error.h $(BUILD)/parsing/semantic
 	$(INSTALL) $(INSTALLFLAGS) $(LIB)/parsing/semantic/parser.h $(BUILD)/parsing/semantic
+	
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/args build
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/args/libargs.a $(BUILD)
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/args
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/args/args.h $(BUILD)/args
+
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/extract build
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/extract/libextract.a $(BUILD)
+	$(MKDIR) $(MKDIRFLAGS) $(BUILD)/extract
+	$(INSTALL) $(INSTALLFLAGS) $(LIB)/extract/extract.h $(BUILD)/extract
 
 	$(INSTALL) $(INSTALLFLAGS) config.mk $(SRC)/mitten/nmctaurus
 	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/mitten/nmctaurus build
@@ -54,14 +64,17 @@ build :
 	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/kernel/arch/arch.h $(BUILD)/nightowl/kernel/arch
 
 test : build
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/extract test
 	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/rendering test
 	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/tse test
 	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/mitten/nmctaurus test
 
 clean :
-	$(RM) $(RMFLAGS) -r $(BUILD)/rendering $(BUILD)/parsing $(BUILD)/librendering.a $(BUILD)/libparsing.a $(BUILD)/libnightowl.a $(BUILD)/libnightowl_kernel.so $(BUILD)/libtse.a $(BUILD)/moph $(BUILD)/nightowl $(BUILD)/tse
+	$(RM) $(RMFLAGS) -r $(BUILD)/rendering $(BUILD)/parsing $(BUILD)/librendering.a $(BUILD)/libparsing.a $(BUILD)/libnightowl.a $(BUILD)/libnightowl_kernel.so $(BUILD)/libtse.a $(BUILD)/libextract.a $(BUILD)/libargs.a $(BUILD)/moph $(BUILD)/nightowl $(BUILD)/tse $(BUILD)/extract $(BUILD)/args
 	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/rendering clean
 	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/parsing clean
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/extract clean
+	@$(MAKE) $(MAKEFLAGS) -C $(LIB)/args clean
 	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/mitten/nmctaurus clean
 	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/moph clean
 	@$(MAKE) $(MAKEFLAGS) -C $(SRC)/nightowl clean
@@ -103,6 +116,14 @@ install :
 	$(INSTALL) $(INSTALLFLAGS) $(SRC)/lib/tse/os/linux/linux.h $(PATH_INCLUDE)/tse/os/linux/linux.h
 	$(INSTALL) $(INSTALLFLAGS) $(SRC)/lib/tse/libtse.a $(PATH_LIB)/libtse.a
 
+	$(MKDIR) $(MKDIRFLAGS) $(PATH_INCLUDE)/extract
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/lib/extract/extract.h $(PATH_INCLUDE)/extract/extract.h
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/lib/extract/libextract.a $(PATH_LIB)/libextract.a
+
+	$(MKDIR) $(MKDIRFLAGS) $(PATH_INCLUDE)/args
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/lib/args/args.h $(PATH_INCLUDE)/args/args.h
+	$(INSTALL) $(INSTALLFLAGS) $(SRC)/lib/args/libargs.a $(PATH_LIB)/libargs.a
+
 	$(MKDIR) $(MKDIRFLAGS) $(PATH_INCLUDE)/nightowl
 	$(MKDIR) $(MKDIRFLAGS) $(PATH_INCLUDE)/nightowl/kernel
 	$(MKDIR) $(MKDIRFLAGS) $(PATH_INCLUDE)/nightowl/kernel/arch
@@ -115,4 +136,4 @@ install :
 	$(INSTALL) $(INSTALLFLAGS) $(SRC)/nightowl/kernel/libnightowl_kernel.so $(PATH_LIB)/libnightowl_kernel.so
 
 uninstall :
-	$(RM) $(RMFLAGS) $(PATH_INCLUDE)/ipc $(PATH_INCLUDE)/nightowl $(PATH_INCLUDE)/parsing $(PATH_INCLUDE)/rendering $(PATH_INCLUDE)/tse  $(PATH_LIB)/libnightowl.a $(PATH_LIB)/libnightowl_kernel.so $(PATH_LIB)/libparsing.a $(PATH_LIB)/librendering.a $(PATH_LIB)/libtse.a
+	$(RM) $(RMFLAGS) $(PATH_INCLUDE)/ipc $(PATH_INCLUDE)/nightowl $(PATH_INCLUDE)/parsing $(PATH_INCLUDE)/rendering $(PATH_INCLUDE)/tse  $(PATH_LIB)/libnightowl.a $(PATH_LIB)/libnightowl_kernel.so $(PATH_LIB)/libparsing.a $(PATH_LIB)/librendering.a $(PATH_LIB)/libtse.a $(PATH_INCLUDE)/extract $(PATH_INCLUDE)/args $(PATH_LIB)/libextract.a $(PATH_LIB)/libargs.a

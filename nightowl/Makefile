@@ -14,7 +14,7 @@ $(KERNEL)/libnightowl_kernel.so : $(KERNEL_OBJ)
 	$(CC) $(CFLAGS) -shared -Wl,-soname,libnightowl_kernel.so $^ -o $@
 
 $(SRC)/libnightowl.a : $(OBJ)
-	$(AR) $(ARFLAGS) $@ $^
+	$(AR) $(ARFLAGS) $@ $^ $(KERNEL)/libnightowl_kernel.so
 
 clean : 
 	$(RM) $(RMFLAGS) $(OBJ) $(KERNEL)/libnightowl_kernel.so $(SRC)/libnightowl.a

@@ -1,9 +1,9 @@
 # PROGARMS
 CC=gcc
-CFLAGS=-ggdb -O0 --std=gnu99 -I../build -L../build
+CFLAGS=-ggdb -O0 --std=gnu99 -I. -L. -I.. -L.. -I../build -L../build
 
 CXX=g++
-CXXFLAGS=-ggdb -O0 -std=c++11 -I../build -L../build
+CXXFLAGS=-ggdb -O0 -std=c++11 -I. -L. -I.. -L.. -I../build -L../build -I../../build -L../../build
 
 AR=ar
 ARFLAGS=rcs
